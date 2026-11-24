@@ -199,6 +199,8 @@ async function Manage({ params, searchParams }: Props) {
     { id: "guests", label: "Guests", href: `${base}?tab=guests`, count: guests.length },
     { id: "replies", label: "Replies", href: `${base}?tab=replies`, count: rsvps.length },
     { id: "share", label: "Share", href: `${base}?tab=share` },
+    { id: "image", label: "Image card", href: `${base}/image` },
+    { id: "print", label: "Print card", href: `${base}/print` },
     { id: "settings", label: "Settings", href: `${base}?tab=settings` },
   ];
 

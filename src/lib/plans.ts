@@ -43,6 +43,7 @@ export const plans: PlanDef[] = [
       "Unlimited guests and RSVPs",
       "Every opening and soundscape",
       "Countdown, schedule, map and gallery",
+      "Image card to send on WhatsApp",
       "Live reply tracking with CSV export",
       "Live for 12 months",
     ],
@@ -94,6 +95,26 @@ export const plans: PlanDef[] = [
       "Three rounds of changes",
     ],
     cta: "Talk to us",
+  },
+];
+
+export interface AddOnDef {
+  id: string;
+  name: string;
+  description: string;
+  lkr: number;
+  usd: number;
+}
+
+/** Optional extras bought on top of a published card. Prices are a starting proposal. */
+export const addOns: AddOnDef[] = [
+  {
+    id: "print",
+    name: "Printed card design",
+    description:
+      "A design for a physical card, in a shape of your choice, matched to your web card. You get a print-ready PDF with bleed and a cut line, and the back carries a QR code to your invitation. Printing itself is done by your own print shop.",
+    lkr: 1500,
+    usd: 7,
   },
 ];
 

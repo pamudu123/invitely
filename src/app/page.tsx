@@ -13,13 +13,14 @@ import {
 import Link from "next/link";
 import { Faq } from "@/components/site/Faq";
 import { HeroPhone, RitualShowcase } from "@/components/site/LiveDemos";
+import { PrintPreview } from "@/components/cards/PrintPreview";
 import { PlanCards } from "@/components/site/PlanCards";
 import { SiteFooter, SiteHeader } from "@/components/site/chrome";
 import { TemplateCover } from "@/components/site/TemplateCover";
 import { ButtonLink } from "@/components/ui/kit";
 import { occasions } from "@/lib/invitation/occasions";
 import { ritualInfo } from "@/lib/invitation/rituals";
-import { templates } from "@/lib/invitation/templates";
+import { createFromTemplate, templates } from "@/lib/invitation/templates";
 
 const features = [
   {
@@ -236,6 +237,27 @@ export default function Home() {
                   <p className="mt-3 text-[0.92rem] leading-relaxed text-paper/55">{f.text}</p>
                 </article>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Image and print */}
+        <section className="border-t border-paper/10 px-5 py-24 sm:px-8 lg:py-32">
+          <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-14 lg:grid-cols-[1fr_auto] [&>*]:min-w-0">
+            <div>
+              <SectionHeading label="Beyond the screen" title={<>One design. Web, image and <em className="text-flame">paper</em>.</>}>
+                Every web card also comes as an image to send on WhatsApp or post as a status. And for the guests who
+                should receive something in the hand, add a printed card in a shape that is anything but a rectangle. Its
+                back carries a QR code that opens your invitation.
+              </SectionHeading>
+              <ButtonLink href="/print-cards" variant="secondary" className="mt-9">
+                See the printed cards <ArrowUpRight size={16} />
+              </ButtonLink>
+            </div>
+            <div className="no-scrollbar -mx-5 flex items-end gap-5 overflow-x-auto px-5 pb-6 lg:mx-0 lg:px-0">
+              <PrintPreview design="thorana" data={createFromTemplate("mahanuwara")} width={190} />
+              <PrintPreview design="bulath-kole" data={createFromTemplate("bulath")} width={190} />
+              <PrintPreview design="araliya" data={createFromTemplate("nelum")} width={170} />
             </div>
           </div>
         </section>

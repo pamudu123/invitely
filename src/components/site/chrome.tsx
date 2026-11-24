@@ -21,6 +21,7 @@ export function SiteFooter() {
           <p className="label text-paper/40">Product</p>
           <ul className="mt-4 grid gap-2.5 text-sm text-paper/70">
             <li><Link href="/templates" className="hover:text-paper">Designs</Link></li>
+            <li><Link href="/print-cards" className="hover:text-paper">Printed cards</Link></li>
             <li><Link href="/#openings" className="hover:text-paper">Openings</Link></li>
             <li><Link href="/#features" className="hover:text-paper">Features</Link></li>
             <li><Link href="/pricing" className="hover:text-paper">Pricing</Link></li>

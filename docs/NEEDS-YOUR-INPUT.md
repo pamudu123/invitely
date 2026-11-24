@@ -35,3 +35,8 @@ Nothing here blocked the build. Each item has a working default in place. They a
 
 20. **Check-in link.** The door check-in page lives under the private manage link. Sharing it with an usher gives them full control of the card. A separate check-in only link is a small follow-up.
 21. **Unused file.** `src/lib/server/auth.ts` is the old email and password code. Nothing uses it now. I could not remove it from this session, so please delete it, or keep it if you want a sign in for a future admin panel.
+22. **Printed card add-on price.** I proposed LKR 1,500 or USD 7 per design in `src/lib/plans.ts`. It is shown on the pricing page but not charged or locked yet, like the plans.
+23. **Print colours.** The print PDF is RGB at 300 dpi. Most local digital printers accept that, but an offset printer may ask for CMYK. Colours can shift slightly on paper, so ask for a proof before a full run.
+24. **Shaped cards need cutting.** Arch, leaf, round and other shaped cards need a die or a laser cutter. The PDF includes the cut line, and there is a separate SVG. Please test one design with a real print shop before selling this widely, and tell me what they want changed.
+25. **Image export on iPhone.** Creating images was tested in Chrome. Safari on iPhone is known to be fussy with this technique. I added the usual workaround, but it needs a check on a real iPhone.
+26. **One guest at a time.** A card can be personalised for one guest per download. Creating a card for every guest in one go, as a zip, is a follow-up.

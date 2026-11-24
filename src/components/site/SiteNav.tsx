@@ -7,6 +7,7 @@ import { ButtonLink, Logo } from "@/components/ui/kit";
 
 const links = [
   { href: "/templates", label: "Designs" },
+  { href: "/print-cards", label: "Printed cards" },
   { href: "/#openings", label: "Openings" },
   { href: "/#features", label: "Features" },
   { href: "/pricing", label: "Pricing" },
