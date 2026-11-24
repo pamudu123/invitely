@@ -70,11 +70,13 @@ export const getUser = cache(async (): Promise<SessionUser | null> => {
   if (!token) return null;
   const c = await db();
   const res = await c.execute({
-    sql: "SELECT u.id, u.email, u.name, s.expires_at FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.id = ?",
+    // Expiry is checked by the database, so rendering never depends on the server clock.
+    sql: `SELECT u.id, u.email, u.name FROM sessions s JOIN users u ON u.id = s.user_id
+          WHERE s.id = ? AND s.expires_at > CAST(strftime('%s', 'now') AS INTEGER) * 1000`,
     args: [hashToken(token)],
   });
   const row = res.rows[0];
-  if (!row || Number(row.expires_at) < Date.now()) return null;
+  if (!row) return null;
   return { id: String(row.id), email: String(row.email), name: String(row.name) };
 });
 

@@ -157,7 +157,7 @@ function DangerZone({ id, title }: { id: string; title: string }) {
 
 export function SettingsPanel({ id, slug, title }: { id: string; slug: string; title: string }) {
   return (
-    <div className="grid gap-5">
+    <div className="grid grid-cols-1 gap-5">
       <SlugForm id={id} slug={slug} />
       <DangerZone id={id} title={title} />
     </div>

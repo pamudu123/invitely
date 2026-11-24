@@ -134,8 +134,8 @@ function Overview({ inv, guests, rsvps, now }: { inv: InvitationRecord; guests: 
   const published = inv.status === "published";
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto]">
-      <div className="grid min-w-0 content-start gap-5">
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_auto]">
+      <div className="grid min-w-0 grid-cols-1 content-start gap-5">
         <dl className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
           <Stat label="Attending parties" value={String(attending.length)} hint={plural(rsvps.length, "reply so far", "replies so far")} />
           <Stat label="Total headcount" value={String(headcount)} hint="Guests in attending parties" />
@@ -186,12 +186,11 @@ async function load(id: string, userId: string) {
 async function Manage({ params, searchParams }: Props) {
   await connection();
   const [{ id }, sp] = await Promise.all([params, searchParams]);
-  const user = await requireUser(`/dashboard/${id}`);
+  const tab: TabId = tabIds.find((t) => t === sp.tab) ?? "overview";
+  const user = await requireUser(tab === "overview" ? `/dashboard/${id}` : `/dashboard/${id}?tab=${tab}`);
   const loaded = await load(id, user.id);
   if (!loaded) notFound();
   const { inv, guests, rsvps, now } = loaded;
-
-  const tab: TabId = tabIds.find((t) => t === sp.tab) ?? "overview";
 
   const published = inv.status === "published";
   const occasion = getOccasion(inv.data.occasion);

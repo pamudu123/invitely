@@ -74,7 +74,7 @@ export function SharePanel({
   const message = `You are invited to celebrate with ${title}. Open the invitation here: ${link}`;
 
   return (
-    <div className="grid gap-5">
+    <div className="grid grid-cols-1 gap-5">
       {!published ? (
         <Card className="flex flex-col gap-4 border-flame/25 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
           <div>
@@ -89,8 +89,8 @@ export function SharePanel({
         </Card>
       ) : null}
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_22rem]">
-        <div className="grid content-start gap-5">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_22rem]">
+        <div className="grid min-w-0 grid-cols-1 content-start gap-5">
           <Card className="p-5 sm:p-6">
             <p className="label text-paper/50">Public link</p>
             <h2 className="display mt-3 text-3xl">One link for everyone</h2>

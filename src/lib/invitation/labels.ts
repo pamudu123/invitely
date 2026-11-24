@@ -97,7 +97,7 @@ const si: Labels = {
   rsvpClosed: "පිළිතුරු භාර ගැනීම අවසන්.",
   music: "සංගීතය",
   language: "භාෂාව",
-  in: "තුළ",
+  in: "තව",
 };
 
 const ta: Labels = {
@@ -144,7 +144,7 @@ const ta: Labels = {
   rsvpClosed: "பதில்கள் இப்போது மூடப்பட்டுள்ளன.",
   music: "இசை",
   language: "மொழி",
-  in: "இல்",
+  in: "இன்னும்",
 };
 
 const all: Record<LanguageId, Labels> = { en, si, ta };

@@ -126,7 +126,8 @@ export function Studio({ saved, templateId, occasion, resume }: StudioProps) {
     if (draft && (resume || !tpl || draft.occasion === wanted)) {
       next = tpl && draft.templateId !== tpl.id && !resume ? applyTemplateDesign(draft, tpl.id) : draft;
     } else {
-      next = createFromTemplate(tpl?.id ?? "pahana", occasion, todayPlus(0));
+      // Sample hashtags belong to the sample names, so a fresh draft starts without one.
+      next = { ...createFromTemplate(tpl?.id ?? "pahana", occasion, todayPlus(0)), hashtag: "" };
     }
     // The draft lives in localStorage, so it can only be read after hydration.
     // eslint-disable-next-line react-hooks/set-state-in-effect

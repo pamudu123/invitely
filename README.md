@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Invitely
 
-## Getting Started
+Living digital invitations that open like a ceremony. Guests light the lamp, break the seal or draw the curtains, and your day unfolds on their phone.
 
-First, run the development server:
+- Product plan and market research: [`docs/PLAN.md`](docs/PLAN.md)
+- Open decisions and things that need the owner: [`docs/NEEDS-YOUR-INPUT.md`](docs/NEEDS-YOUR-INPUT.md)
+
+## Run it
+
+```bash
+npm install
+```
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000. No configuration is needed for development. Data is stored in a local SQLite file at `.data/invitely.db`, created on first use.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Where to look
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Page | Path |
+| --- | --- |
+| Landing page with a live demo | `/` |
+| Designs gallery | `/templates` |
+| One design, live | `/templates/pahana` |
+| Full screen demo invitation | `/demo/pahana` |
+| Design studio, no account needed | `/studio/new?template=pahana` |
+| Pricing | `/pricing` |
+| Host dashboard | `/dashboard` |
+| A published invitation | `/i/your-link` |
+| A guest's personal link | `/i/your-link?g=token` |
 
-## Learn More
+## Configuration
 
-To learn more about Next.js, take a look at the following resources:
+Copy `.env.example` to `.env.local` and fill in what you need. Everything is optional in development.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Variable | Purpose |
+| --- | --- |
+| `DATABASE_URL` | libSQL database URL, for example a Turso database. Defaults to a local file |
+| `DATABASE_AUTH_TOKEN` | Token for the hosted database |
+| `NEXT_PUBLIC_SITE_URL` | Public address of the site, used in share links |
+| `PAYMENTS_MODE` | `off` (default, publishing is free) or `manual` (hold until payment is confirmed) |
+| `ADMIN_EMAILS` | Comma separated emails treated as admins |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Scripts
 
-## Deploy on Vercel
+```bash
+npm run build
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run lint
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Stack
+
+Next.js 16 (App Router with Cache Components), React 19, TypeScript, Tailwind CSS 4, libSQL. Ornaments are SVG drawn in code and the soundscapes are synthesised in the browser, so the project ships no licensed media.
+
+## Changing things
+
+- Prices and plan features: `src/lib/plans.ts`
+- Designs: `src/lib/invitation/templates.ts`
+- Colours and lettering: `src/lib/invitation/theme.ts`
+- Occasions and default wording: `src/lib/invitation/occasions.ts`
+- Sinhala and Tamil labels: `src/lib/invitation/labels.ts`
+- Ornaments: `src/components/invitation/ornaments.tsx`
+- Openings: `src/components/invitation/rituals/`

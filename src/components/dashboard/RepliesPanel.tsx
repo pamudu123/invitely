@@ -116,7 +116,7 @@ export function RepliesPanel({
       </div>
 
       {shown.length ? (
-        <ul className="grid gap-3">
+        <ul className="grid grid-cols-1 gap-3">
           {shown.map((r) => (
             <li key={r.id}>
               <Card className="p-4 sm:p-5">
@@ -147,7 +147,7 @@ export function RepliesPanel({
                 </div>
 
                 {r.answer ? (
-                  <p className="mt-3 text-sm leading-relaxed text-paper/80">
+                  <p className="mt-3 break-words text-sm leading-relaxed text-paper/80 [overflow-wrap:anywhere]">
                     <span className="text-paper/45">{question || "Answer"}: </span>
                     {r.answer}
                   </p>
@@ -155,7 +155,7 @@ export function RepliesPanel({
 
                 {r.message ? (
                   <blockquote
-                    className={`mt-3 whitespace-pre-line break-words border-l-2 pl-3.5 font-serif text-[1.15rem] leading-snug ${
+                    className={`mt-3 whitespace-pre-line break-words border-l-2 [overflow-wrap:anywhere] pl-3.5 font-serif text-[1.15rem] leading-snug ${
                       r.hidden ? "border-paper/15 text-paper/40" : "border-flame/50 text-paper/90"
                     }`}
                   >

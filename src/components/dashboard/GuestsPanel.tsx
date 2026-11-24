@@ -178,8 +178,8 @@ export function GuestsPanel({
   };
 
   return (
-    <div className="grid gap-6">
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
+    <div className="grid grid-cols-1 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
         <div>
           <p className="label text-paper/50">Guest list</p>
           <h2 className="display mt-3 text-4xl">A link for every guest</h2>

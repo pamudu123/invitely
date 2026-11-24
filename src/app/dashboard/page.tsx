@@ -73,7 +73,7 @@ function InvitationCard({ inv }: { inv: InvitationSummary }) {
         <Count value={inv.views} label="Views" />
       </dl>
 
-      <div className="mt-5 flex flex-wrap gap-2 pt-1">
+      <div className="mt-auto flex flex-wrap gap-2 pt-6">
         <ButtonLink href={`/dashboard/${inv.id}`} className="flex-1 !px-4">
           Manage
         </ButtonLink>
@@ -121,9 +121,9 @@ async function Invitations() {
   const list = await listInvitations(user.id);
   if (!list.length) return <EmptyState />;
   return (
-    <ul className="grid gap-4 sm:gap-5 md:grid-cols-2 xl:grid-cols-3">
+    <ul className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 xl:grid-cols-3">
       {list.map((inv) => (
-        <li key={inv.id} className="grid">
+        <li key={inv.id} className="grid grid-cols-1">
           <InvitationCard inv={inv} />
         </li>
       ))}

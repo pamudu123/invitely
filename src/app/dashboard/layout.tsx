@@ -5,7 +5,7 @@ import { connection } from "next/server";
 import { Suspense } from "react";
 import { logoutAction } from "@/app/actions/auth";
 import { ButtonLink, Logo } from "@/components/ui/kit";
-import { requireUser } from "@/lib/server/auth";
+import { getUser } from "@/lib/server/auth";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -15,7 +15,10 @@ export const metadata: Metadata = {
 async function UserMenu() {
   // The session check reads the clock, so it has to wait for a real request.
   await connection();
-  const user = await requireUser("/dashboard");
+  // Each page sends signed out visitors to login with its own return address,
+  // so the bar stays quiet instead of redirecting to the dashboard home.
+  const user = await getUser();
+  if (!user) return null;
   const initial = user.name.trim().charAt(0).toUpperCase() || "?";
   return (
     <>
@@ -64,7 +67,7 @@ export default function DashboardLayout({ children }: LayoutProps<"/dashboard">)
             <Logo />
           </Link>
           <div className="flex min-w-0 items-center gap-2 sm:gap-3">
-            <ButtonLink href="/templates" className="!px-4 sm:!px-5">
+            <ButtonLink href="/templates" aria-label="New invitation" className="!px-4 sm:!px-5">
               <Plus size={17} strokeWidth={1.5} aria-hidden />
               <span>
                 New<span className="hidden sm:inline"> invitation</span>
