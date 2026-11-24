@@ -1,6 +1,7 @@
 "use client";
 
 import { CalendarPlus, MapPin, Phone, X } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import type { Labels } from "@/lib/invitation/labels";
 import { displayNames, initials } from "@/lib/invitation/templates";
@@ -596,9 +597,9 @@ export function Footer({ data, labels, lang, branding }: SectionProps & { brandi
       <p className="inv-kicker mt-4 opacity-70" suppressHydrationWarning>{formatLongDate(data.date, lang)}</p>
       {data.hashtag ? <p className="inv-serif mt-5 text-lg italic" style={{ color: "var(--inv-accent)" }}>{data.hashtag}</p> : null}
       {branding ? (
-        <a href="/" className="mt-12 inline-block text-[0.62rem] uppercase tracking-[0.22em] no-underline opacity-45 transition-opacity hover:opacity-80" style={{ color: "inherit", fontFamily: "var(--font-mono), monospace" }}>
+        <Link href="/" prefetch={false} className="mt-12 inline-block text-[0.62rem] uppercase tracking-[0.22em] no-underline opacity-45 transition-opacity hover:opacity-80" style={{ color: "inherit", fontFamily: "var(--font-mono), monospace" }}>
           {labels.madeWith} Invitely
-        </a>
+        </Link>
       ) : null}
     </footer>
   );

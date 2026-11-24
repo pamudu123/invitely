@@ -95,6 +95,23 @@ export function InvitationView({
     };
   }, [embedded, coverGone]);
 
+  // Match the phone's browser bar to the invitation (full page mode only).
+  const barColor = coverGone ? palette.bg : palette.deep;
+  useEffect(() => {
+    if (embedded) return;
+    let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.name = "theme-color";
+      document.head.appendChild(meta);
+    }
+    const prev = meta.content;
+    meta.content = barColor;
+    return () => {
+      if (meta) meta.content = prev;
+    };
+  }, [embedded, barColor]);
+
   const startMusic = music.start;
   const handleOpen = useCallback(() => {
     setOpened(true);

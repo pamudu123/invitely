@@ -158,24 +158,23 @@ export interface AmbientControls {
 export function useAmbient(music: MusicId, url?: string): AmbientControls {
   const engine = useRef<AmbientEngine | null>(null);
   const audio = useRef<HTMLAudioElement | null>(null);
-  const [playing, setPlaying] = useState(false);
+  // Remember which soundtrack is playing, so switching soundtrack reads as stopped.
+  const track = `${music}|${url ?? ""}`;
+  const [playingTrack, setPlayingTrack] = useState<string | null>(null);
+  const playing = playingTrack === track;
   const available = music !== "none" && (music !== "custom" || Boolean(url));
 
-  const teardown = useCallback(() => {
-    engine.current?.dispose();
-    engine.current = null;
-    if (audio.current) {
-      audio.current.pause();
-      audio.current = null;
-    }
-  }, []);
-
   useEffect(() => {
-    // The soundtrack changed, so drop whatever was playing.
-    teardown();
-    setPlaying(false);
-    return teardown;
-  }, [music, url, teardown]);
+    // The soundtrack changed or the view unmounted: drop whatever was playing.
+    return () => {
+      engine.current?.dispose();
+      engine.current = null;
+      if (audio.current) {
+        audio.current.pause();
+        audio.current = null;
+      }
+    };
+  }, [track]);
 
   const start = useCallback(() => {
     if (!available) return;
@@ -186,21 +185,21 @@ export function useAmbient(music: MusicId, url?: string): AmbientControls {
           audio.current.loop = true;
           audio.current.volume = 0.6;
         }
-        void audio.current.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+        void audio.current.play().then(() => setPlayingTrack(track)).catch(() => setPlayingTrack(null));
         return;
       }
       if (!engine.current) engine.current = new AmbientEngine(music as Mood);
       engine.current.start();
-      setPlaying(true);
+      setPlayingTrack(track);
     } catch {
-      setPlaying(false);
+      setPlayingTrack(null);
     }
-  }, [available, music, url]);
+  }, [available, music, url, track]);
 
   const stop = useCallback(() => {
     engine.current?.stop();
     audio.current?.pause();
-    setPlaying(false);
+    setPlayingTrack(null);
   }, []);
 
   useEffect(() => {
