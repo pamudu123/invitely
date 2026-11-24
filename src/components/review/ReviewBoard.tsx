@@ -34,6 +34,12 @@ export function sectionName(id: string): string {
   return sectionLabels[id as SectionId]?.label ?? id;
 }
 
+/** Pin colours: new notes are royal blue, sent ones lilac, finished ones mint. */
+function pinTone(p: PinView, kind: "new" | "sent") {
+  if (p.done) return { background: "#a9fbe4", color: "#0f1c5c" };
+  return kind === "sent" ? { background: "#d6ccff", color: "#0f1c5c" } : { background: "#2740c9", color: "#ffffff" };
+}
+
 function usePhoneWidth() {
   const [w, setW] = useState(320);
   useEffect(() => {
@@ -158,10 +164,9 @@ export function ReviewBoard({
           alignItems: "center",
           justifyContent: "center",
           font: "600 15px/1 system-ui, sans-serif",
-          color: "#151b1a",
-          background: p.done ? "#63c7b6" : kind === "sent" ? "#f4eddf" : "#e8b565",
-          border: on ? "3px solid #ffffff" : "2px solid rgba(21,27,26,0.75)",
-          boxShadow: "0 4px 14px rgba(0,0,0,0.45)",
+          ...pinTone(p, kind),
+          border: on ? "3px solid #a9fbe4" : `2px solid ${kind === "new" && !p.done ? "#ffffff" : "#0f1c5c"}`,
+          boxShadow: "0 0 0 1px rgba(15,28,92,0.5), 0 4px 14px rgba(15,28,92,0.45)",
           cursor: "pointer",
         }}
       >
@@ -174,11 +179,11 @@ export function ReviewBoard({
 
   const activePin = pins.find((p) => p.id === active);
   const editor = activePin ? (
-    <div className="grid gap-2">
-      <p className="label text-flame">
+    <div className="grid grid-cols-1 gap-2">
+      <p className="label text-brand">
         Note {sent.length + pins.indexOf(activePin) + 1} · {sectionName(activePin.section)}
       </p>
-      {activePin.context ? <p className="truncate text-[0.8rem] italic text-paper/45">“{activePin.context}”</p> : null}
+      {activePin.context ? <p className="truncate text-[0.8rem] italic text-fg/85">“{activePin.context}”</p> : null}
       <Textarea
         rows={3}
         autoFocus
@@ -197,26 +202,26 @@ export function ReviewBoard({
   ) : null;
 
   const pinRow = (p: PinView, n: number, kind: "new" | "sent") => (
-    <li key={p.id} className="flex gap-3 rounded-xl border border-paper/10 bg-night-3/40 p-3">
+    <li key={p.id} className="flex gap-3 rounded-xl border border-fg/10 bg-page-3/40 p-3">
       <span
-        className="grid size-7 shrink-0 place-items-center rounded-full text-[0.8rem] font-semibold text-night"
-        style={{ background: p.done ? "#63c7b6" : kind === "sent" ? "#f4eddf" : "#e8b565" }}
+        className="grid size-7 shrink-0 place-items-center rounded-full text-[0.8rem] font-semibold"
+        style={pinTone(p, kind)}
       >
         {p.done ? "✓" : n}
       </span>
       <div className="min-w-0 flex-1">
-        <p className="label !text-[0.58rem] text-paper/45">{sectionName(p.section)}</p>
-        {p.context ? <p className="truncate text-[0.76rem] italic text-paper/40">“{p.context}”</p> : null}
-        <p className="mt-0.5 whitespace-pre-wrap text-[0.9rem] leading-snug text-paper/85">{p.comment || "Tap to write what should change"}</p>
+        <p className="label !text-[0.75rem] text-fg/85">{sectionName(p.section)}</p>
+        {p.context ? <p className="truncate text-[0.76rem] italic text-fg/85">“{p.context}”</p> : null}
+        <p className="mt-0.5 whitespace-pre-wrap text-[0.9rem] leading-snug text-fg/90">{p.comment || "Tap to write what should change"}</p>
       </div>
       {kind === "new" ? (
-        <button type="button" onClick={() => setActive(p.id)} className="shrink-0 self-start text-[0.78rem] text-flame hover:underline">Edit</button>
+        <button type="button" onClick={() => setActive(p.id)} className="shrink-0 self-start text-[0.78rem] text-brand hover:underline">Edit</button>
       ) : mode === "team" && teamRound ? (
         <button
           type="button"
           aria-label={p.done ? "Mark as not done" : "Mark as done"}
           onClick={() => start(() => pinDoneAction(teamRound.id, p.id, !p.done))}
-          className={`grid size-8 shrink-0 place-items-center self-start rounded-lg border ${p.done ? "border-teal bg-teal/15 text-teal" : "border-paper/20 text-paper/40"}`}
+          className={`grid size-8 shrink-0 place-items-center self-start rounded-lg border ${p.done ? "border-aqua bg-aqua/15 text-aqua" : "border-fg/50 text-fg/85"}`}
         >
           <Check size={15} />
         </button>
@@ -229,8 +234,8 @@ export function ReviewBoard({
       {/* The card */}
       <div className="flex flex-col items-center">
         {canPin ? (
-          <p className="mb-4 flex items-center gap-2 text-sm text-paper/60">
-            <MapPin size={15} className="text-flame" /> Tap anywhere on your card to mark a change
+          <p className="mb-4 flex items-center gap-2 text-sm text-fg/85">
+            <MapPin size={15} className="text-brand" /> Tap anywhere on your card to mark a change
           </p>
         ) : null}
         <div ref={setRoot} onClickCapture={place} style={{ cursor: canPin ? "crosshair" : "default" }}>
@@ -243,13 +248,13 @@ export function ReviewBoard({
       </div>
 
       {/* Notes */}
-      <div className="grid content-start gap-5">
+      <div className="grid grid-cols-1 content-start gap-5">
         {mode === "host" && ready ? (
-          <Card className="!border-teal/40 bg-teal/5 p-5">
-            <p className="label text-teal">Ready for you to check</p>
+          <Card className="!border-aqua/40 bg-aqua/5 p-5">
+            <p className="label text-aqua">Ready for you to check</p>
             <h2 className="mt-2 font-serif text-2xl">We have made your changes.</h2>
-            {ready.reply ? <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-paper/70">{ready.reply}</p> : null}
-            <p className="mt-3 text-sm text-paper/55">Look through the card on the left. If something is still not right, mark it and send it again.</p>
+            {ready.reply ? <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-fg/90">{ready.reply}</p> : null}
+            <p className="mt-3 text-sm text-fg/85">Look through the card on the left. If something is still not right, mark it and send it again.</p>
             <Button className="mt-4 w-full" disabled={pending} onClick={() => start(async () => { await confirmCardAction(token); })}>
               <Check size={16} /> It is perfect, confirm my card
             </Button>
@@ -257,49 +262,49 @@ export function ReviewBoard({
         ) : null}
 
         {mode === "host" && confirmed ? (
-          <Card className="!border-teal/40 bg-teal/5 p-5">
-            <p className="label text-teal">Confirmed</p>
+          <Card className="!border-aqua/40 bg-aqua/5 p-5">
+            <p className="label text-aqua">Confirmed</p>
             <h2 className="mt-2 font-serif text-2xl">Your card is final.</h2>
-            <p className="mt-2 text-sm leading-relaxed text-paper/60">You confirmed this card, so review requests are closed. You can still edit it yourself in the studio.</p>
+            <p className="mt-2 text-sm leading-relaxed text-fg/85">You confirmed this card, so review requests are closed. You can still edit it yourself in the studio.</p>
           </Card>
         ) : null}
 
         {mode === "host" && status === "requested" && !pins.length ? (
           <Card className="p-5">
-            <p className="label text-flame">With our team</p>
-            <p className="mt-2 text-sm leading-relaxed text-paper/65">Your notes are with us. You can add more below, and they will join the same list.</p>
+            <p className="label text-brand">With our team</p>
+            <p className="mt-2 text-sm leading-relaxed text-fg/90">Your notes are with us. You can add more below, and they will join the same list.</p>
           </Card>
         ) : null}
 
         {editor ? <Card className="hidden p-4 lg:block">{editor}</Card> : null}
 
         {canPin ? (
-          <Card className="grid gap-4 p-5">
+          <Card className="grid grid-cols-1 gap-4 p-5">
             <div>
-              <p className="label text-flame">Your notes</p>
-              <p className="mt-1.5 text-sm text-paper/55">
+              <p className="label text-brand">Your notes</p>
+              <p className="mt-1.5 text-sm text-fg/85">
                 {pins.length ? "Check your notes, then send them to our team." : "Nothing marked yet. Tap the card where you want something changed."}
               </p>
             </div>
-            {pins.length ? <ul className="grid gap-2">{pins.map((p, i) => pinRow(p, sent.length + i + 1, "new"))}</ul> : null}
+            {pins.length ? <ul className="grid grid-cols-1 gap-2">{pins.map((p, i) => pinRow(p, sent.length + i + 1, "new"))}</ul> : null}
             <Textarea rows={3} value={note} maxLength={1500} onChange={(e) => setNote(e.target.value)} placeholder="Anything else? For example: please make the whole card feel more traditional." aria-label="General note" />
-            {error ? <p role="alert" className="text-sm text-red-300">{error}</p> : null}
-            {message ? <p role="status" className="text-sm text-teal">{message}</p> : null}
+            {error ? <p role="alert" className="text-sm text-red-700">{error}</p> : null}
+            {message ? <p role="status" className="text-sm text-aqua">{message}</p> : null}
             <Button onClick={send} disabled={pending || (!pins.some((p) => p.comment.trim()) && !note.trim())}>
               {pending ? "Sending…" : "Send for review"}
             </Button>
-            <p className="text-[0.78rem] leading-snug text-paper/40">You can send for review as many times as you need until you confirm the card.</p>
+            <p className="text-[0.78rem] leading-snug text-fg/85">You can send for review as many times as you need until you confirm the card.</p>
           </Card>
         ) : null}
 
         {mode === "team" && teamRound ? (
-          <Card className="grid gap-4 p-5">
+          <Card className="grid grid-cols-1 gap-4 p-5">
             <div className="flex items-center justify-between gap-3">
-              <p className="label text-flame">Round {teamRound.round} · {teamRound.status === "open" ? "to do" : teamRound.status}</p>
-              {studioHref ? <a href={studioHref} target="_blank" rel="noopener" className="text-sm text-flame underline-offset-4 hover:underline">Open in studio</a> : null}
+              <p className="label text-brand">Round {teamRound.round} · {teamRound.status === "open" ? "to do" : teamRound.status}</p>
+              {studioHref ? <a href={studioHref} target="_blank" rel="noopener" className="text-sm text-brand underline-offset-4 hover:underline">Open in studio</a> : null}
             </div>
-            {teamRound.note ? <p className="whitespace-pre-wrap rounded-xl border border-paper/10 bg-night-3/40 p-3 text-sm text-paper/80">{teamRound.note}</p> : null}
-            {teamRound.pins.length ? <ul className="grid gap-2">{teamRound.pins.map((p, i) => pinRow(p, i + 1, "sent"))}</ul> : <p className="text-sm text-paper/50">No pins in this round.</p>}
+            {teamRound.note ? <p className="whitespace-pre-wrap rounded-xl border border-fg/10 bg-page-3/40 p-3 text-sm text-fg/90">{teamRound.note}</p> : null}
+            {teamRound.pins.length ? <ul className="grid grid-cols-1 gap-2">{teamRound.pins.map((p, i) => pinRow(p, i + 1, "sent"))}</ul> : <p className="text-sm text-fg/85">No pins in this round.</p>}
             {teamRound.status === "open" ? (
               <>
                 <Textarea rows={3} value={reply} maxLength={1500} onChange={(e) => setReply(e.target.value)} placeholder="Message to the host, for example: All done. We also aligned the schedule times." aria-label="Reply to the host" />
@@ -308,27 +313,27 @@ export function ReviewBoard({
                 </Button>
               </>
             ) : teamRound.reply ? (
-              <p className="text-sm text-paper/55">Your reply: {teamRound.reply}</p>
+              <p className="text-sm text-fg/85">Your reply: {teamRound.reply}</p>
             ) : null}
           </Card>
         ) : null}
 
-        {mode === "team" && !teamRound ? <Card className="p-5 text-sm text-paper/55">This card has no review requests.</Card> : null}
+        {mode === "team" && !teamRound ? <Card className="p-5 text-sm text-fg/85">This card has no review requests.</Card> : null}
 
         {mode === "host" && open && open.pins.length ? (
-          <Card className="grid gap-3 p-5">
-            <p className="label text-paper/45">Already sent</p>
-            <ul className="grid gap-2">{open.pins.map((p, i) => pinRow(p, i + 1, "sent"))}</ul>
+          <Card className="grid grid-cols-1 gap-3 p-5">
+            <p className="label text-fg/85">Already sent</p>
+            <ul className="grid grid-cols-1 gap-2">{open.pins.map((p, i) => pinRow(p, i + 1, "sent"))}</ul>
           </Card>
         ) : null}
 
         {rounds.filter((r) => r.status === "closed").length ? (
-          <details className="rounded-2xl border border-paper/10 bg-night-2 p-5">
-            <summary className="label cursor-pointer text-paper/45">Earlier rounds</summary>
+          <details className="rounded-2xl border border-fg/10 bg-page-2 p-5">
+            <summary className="label cursor-pointer text-fg/85">Earlier rounds</summary>
             <ul className="mt-3 grid gap-3">
               {rounds.filter((r) => r.status === "closed").map((r) => (
-                <li key={r.id} className="text-sm text-paper/60">
-                  <span className="text-paper/80">Round {r.round}</span>: {r.pins.length} notes{r.reply ? `. Reply: ${r.reply}` : ""}
+                <li key={r.id} className="text-sm text-fg/85">
+                  <span className="text-fg/90">Round {r.round}</span>: {r.pins.length} notes{r.reply ? `. Reply: ${r.reply}` : ""}
                 </li>
               ))}
             </ul>
@@ -338,7 +343,7 @@ export function ReviewBoard({
 
       {/* Phone: the comment box rises from the bottom when a pin is dropped */}
       {editor ? (
-        <div className="fixed inset-x-0 bottom-0 z-[70] rounded-t-3xl border-t border-paper/15 bg-night-2 p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-[0_-20px_60px_rgba(0,0,0,0.6)] lg:hidden">
+        <div className="fixed inset-x-0 bottom-0 z-[70] rounded-t-3xl border-t border-fg/15 bg-page-2 p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-[0_-20px_60px_rgba(15,28,92,0.35)] lg:hidden">
           {editor}
         </div>
       ) : null}

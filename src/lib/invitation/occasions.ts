@@ -20,7 +20,7 @@ export interface OccasionDef {
 export const occasions: OccasionDef[] = [
   {
     id: "wedding", label: "Wedding", plural: "Weddings",
-    blurb: "Poruwa ceremonies, church weddings, nikah, Hindu weddings and receptions.",
+    blurb: "Ceremonies, church and garden weddings, and receptions.",
     hosts: "couple", name1Label: "Partner one", name2Label: "Partner two",
     kicker: "Together with their families",
     subline: "invite you to celebrate their wedding",
@@ -177,7 +177,7 @@ export function getOccasion(id: OccasionId): OccasionDef {
 export const sectionLabels: Record<SectionId, { label: string; hint: string }> = {
   message: { label: "Invitation message", hint: "Your personal words and hosts line" },
   countdown: { label: "Countdown", hint: "Live timer to the big moment" },
-  nekath: { label: "Auspicious times", hint: "Nekath or muhurtham with their own countdowns" },
+  nekath: { label: "Auspicious times", hint: "Key ceremony times with their own countdowns" },
   schedule: { label: "Schedule", hint: "Order of the day" },
   venue: { label: "Venue & map", hint: "Directions and add to calendar" },
   story: { label: "Our story", hint: "A short timeline of your journey" },

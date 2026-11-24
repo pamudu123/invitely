@@ -33,7 +33,7 @@ export function TemplateGallery({ items, initial }: { items: GalleryItem[]; init
 
   return (
     <>
-      <div className="no-scrollbar sticky top-16 z-30 -mx-5 flex gap-2 overflow-x-auto border-b border-paper/10 bg-night/80 px-5 py-3 backdrop-blur-xl sm:-mx-8 sm:px-8">
+      <div className="no-scrollbar sticky top-16 z-30 -mx-5 flex gap-2 overflow-x-auto border-b border-fg/10 bg-page/80 px-5 py-3 backdrop-blur-xl sm:-mx-8 sm:px-8">
         {[{ id: "all" as const, label: "All designs" }, ...available.map((o) => ({ id: o.id, label: o.plural }))].map((o) => (
           <button
             key={o.id}
@@ -41,7 +41,7 @@ export function TemplateGallery({ items, initial }: { items: GalleryItem[]; init
             aria-pressed={filter === o.id}
             onClick={() => choose(o.id)}
             className={`h-10 shrink-0 rounded-full border px-4 text-[0.86rem] transition-colors ${
-              filter === o.id ? "border-flame bg-flame text-night" : "border-paper/15 text-paper/70 hover:border-paper/40"
+              filter === o.id ? "border-brand bg-brand text-on-brand" : "border-fg/15 text-fg/90 hover:border-fg/40"
             }`}
           >
             {o.label}
@@ -54,17 +54,17 @@ export function TemplateGallery({ items, initial }: { items: GalleryItem[]; init
           const occasionParam = filter !== "all" && item.occasion !== filter ? `&occasion=${filter}` : "";
           return (
             <li key={item.id} className="group flex flex-col">
-              <Link href={`/templates/${item.id}`} className="block overflow-hidden rounded-[1.4rem] border border-paper/10 transition-transform duration-500 ease-out-soft group-hover:-translate-y-1.5" aria-label={`${item.name} live demo`}>
+              <Link href={`/templates/${item.id}`} className="block overflow-hidden rounded-[1.4rem] border border-fg/10 transition-transform duration-500 ease-out-soft group-hover:-translate-y-1.5" aria-label={`${item.name} live demo`}>
                 {item.cover}
               </Link>
               <div className="mt-4 flex items-baseline justify-between gap-2">
                 <h2 className="font-serif text-[1.6rem] leading-none">{item.name}</h2>
-                <span className="label hidden text-paper/40 sm:inline">{item.opening}</span>
+                <span className="label hidden text-fg/85 sm:inline">{item.opening}</span>
               </div>
-              <p className="mt-1.5 text-[0.84rem] text-paper/50">{item.meaning}</p>
+              <p className="mt-1.5 text-[0.84rem] text-fg/85">{item.meaning}</p>
               <p className="mt-2 hidden flex-wrap gap-1.5 sm:flex">
                 {item.tags.map((t) => (
-                  <span key={t} className="rounded-full border border-paper/12 px-2.5 py-0.5 text-[0.68rem] text-paper/55">{t}</span>
+                  <span key={t} className="rounded-full border border-fg/12 px-2.5 py-0.5 text-[0.75rem] text-fg/85">{t}</span>
                 ))}
               </p>
               <div className="mt-4 grid gap-2 sm:grid-cols-2">

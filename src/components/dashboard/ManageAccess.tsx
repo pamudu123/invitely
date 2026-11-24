@@ -56,22 +56,22 @@ export function ManageAccess({
   };
 
   return (
-    <Card className={`p-5 sm:p-6 ${highlight ? "!border-flame/50 bg-gradient-to-b from-flame/10 to-transparent" : ""}`}>
+    <Card className={`p-5 sm:p-6 ${highlight ? "!border-brand/50 bg-gradient-to-b from-brand/10 to-transparent" : ""}`}>
       <div className="flex items-start gap-3">
-        <span className="grid size-11 shrink-0 place-items-center rounded-full border border-flame/30 bg-flame/10 text-flame">
+        <span className="grid size-11 shrink-0 place-items-center rounded-full border border-brand/30 bg-brand/10 text-brand">
           <ShieldCheck size={19} strokeWidth={1.5} aria-hidden />
         </span>
         <div className="min-w-0">
-          <p className="label text-flame">{highlight ? "Save this first" : "Your way back in"}</p>
+          <p className="label text-brand">{highlight ? "Save this first" : "Your way back in"}</p>
           <h2 className="mt-1.5 font-serif text-2xl leading-tight">Your private manage link</h2>
-          <p className="mt-2 text-sm leading-relaxed text-paper/60">
+          <p className="mt-2 text-sm leading-relaxed text-fg/85">
             There is no account or password. This link is the key to your card, so keep it to yourself. Anyone who has it can
             edit the card and see your guest list.
           </p>
         </div>
       </div>
 
-      <div className="mt-5 truncate rounded-xl border border-paper/10 bg-night-3/60 px-3.5 py-3 font-mono text-[0.78rem] text-paper/70" suppressHydrationWarning>
+      <div className="mt-5 truncate rounded-xl border border-fg/10 bg-page-3/60 px-3.5 py-3 font-mono text-[0.78rem] text-fg/90" suppressHydrationWarning>
         {link}
       </div>
       <div className="mt-3 flex flex-wrap gap-2">
@@ -86,14 +86,14 @@ export function ManageAccess({
         </a>
       </div>
 
-      <div className="mt-6 border-t border-paper/10 pt-5">
-        <div className="flex items-center gap-2 text-sm text-paper/80">
-          <KeyRound size={16} strokeWidth={1.5} aria-hidden className="text-flame" />
+      <div className="mt-6 border-t border-fg/10 pt-5">
+        <div className="flex items-center gap-2 text-sm text-fg/90">
+          <KeyRound size={16} strokeWidth={1.5} aria-hidden className="text-brand" />
           {hasPin ? "Edit PIN is set" : "No edit PIN yet"}
         </div>
-        <p className="mt-1.5 text-sm leading-relaxed text-paper/55">
+        <p className="mt-1.5 text-sm leading-relaxed text-fg/85">
           With the PIN you can open this card on any phone from My cards, using your invitation link
-          <span className="whitespace-nowrap font-mono text-[0.78rem] text-paper/70"> /i/{slug}</span>.
+          <span className="whitespace-nowrap font-mono text-[0.78rem] text-fg/90"> /i/{slug}</span>.
         </p>
         {editing ? (
           <form onSubmit={save} className="mt-3 flex gap-2">
@@ -111,12 +111,12 @@ export function ManageAccess({
             <Button type="submit" variant="secondary" disabled={pending}>{pending ? "Saving…" : "Save PIN"}</Button>
           </form>
         ) : (
-          <button type="button" onClick={() => setEditing(true)} className="mt-3 text-sm text-flame underline-offset-4 hover:underline">
+          <button type="button" onClick={() => setEditing(true)} className="mt-3 text-sm text-brand underline-offset-4 hover:underline">
             Change PIN
           </button>
         )}
-        {message ? <p className="mt-2 text-sm text-teal">{message}</p> : null}
-        {error ? <p role="alert" className="mt-2 text-sm text-red-300">{error}</p> : null}
+        {message ? <p className="mt-2 text-sm text-aqua">{message}</p> : null}
+        {error ? <p role="alert" className="mt-2 text-sm text-red-700">{error}</p> : null}
       </div>
     </Card>
   );

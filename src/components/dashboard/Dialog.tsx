@@ -37,7 +37,7 @@ export function Dialog({
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      className="m-0 mt-auto w-full max-w-full rounded-t-3xl border border-paper/10 bg-night-2 p-0 text-paper backdrop:bg-black/70 backdrop:backdrop-blur-sm sm:m-auto sm:max-w-md sm:rounded-2xl"
+      className="m-0 mt-auto w-full max-w-full rounded-t-3xl border border-fg/10 bg-page-2 p-0 text-fg backdrop:bg-black/70 backdrop:backdrop-blur-sm sm:m-auto sm:max-w-md sm:rounded-2xl"
     >
       {open ? (
         <div className="p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:p-6">
@@ -49,7 +49,7 @@ export function Dialog({
               type="button"
               onClick={onClose}
               aria-label="Close"
-              className="-mr-2 -mt-2 grid size-11 shrink-0 place-items-center rounded-full text-paper/60 transition-colors hover:bg-paper/5 hover:text-paper"
+              className="-mr-2 -mt-2 grid size-11 shrink-0 place-items-center rounded-full text-fg/85 transition-colors hover:bg-fg/5 hover:text-fg"
             >
               <X size={18} strokeWidth={1.5} aria-hidden />
             </button>
@@ -81,7 +81,7 @@ export function ConfirmDialog({
 }) {
   return (
     <Dialog open={open} onClose={onClose} title={title}>
-      <div className="text-sm leading-relaxed text-paper/65">{body}</div>
+      <div className="text-sm leading-relaxed text-fg/90">{body}</div>
       <div className="mt-6 flex flex-col-reverse gap-2.5 sm:flex-row sm:justify-end">
         <Button type="button" variant="ghost" onClick={onClose} disabled={pending}>
           Cancel

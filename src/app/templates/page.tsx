@@ -39,9 +39,9 @@ export default function TemplatesPage({ searchParams }: PageProps<"/templates">)
       <SiteHeader />
       <main className="px-5 pb-28 pt-28 sm:px-8 lg:pt-36">
         <div className="mx-auto max-w-7xl">
-          <p className="label text-flame">The collection</p>
+          <p className="label text-brand">The collection</p>
           <h1 className="display mt-5 max-w-4xl text-[clamp(3rem,9vw,6.5rem)]">Find the design that feels like you.</h1>
-          <p className="mb-10 mt-6 max-w-xl text-[1.05rem] leading-relaxed text-paper/60">
+          <p className="mb-10 mt-6 max-w-xl text-[1.05rem] leading-relaxed text-fg/85">
             Every design is shown exactly as it looks on a phone. Open the live demo, try the opening, then make it yours.
             Colours, lettering, ornaments and wording can all change.
           </p>

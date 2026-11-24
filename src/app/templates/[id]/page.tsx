@@ -36,7 +36,7 @@ async function Detail({ params }: { params: PageProps<"/templates/[id]">["params
 
   return (
     <div className="mx-auto max-w-6xl">
-      <Link href="/templates" className="label inline-flex items-center gap-2 text-paper/50 hover:text-paper">
+      <Link href="/templates" className="label inline-flex items-center gap-2 text-fg/85 hover:text-fg">
         <ArrowLeft size={14} /> All designs
       </Link>
       <div className="mt-6">
@@ -46,20 +46,20 @@ async function Detail({ params }: { params: PageProps<"/templates/[id]">["params
           initial={tpl.occasion}
           header={
             <header className="max-w-2xl">
-              <p className="label text-flame">{tpl.meaning}</p>
+              <p className="label text-brand">{tpl.meaning}</p>
               <h1 className="display mt-4 text-[clamp(3.4rem,11vw,7rem)]">{tpl.name}</h1>
-              <p className="mt-5 text-[1.08rem] leading-relaxed text-paper/65">{tpl.description}</p>
-              <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-paper/10 pt-6 sm:grid-cols-4">
+              <p className="mt-5 text-[1.08rem] leading-relaxed text-fg/90">{tpl.description}</p>
+              <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-fg/10 pt-6 sm:grid-cols-4">
                 {facts.map(([k, v]) => (
                   <div key={k}>
-                    <dt className="label text-paper/40">{k}</dt>
+                    <dt className="label text-fg/85">{k}</dt>
                     <dd className="mt-1.5 font-serif text-xl">{v}</dd>
                   </div>
                 ))}
               </dl>
               <div className="mt-6 flex gap-1.5" aria-hidden="true">
                 {[palette.bg, palette.accent, palette.deep, palette.ink].map((c, i) => (
-                  <span key={i} className="h-7 w-7 rounded-full border border-paper/20" style={{ background: c }} />
+                  <span key={i} className="h-7 w-7 rounded-full border border-fg/20" style={{ background: c }} />
                 ))}
               </div>
             </header>
@@ -75,7 +75,7 @@ export default function TemplatePage({ params }: PageProps<"/templates/[id]">) {
     <>
       <SiteHeader />
       <main className="px-5 pb-28 pt-24 sm:px-8 lg:pt-32">
-        <Suspense fallback={<div className="mx-auto h-[70vh] max-w-6xl animate-pulse rounded-3xl bg-paper/5" />}>
+        <Suspense fallback={<div className="mx-auto h-[70vh] max-w-6xl animate-pulse rounded-3xl bg-fg/5" />}>
           <Detail params={params} />
         </Suspense>
       </main>

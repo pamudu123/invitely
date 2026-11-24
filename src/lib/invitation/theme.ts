@@ -7,6 +7,13 @@ export interface PaletteDef extends Palette {
 }
 
 export const palettes: PaletteDef[] = [
+  { id: "frost-royal", label: "Frost Royal", bg: "#1A2C9E", surface: "#2438B4", ink: "#FFFFFF", accent: "#A9E9FF", deep: "#101C70", onDeep: "#E6F6FF", dark: true },
+  { id: "glacier", label: "Glacier", bg: "#E6F4FF", surface: "#F6FBFF", ink: "#12226E", accent: "#3B2FB8", deep: "#2740C9", onDeep: "#FFFFFF" },
+  { id: "amethyst-ice", label: "Amethyst Ice", bg: "#3D2AA8", surface: "#4A36BC", ink: "#FFFFFF", accent: "#B9F7E2", deep: "#281A78", onDeep: "#F0E9FF", dark: true },
+  { id: "lagoon-ice", label: "Lagoon Ice", bg: "#06505F", surface: "#0A6072", ink: "#FFFFFF", accent: "#A8F0F5", deep: "#043842", onDeep: "#E4FBFF", dark: true },
+  { id: "lilac-ice", label: "Lilac Ice", bg: "#DCD4FF", surface: "#EBE6FF", ink: "#24147A", accent: "#3426A8", deep: "#3D2AA8", onDeep: "#F3EFFF" },
+  { id: "aurora", label: "Aurora", bg: "#0F2473", surface: "#17307F", ink: "#EAF6FF", accent: "#5FF0C8", deep: "#081650", onDeep: "#EAF6FF", dark: true },
+  { id: "aqua-ice", label: "Aqua Ice", bg: "#CDF2F7", surface: "#E4FAFC", ink: "#0A2F5E", accent: "#2B2AA8", deep: "#0A4A6E", onDeep: "#E4FAFC" },
   { id: "ivory-brass", label: "Ivory & Brass", bg: "#F7F1E5", surface: "#FFFCF5", ink: "#2A2620", accent: "#A47B3C", deep: "#1F1B15", onDeep: "#F2E6CF" },
   { id: "peacock", label: "Peacock", bg: "#F2EEE2", surface: "#FBF8F0", ink: "#12302F", accent: "#B08A45", deep: "#0C3334", onDeep: "#EFE3C8" },
   { id: "kandyan", label: "Kandyan Maroon", bg: "#F8EFE1", surface: "#FFFAF0", ink: "#3B1416", accent: "#B4832B", deep: "#571A1F", onDeep: "#F6E2B8" },
@@ -41,7 +48,7 @@ export const palettes: PaletteDef[] = [
 ];
 
 export function getPalette(theme: ThemeConfig): Palette & { dark: boolean } {
-  const base = palettes.find((p) => p.id === theme.paletteId) ?? palettes[0];
+  const base = palettes.find((p) => p.id === theme.paletteId) ?? palettes.find((p) => p.id === "ivory-brass")!;
   const merged = { ...base, ...(theme.custom ?? {}) };
   return { ...merged, dark: isDark(merged.bg) };
 }

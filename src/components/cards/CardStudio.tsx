@@ -58,7 +58,7 @@ function Scaled({
     : undefined;
   return (
     <div ref={box} className="w-full" style={{ maxWidth: max }}>
-      <div className="relative" style={{ width, height: format.height * scale, filter: "drop-shadow(0 22px 30px rgba(0,0,0,0.65))" }}>
+      <div className="relative" style={{ width, height: format.height * scale, filter: "drop-shadow(0 20px 28px rgba(15,28,92,0.34))" }}>
         <div
           ref={refTo}
           className="absolute left-0 top-0 origin-top-left"
@@ -73,7 +73,7 @@ function Scaled({
 
 const chip = (active: boolean) =>
   `rounded-xl border px-2 py-2.5 text-center text-[0.8rem] transition-colors ${
-    active ? "border-flame bg-flame/10 text-paper shadow-[0_0_0_1px_var(--color-flame)]" : "border-paper/12 text-paper/70 hover:border-paper/35"
+    active ? "border-brand bg-brand/10 text-fg shadow-[0_0_0_1px_var(--color-brand)]" : "border-fg/40 bg-page-2 text-fg/90 hover:border-fg/70"
   }`;
 
 export function CardStudio({
@@ -210,19 +210,19 @@ export function CardStudio({
       {/* Choose a design. On a phone this sits above the preview as a swipeable row. */}
       <div className="grid grid-cols-1 content-start gap-5 lg:col-start-1 lg:row-start-1 [&>*]:min-w-0">
         {!published ? (
-          <p className="rounded-xl border border-flame/40 bg-flame/10 px-4 py-3 text-sm leading-relaxed text-paper/80">
+          <p className="rounded-xl border border-brand/40 bg-brand/10 px-4 py-3 text-sm leading-relaxed text-fg/90">
             Your web card is still a draft. Publish it before you {isPrint ? "print this, so the QR code" : "send this, so the link"} will open.
           </p>
         ) : null}
 
         <div>
-          <p className="label text-flame">{isPrint ? "Card design" : "Design"}</p>
+          <p className="label text-brand">{isPrint ? "Card design" : "Design"}</p>
           {isPrint ? (
             <div className="no-scrollbar -mx-4 mt-3 flex gap-2 overflow-x-auto px-4 lg:mx-0 lg:grid lg:grid-cols-2 lg:px-0">
               {printDesigns.map((d) => (
                 <button key={d.id} type="button" onClick={() => { setDesignId(d.id); setFormatId(""); }} aria-pressed={designId === d.id} className={`${chip(designId === d.id)} w-36 shrink-0 !px-3 !text-left lg:w-auto`}>
-                  <span className="block text-paper">{d.name}</span>
-                  <span className="block text-[0.68rem] text-paper/45">{getShape(d.shape).label}</span>
+                  <span className="block text-fg">{d.name}</span>
+                  <span className="block text-[0.75rem] text-fg/85">{getShape(d.shape).label}</span>
                 </button>
               ))}
             </div>
@@ -235,7 +235,7 @@ export function CardStudio({
               ))}
             </div>
           )}
-          <p className="mt-2.5 text-[0.82rem] leading-snug text-paper/50">
+          <p className="mt-2.5 text-[0.82rem] leading-snug text-fg/85">
             {isPrint ? `${design.meaning}. ${design.description}` : getCardLayout(layout).description}
           </p>
         </div>
@@ -253,7 +253,7 @@ export function CardStudio({
             </Select>
           </Field>
         ) : isPrint ? (
-          <p className="text-[0.82rem] text-paper/55">Finished size: {format.label}</p>
+          <p className="text-[0.82rem] text-fg/85">Finished size: {format.label}</p>
         ) : null}
 
         {!isPrint ? (
@@ -296,7 +296,7 @@ export function CardStudio({
                   <Scissors size={15} strokeWidth={1.6} aria-hidden /> Cut line (SVG)
                 </Button>
               ) : null}
-              <p className="text-[0.78rem] leading-snug text-paper/45">
+              <p className="text-[0.78rem] leading-snug text-fg/85">
                 The PDF has the front and back at 300 dpi with a 3 mm bleed, then a page with the cut line as a vector outline.
                 {design.shape !== "rect" ? " Shaped cards need die or laser cutting, so ask your print shop before you order." : ""}
               </p>
@@ -309,26 +309,26 @@ export function CardStudio({
               <Button variant="secondary" onClick={() => void downloadPng(frontRef, format.id)} disabled={Boolean(busy)}>
                 <Download size={16} strokeWidth={1.6} aria-hidden /> {busy === format.id ? "Preparing…" : "Download PNG"}
               </Button>
-              <p className="text-[0.78rem] leading-snug text-paper/45">
+              <p className="text-[0.78rem] leading-snug text-fg/85">
                 A picture cannot be tapped, so send the invitation link in the same message.
               </p>
             </>
           )}
-          {note ? <p role="status" className="text-[0.8rem] text-flame">{note}</p> : null}
+          {note ? <p role="status" className="text-[0.8rem] text-brand">{note}</p> : null}
         </Card>
       </div>
 
       {/* Preview */}
       <div className={`grid content-start justify-items-center gap-6 lg:col-start-2 lg:row-span-2 lg:row-start-1 [&>*]:min-w-0 ${isPrint && !wide ? "grid-cols-2" : "grid-cols-1"}`}>
         <div className="grid w-full grid-cols-1 justify-items-center gap-3 [&>*]:min-w-0">
-          {isPrint ? <p className="label text-paper/45">Front</p> : null}
+          {isPrint ? <p className="label text-fg/85">Front</p> : null}
           <Scaled format={format} max={wide ? 640 : 360} shape={shape} refTo={frontRef}>
             <CardFace {...face} side="front" footer={isPrint ? "none" : footer} />
           </Scaled>
         </div>
         {isPrint ? (
           <div className="grid w-full grid-cols-1 justify-items-center gap-3 [&>*]:min-w-0">
-            <p className="label text-paper/45">Back</p>
+            <p className="label text-fg/85">Back</p>
             <Scaled format={format} max={wide ? 640 : 360} shape={shape} refTo={backRef}>
               <CardFace {...face} side="back" />
             </Scaled>

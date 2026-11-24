@@ -80,7 +80,7 @@ export function RepliesPanel({
     return (
       <Card className="px-6 py-14 text-center">
         <h2 className="display text-3xl">No replies yet</h2>
-        <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-paper/60">
+        <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-fg/85">
           Replies appear here the moment a guest responds. Share your link to get things started.
         </p>
       </Card>
@@ -99,12 +99,12 @@ export function RepliesPanel({
                 type="button"
                 aria-pressed={on}
                 onClick={() => setFilter(f.id)}
-                className={`inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full border px-4 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-flame/60 ${
-                  on ? "border-flame/50 bg-flame/10 text-flame" : "border-paper/15 text-paper/65 hover:border-paper/35 hover:text-paper"
+                className={`inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full border px-4 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-brand/60 ${
+                  on ? "border-brand/50 bg-brand/10 text-brand" : "border-fg/15 text-fg/90 hover:border-fg/35 hover:text-fg"
                 }`}
               >
                 {f.label}
-                <span className="font-mono text-[0.72rem] opacity-70">{f.count}</span>
+                <span className="font-mono text-[0.75rem] opacity-70">{f.count}</span>
               </button>
             );
           })}
@@ -122,8 +122,8 @@ export function RepliesPanel({
               <Card className="p-4 sm:p-5">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0 py-1">
-                    <p className="break-words text-[1.02rem] font-medium text-paper">{r.name}</p>
-                    <ul className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-[0.82rem] text-paper/55 [&>li]:whitespace-nowrap">
+                    <p className="break-words text-[1.02rem] font-medium text-fg">{r.name}</p>
+                    <ul className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-[0.82rem] text-fg/85 [&>li]:whitespace-nowrap">
                       {r.attending ? <li>{plural(r.partySize, "guest", "guests")}</li> : null}
                       {r.attending && r.meal ? <li className="!whitespace-normal">{r.meal}</li> : null}
                       {r.phone ? <li>{r.phone}</li> : null}
@@ -139,7 +139,7 @@ export function RepliesPanel({
                       onClick={() => setRemoving(r)}
                       aria-label={`Delete reply from ${r.name}`}
                       title="Delete reply"
-                      className="-mr-2 grid size-11 place-items-center rounded-full text-paper/50 outline-none transition-colors hover:bg-red-400/10 hover:text-red-300 focus-visible:ring-2 focus-visible:ring-flame/60"
+                      className="-mr-2 grid size-11 place-items-center rounded-full text-fg/85 outline-none transition-colors hover:bg-red-600/8 hover:text-red-700 focus-visible:ring-2 focus-visible:ring-brand/60"
                     >
                       <Trash2 size={17} strokeWidth={1.5} aria-hidden />
                     </button>
@@ -147,8 +147,8 @@ export function RepliesPanel({
                 </div>
 
                 {r.answer ? (
-                  <p className="mt-3 break-words text-sm leading-relaxed text-paper/80 [overflow-wrap:anywhere]">
-                    <span className="text-paper/45">{question || "Answer"}: </span>
+                  <p className="mt-3 break-words text-sm leading-relaxed text-fg/90 [overflow-wrap:anywhere]">
+                    <span className="text-fg/85">{question || "Answer"}: </span>
                     {r.answer}
                   </p>
                 ) : null}
@@ -156,7 +156,7 @@ export function RepliesPanel({
                 {r.message ? (
                   <blockquote
                     className={`mt-3 whitespace-pre-line break-words border-l-2 [overflow-wrap:anywhere] pl-3.5 font-serif text-[1.15rem] leading-snug ${
-                      r.hidden ? "border-paper/15 text-paper/40" : "border-flame/50 text-paper/90"
+                      r.hidden ? "border-fg/15 text-fg/85" : "border-brand/50 text-fg/90"
                     }`}
                   >
                     {r.message}
@@ -166,7 +166,7 @@ export function RepliesPanel({
                 {r.message ? (
                   <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2">
                     <WishToggle invitationId={invitationId} reply={r} />
-                    <span className="text-xs text-paper/45">{r.hidden ? "Hidden from guests" : "Showing on the wishes wall"}</span>
+                    <span className="text-xs text-fg/85">{r.hidden ? "Hidden from guests" : "Showing on the wishes wall"}</span>
                   </div>
                 ) : null}
               </Card>
@@ -174,7 +174,7 @@ export function RepliesPanel({
           ))}
         </ul>
       ) : (
-        <Card className="px-6 py-10 text-center text-sm text-paper/55">No replies in this view yet.</Card>
+        <Card className="px-6 py-10 text-center text-sm text-fg/85">No replies in this view yet.</Card>
       )}
 
       <ConfirmDialog
@@ -186,7 +186,7 @@ export function RepliesPanel({
         confirmLabel="Delete reply"
         body={
           <>
-            The reply from <span className="text-paper">{removing?.name}</span> will be removed for good, along with any message on the
+            The reply from <span className="text-fg">{removing?.name}</span> will be removed for good, along with any message on the
             wishes wall. This cannot be undone.
           </>
         }

@@ -23,10 +23,6 @@ export const generalFaq: FaqItem[] = [
     a: "Each guest or family can get their own link. The invitation greets them by name, shows the seats you reserved for them, and their reply is matched to your guest list automatically.",
   },
   {
-    q: "Can the invitation be in Sinhala or Tamil?",
-    a: "Yes. You can write in Sinhala, Tamil or English, and offer more than one. Guests switch language with one tap and the dates, buttons and labels follow.",
-  },
-  {
     q: "Can I change details after sending it?",
     a: "Any time. Edit the time, venue or schedule and every guest sees the update on the same link. Nothing needs to be sent again.",
   },
@@ -42,16 +38,16 @@ export const generalFaq: FaqItem[] = [
 
 export function Faq({ items = generalFaq }: { items?: FaqItem[] }) {
   return (
-    <div className="border-t border-paper/10">
+    <div className="border-t border-fg/10">
       {items.map((item) => (
-        <details key={item.q} className="group border-b border-paper/10">
+        <details key={item.q} className="group border-b border-fg/10">
           <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-6 py-5 text-left [&::-webkit-details-marker]:hidden">
             <span className="font-serif text-[1.45rem] leading-snug sm:text-[1.7rem]">{item.q}</span>
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-paper/15 text-paper/70 transition-transform duration-300 group-open:rotate-45">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-fg/15 text-fg/90 transition-transform duration-300 group-open:rotate-45">
               <Plus size={16} />
             </span>
           </summary>
-          <p className="max-w-2xl pb-6 leading-relaxed text-paper/60">{item.a}</p>
+          <p className="max-w-2xl pb-6 leading-relaxed text-fg/85">{item.a}</p>
         </details>
       ))}
     </div>

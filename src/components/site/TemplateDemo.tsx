@@ -34,7 +34,7 @@ export function TemplateDemo({ templateId, occasionIds, initial, header }: { tem
           <button
             type="button"
             onClick={() => setKey((k) => k + 1)}
-            className="flex h-10 items-center gap-1.5 rounded-full border border-paper/15 px-4 text-[0.8rem] text-paper/75 hover:border-paper/40"
+            className="flex h-10 items-center gap-1.5 rounded-full border border-fg/15 px-4 text-[0.8rem] text-fg/90 hover:border-fg/40"
           >
             <RotateCcw size={13} /> Replay opening
           </button>
@@ -44,7 +44,7 @@ export function TemplateDemo({ templateId, occasionIds, initial, header }: { tem
 
       <div className="lg:col-start-2 lg:row-start-2">
         <div>
-          <p className="label text-paper/45">Start it as</p>
+          <p className="label text-fg/85">Start it as</p>
           <div className="mt-3 flex flex-wrap gap-2">
             {occasionIds.map((o) => (
               <button
@@ -53,7 +53,7 @@ export function TemplateDemo({ templateId, occasionIds, initial, header }: { tem
                 aria-pressed={occasion === o}
                 onClick={() => setOccasion(o)}
                 className={`h-10 rounded-full border px-4 text-[0.86rem] transition-colors ${
-                  occasion === o ? "border-flame bg-flame text-night" : "border-paper/15 text-paper/70 hover:border-paper/40"
+                  occasion === o ? "border-brand bg-brand text-on-brand" : "border-fg/15 text-fg/90 hover:border-fg/40"
                 }`}
               >
                 {getOccasion(o).label}
@@ -63,7 +63,7 @@ export function TemplateDemo({ templateId, occasionIds, initial, header }: { tem
           <ButtonLink href={`/studio/new?template=${templateId}&occasion=${occasion}`} size="lg" className="mt-7 w-full sm:w-auto">
             Customise this design
           </ButtonLink>
-          <p className="mt-3 text-[0.82rem] text-paper/45">Free to design. No account or password, ever.</p>
+          <p className="mt-3 text-[0.82rem] text-fg/85">Free to design. No account or password, ever.</p>
         </div>
       </div>
     </div>

@@ -34,16 +34,16 @@ function SlugForm({ id, slug }: { id: string; slug: string }) {
 
   return (
     <Card className="p-5 sm:p-6">
-      <p className="label text-paper/50">Invitation link</p>
+      <p className="label text-fg/85">Invitation link</p>
       <h2 className="display mt-3 text-3xl">Choose your link</h2>
-      <p className="mt-3 max-w-xl text-sm leading-relaxed text-paper/60">
+      <p className="mt-3 max-w-xl text-sm leading-relaxed text-fg/85">
         Use lowercase letters, numbers and hyphens. If you have already shared the old link, it will stop working once you change it.
       </p>
       <form onSubmit={submit} className="mt-5 grid gap-3 sm:max-w-xl">
         <label className="grid gap-1.5">
-          <span className="text-[0.78rem] font-medium text-paper/70">Link name</span>
-          <span className="flex min-h-11 items-stretch overflow-hidden rounded-xl border border-paper/12 bg-night-3/70 transition-colors focus-within:border-flame/70">
-            <span className="flex shrink-0 items-center border-r border-paper/10 px-3 font-mono text-[0.8rem] text-paper/45">
+          <span className="text-[0.78rem] font-medium text-fg/90">Link name</span>
+          <span className="flex min-h-11 items-stretch overflow-hidden rounded-xl border border-fg/12 bg-page-3/70 transition-colors focus-within:border-brand/70">
+            <span className="flex shrink-0 items-center border-r border-fg/10 px-3 font-mono text-[0.8rem] text-fg/85">
               <span className="hidden sm:inline">{origin ? bareHost(origin) : ""}</span>/i/
             </span>
             <Input
@@ -67,7 +67,7 @@ function SlugForm({ id, slug }: { id: string; slug: string }) {
           <Button type="submit" disabled={pending || unchanged || !value.trim()}>
             {pending ? "Saving…" : "Save link"}
           </Button>
-          <p role={note?.tone === "error" ? "alert" : "status"} className={`text-sm ${note?.tone === "error" ? "text-red-300" : "text-teal"}`}>
+          <p role={note?.tone === "error" ? "alert" : "status"} className={`text-sm ${note?.tone === "error" ? "text-red-700" : "text-aqua"}`}>
             {note?.text}
           </p>
         </div>
@@ -99,18 +99,18 @@ function DangerZone({ id, title }: { id: string; title: string }) {
   };
 
   return (
-    <Card className="border-red-400/25 p-5 sm:p-6">
-      <p className="label text-red-300">Danger zone</p>
+    <Card className="border-red-600/50 p-5 sm:p-6">
+      <p className="label text-red-700">Danger zone</p>
       <h2 className="display mt-3 text-3xl">Delete this invitation</h2>
-      <p className="mt-3 max-w-xl text-sm leading-relaxed text-paper/60">
-        This removes <span className="text-paper">{title}</span>, its guest list and every reply for good. The link stops working straight
+      <p className="mt-3 max-w-xl text-sm leading-relaxed text-fg/85">
+        This removes <span className="text-fg">{title}</span>, its guest list and every reply for good. The link stops working straight
         away and none of it can be brought back.
       </p>
       {armed ? (
         <form onSubmit={submit} className="mt-5 grid gap-3 sm:max-w-md">
           <label className="grid gap-1.5">
-            <span className="text-[0.78rem] font-medium text-paper/70">
-              Type <span className="font-mono text-red-300">delete</span> to confirm
+            <span className="text-[0.78rem] font-medium text-fg/90">
+              Type <span className="font-mono text-red-700">delete</span> to confirm
             </span>
             <Input
               value={typed}
@@ -119,7 +119,7 @@ function DangerZone({ id, title }: { id: string; title: string }) {
               autoCapitalize="none"
               spellCheck={false}
               autoFocus
-              className="focus:!border-red-400/60"
+              className="focus:!border-red-600/50"
             />
           </label>
           <div className="flex flex-col-reverse gap-2.5 sm:flex-row">
@@ -140,7 +140,7 @@ function DangerZone({ id, title }: { id: string; title: string }) {
             </Button>
           </div>
           {failed ? (
-            <p role="alert" className="text-sm text-red-300">
+            <p role="alert" className="text-sm text-red-700">
               Something went wrong. Please try again.
             </p>
           ) : null}

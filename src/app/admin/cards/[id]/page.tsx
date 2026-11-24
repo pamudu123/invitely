@@ -20,17 +20,17 @@ async function Content({ params }: { params: Props["params"] }) {
   const rounds = await listReviews(inv.id);
   return (
     <>
-      <Link href="/admin" className="inline-flex items-center gap-2 text-sm text-paper/55 hover:text-paper">
+      <Link href="/admin" className="inline-flex items-center gap-2 text-sm text-fg/85 hover:text-fg">
         <ArrowLeft size={15} strokeWidth={1.5} aria-hidden /> Review queue
       </Link>
       <h1 className="display mt-6 text-5xl">{inv.title}</h1>
-      <p className="mt-2 text-sm text-paper/50">
+      <p className="mt-2 text-sm text-fg/85">
         /i/{inv.slug}{inv.ownerName ? ` · ${inv.ownerName}` : ""}{inv.ownerContact ? ` · ${inv.ownerContact}` : ""}
       </p>
-      <div className="mb-8 mt-5 rounded-2xl border border-paper/10 bg-night-2 p-4 text-sm leading-relaxed text-paper/65">
-        <p className="label text-flame">Edit this card with Claude Code</p>
+      <div className="mb-8 mt-5 rounded-2xl border border-fg/10 bg-page-2 p-4 text-sm leading-relaxed text-fg/90">
+        <p className="label text-brand">Edit this card with Claude Code</p>
         <p className="mt-2">
-          In the project folder, run <code className="rounded bg-night-3 px-1.5 py-0.5 font-mono text-[0.8rem] text-paper">/revise-card {inv.slug}</code> in
+          In the project folder, run <code className="rounded bg-page-3 px-1.5 py-0.5 font-mono text-[0.8rem] text-fg">/revise-card {inv.slug}</code> in
           Claude Code. It downloads only this card with the host&apos;s notes, makes the changes and sends it back.
         </p>
       </div>
@@ -47,7 +47,7 @@ async function Content({ params }: { params: Props["params"] }) {
 
 export default function AdminCardPage({ params }: Props) {
   return (
-    <Suspense fallback={<div className="h-96 animate-pulse rounded-2xl border border-paper/10 bg-night-2" />}>
+    <Suspense fallback={<div className="h-96 animate-pulse rounded-2xl border border-fg/10 bg-page-2" />}>
       <Content params={params} />
     </Suspense>
   );

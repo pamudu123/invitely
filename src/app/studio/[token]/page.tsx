@@ -19,7 +19,7 @@ async function SavedStudio({ params }: { params: PageProps<"/studio/[token]">["p
 
 export default function Page({ params }: PageProps<"/studio/[token]">) {
   return (
-    <Suspense fallback={<div className="fixed inset-0 bg-night" />}>
+    <Suspense fallback={<div className="fixed inset-0 bg-page" />}>
       <SavedStudio params={params} />
     </Suspense>
   );

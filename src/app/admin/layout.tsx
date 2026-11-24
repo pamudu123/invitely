@@ -6,12 +6,12 @@ export const metadata: Metadata = { title: "Team", robots: { index: false, follo
 
 export default function AdminLayout({ children }: LayoutProps<"/admin">) {
   return (
-    <div className="flex min-h-dvh flex-col bg-night text-paper">
-      <header className="border-b border-paper/10">
+    <div className="flex min-h-dvh flex-col bg-page text-fg">
+      <header className="border-b border-fg/10">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-          <Link href="/admin" className="flex items-center gap-3 text-paper">
+          <Link href="/admin" className="flex items-center gap-3 text-fg">
             <Logo />
-            <span className="label text-flame">Team</span>
+            <span className="label text-brand">Team</span>
           </Link>
         </div>
       </header>

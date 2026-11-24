@@ -12,7 +12,7 @@ export function AdminLogin() {
       <Field label="Password">
         <Input name="password" type="password" autoComplete="current-password" required autoFocus />
       </Field>
-      {state.error ? <p role="alert" className="text-sm text-red-300">{state.error}</p> : null}
+      {state.error ? <p role="alert" className="text-sm text-red-700">{state.error}</p> : null}
       <Button type="submit" disabled={pending}>{pending ? "Checking…" : "Sign in"}</Button>
     </form>
   );

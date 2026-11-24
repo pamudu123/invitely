@@ -38,14 +38,14 @@ export default function PrintCardsPage() {
       <SiteHeader />
       <main className="px-5 pb-28 pt-28 sm:px-8 lg:pt-36">
         <div className="mx-auto max-w-7xl">
-          <p className="label text-flame">Printed cards</p>
+          <p className="label text-brand">Printed cards</p>
           <h1 className="display mt-5 max-w-4xl text-[clamp(3rem,9vw,6.5rem)]">A card worth keeping in the hand.</h1>
-          <p className="mt-6 max-w-2xl text-[1.05rem] leading-relaxed text-paper/60">
+          <p className="mt-6 max-w-2xl text-[1.05rem] leading-relaxed text-fg/85">
             Some guests should receive something on paper. These are designs for physical cards, and most of them are not
             rectangles. Each one takes the colours and lettering of your web card, and its back carries a QR code that opens
             the map, the live schedule and the RSVP.
           </p>
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-paper/45">
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-fg/85">
             A printed card is an optional add-on to any web card. You download a print-ready PDF with bleed and a cut line,
             and take it to the print shop of your choice.
           </p>
@@ -56,31 +56,25 @@ export default function PrintCardsPage() {
               const wide = design.sizes[0].w > design.sizes[0].h * 1.3;
               return (
                 <li key={design.id} className="flex flex-col">
-                  <div className="flex min-h-[23rem] items-center justify-center gap-4 rounded-3xl border border-paper/10 bg-night-2 p-6">
-                    {wide ? (
-                      <div className="grid justify-items-center gap-4">
-                        <PrintPreview design={design} data={data} width={300} />
-                        <PrintPreview design={design} data={data} side="back" width={300} />
-                      </div>
-                    ) : (
-                      <>
-                        <PrintPreview design={design} data={data} width={168} />
-                        <PrintPreview design={design} data={data} side="back" width={168} />
-                      </>
-                    )}
+                  <div className="@container rounded-3xl border border-fg/10 bg-page-2 p-4 sm:p-6">
+                    {/* The previews have a fixed width, so narrow columns zoom them down to fit. */}
+                    <div className={`flex min-h-[20rem] items-center justify-center gap-4 [zoom:0.62] @min-[17rem]:[zoom:0.74] @min-[20rem]:[zoom:0.9] @min-[22rem]:[zoom:1] ${wide ? "flex-col" : ""}`}>
+                      <PrintPreview design={design} data={data} width={wide ? 300 : 168} />
+                      <PrintPreview design={design} data={data} side="back" width={wide ? 300 : 168} />
+                    </div>
                   </div>
-                  <p className="label mt-5 text-flame">{getShape(design.shape).label}</p>
+                  <p className="label mt-5 text-brand">{getShape(design.shape).label}</p>
                   <h2 className="mt-1.5 font-serif text-[1.9rem] leading-none">{design.name}</h2>
-                  <p className="mt-1 text-[0.84rem] text-paper/45">{design.meaning} · {design.sizes.map((s) => s.label).join(", ")}</p>
-                  <p className="mt-3 text-[0.92rem] leading-relaxed text-paper/60">{design.description}</p>
+                  <p className="mt-1 text-[0.84rem] text-fg/85">{design.meaning} · {design.sizes.map((s) => s.label).join(", ")}</p>
+                  <p className="mt-3 text-[0.92rem] leading-relaxed text-fg/85">{design.description}</p>
                 </li>
               );
             })}
           </ul>
 
-          <section className="mt-24 rounded-3xl border border-paper/10 bg-night-2 px-6 py-14 text-center">
+          <section className="mt-24 rounded-3xl border border-fg/10 bg-page-2 px-6 py-14 text-center">
             <h2 className="display text-4xl sm:text-6xl">Start with the web card.</h2>
-            <p className="mx-auto mt-4 max-w-md text-paper/60">
+            <p className="mx-auto mt-4 max-w-md text-fg/85">
               Design your invitation first. The printed card is made from it in a few taps, whenever you are ready.
             </p>
             <ButtonLink href="/templates" size="lg" className="mt-8">Browse the designs</ButtonLink>

@@ -6,10 +6,10 @@ import { ButtonLink, Logo } from "@/components/ui/kit";
 /** Frame for the host pages. There is no sign in: a card is opened with its private link. */
 export function ManageShell({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-dvh flex-col bg-night text-paper">
-      <header className="sticky top-0 z-40 border-b border-paper/10 bg-night/85 backdrop-blur-xl">
+    <div className="flex min-h-dvh flex-col bg-page text-fg">
+      <header className="sticky top-0 z-40 border-b border-fg/10 bg-page/85 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
-          <Link href="/" aria-label="Invitely home" className="text-paper">
+          <Link href="/" aria-label="Invitely home" className="text-fg">
             <Logo />
           </Link>
           <div className="flex items-center gap-2">

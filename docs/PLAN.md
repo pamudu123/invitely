@@ -60,15 +60,14 @@ Three ideas carry the brand:
 2. **One link, three lives.** Before the day it is an invitation with countdown and RSVP. On the day it shows what is happening now and next. Afterwards it becomes a thank you page with photos and wishes.
 3. **Made for how we celebrate.** Auspicious time countdowns, a language switch, personal links sent on WhatsApp, and designs named for what they are drawn from: Pahana, Mahanuwara, Nelum, Kolam, Noor.
 
-### Visual direction
+### Visual direction: Frost (chosen November 2026)
 
-The reference studio (Samana Studios) builds cinematic sites: near-black gradients, oversized type, small tracked mono labels, hairline borders. Invitely's site follows that, lit by one warm colour.
+A snow globe with a palace and a couple inside. Ice-light pages, navy text, royal blue actions, with violet, lagoon and mint as supporting colours. Deep blue is used for the hero, the closing section and the footer (the `.on-deep` class swaps the colour roles).
 
-- Site chrome: night green-black `#060b0b`, paper text `#f4eddf`, one flame accent `#e8b565`.
-- Type: Instrument Serif for display at very large sizes, Instrument Sans for interface, Geist Mono for labels.
-- No drop shadows on cards, pill buttons, hairline rules.
-- The invitations themselves are light, warm and typographic, so they glow against the dark site.
-- Everything is designed at phone size first. Templates are always shown inside phone frames, drawn at true 390 by 844 size and scaled.
+- Colour roles live in `src/app/globals.css`: page `#eef7ff`, text `#0f1c5c`, brand `#2740c9`. Frost artwork and section styles live in `src/components/site/frost/`.
+- Every text and background pair on the site is kept at 4.5:1 contrast or better.
+- Type: Marcellus for large headings only, Figtree for everything else. No text below 12px.
+- The site is in English only and prices are in USD only. New cards are English only. The Sinhala and Tamil labels remain in the code for cards saved before this change, and earlier mentions of LKR and languages in this document are research history.
 
 ## 3. Features and phases
 

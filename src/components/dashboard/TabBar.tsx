@@ -15,7 +15,7 @@ function Pending() {
   return (
     <span
       aria-hidden
-      className={`absolute right-1 top-2.5 size-1.5 rounded-full bg-flame transition-opacity duration-300 ${pending ? "animate-pulse opacity-100" : "opacity-0"}`}
+      className={`absolute right-1 top-2.5 size-1.5 rounded-full bg-brand transition-opacity duration-300 ${pending ? "animate-pulse opacity-100" : "opacity-0"}`}
     />
   );
 }
@@ -34,7 +34,7 @@ export function TabBar({ tabs, active }: { tabs: TabItem[]; active: string }) {
   }, [active]);
 
   return (
-    <nav ref={navRef} aria-label="Invitation sections" className="no-scrollbar relative -mx-4 overflow-x-auto border-b border-paper/10 px-4 sm:mx-0 sm:px-0">
+    <nav ref={navRef} aria-label="Invitation sections" className="no-scrollbar relative -mx-4 overflow-x-auto border-b border-fg/10 px-4 sm:mx-0 sm:px-0">
       <ul className="flex w-max min-w-full gap-1 sm:gap-2">
         {tabs.map((tab) => {
           const current = tab.id === active;
@@ -44,15 +44,15 @@ export function TabBar({ tabs, active }: { tabs: TabItem[]; active: string }) {
                 href={tab.href}
                 scroll={false}
                 aria-current={current ? "page" : undefined}
-                className={`relative flex min-h-12 items-center gap-2 whitespace-nowrap px-3.5 text-[0.92rem] outline-none transition-colors focus-visible:bg-paper/5 ${
-                  current ? "text-paper" : "text-paper/55 hover:text-paper"
+                className={`relative flex min-h-12 items-center gap-2 whitespace-nowrap px-3.5 text-[0.92rem] outline-none transition-colors focus-visible:bg-fg/5 ${
+                  current ? "text-fg" : "text-fg/85 hover:text-fg"
                 }`}
               >
                 {tab.label}
                 {typeof tab.count === "number" ? (
                   <span
-                    className={`rounded-full px-1.5 py-0.5 font-mono text-[0.66rem] leading-none ${
-                      current ? "bg-flame/15 text-flame" : "bg-paper/8 text-paper/50"
+                    className={`rounded-full px-1.5 py-0.5 font-mono text-[0.75rem] leading-none ${
+                      current ? "bg-brand/15 text-brand" : "bg-fg/8 text-fg/85"
                     }`}
                   >
                     {tab.count}
@@ -61,7 +61,7 @@ export function TabBar({ tabs, active }: { tabs: TabItem[]; active: string }) {
                 <Pending />
                 <span
                   aria-hidden
-                  className={`absolute inset-x-3 bottom-0 h-0.5 rounded-full bg-flame transition-opacity ${current ? "opacity-100" : "opacity-0"}`}
+                  className={`absolute inset-x-3 bottom-0 h-0.5 rounded-full bg-brand transition-opacity ${current ? "opacity-100" : "opacity-0"}`}
                 />
               </Link>
             </li>

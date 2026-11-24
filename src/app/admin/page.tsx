@@ -16,7 +16,7 @@ async function Cards() {
     <>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="label text-flame">Review queue</p>
+          <p className="label text-brand">Review queue</p>
           <h1 className="display mt-3 text-5xl sm:text-6xl">{waiting ? `${waiting} waiting for you` : "Nothing waiting"}</h1>
         </div>
         <form action={adminLogoutAction}>
@@ -27,15 +27,15 @@ async function Cards() {
         {cards.map((c) => {
           const key = (c.reviewStatus in label ? c.reviewStatus : "none") as keyof typeof label;
           return (
-            <li key={c.id} className="flex flex-col gap-3 rounded-2xl border border-paper/10 bg-night-2 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <li key={c.id} className="flex flex-col gap-3 rounded-2xl border border-fg/10 bg-page-2 p-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge tone={tone[key]}>{label[key]}</Badge>
                   <Badge>{c.status === "published" ? "Live" : "Draft"}</Badge>
-                  {c.openPins ? <span className="text-xs text-paper/50">{c.openPins} open notes · round {c.round}</span> : null}
+                  {c.openPins ? <span className="text-xs text-fg/85">{c.openPins} open notes · round {c.round}</span> : null}
                 </div>
                 <p className="mt-2 truncate font-serif text-2xl">{c.title}</p>
-                <p className="truncate text-xs text-paper/45">
+                <p className="truncate text-xs text-fg/85">
                   /i/{c.slug}{c.ownerName ? ` · ${c.ownerName}` : ""}{c.ownerContact ? ` · ${c.ownerContact}` : ""}
                 </p>
               </div>
@@ -47,7 +47,7 @@ async function Cards() {
             </li>
           );
         })}
-        {!cards.length ? <li className="rounded-2xl border border-paper/10 p-6 text-sm text-paper/55">No cards yet.</li> : null}
+        {!cards.length ? <li className="rounded-2xl border border-fg/10 p-6 text-sm text-fg/85">No cards yet.</li> : null}
       </ul>
     </>
   );
@@ -55,7 +55,7 @@ async function Cards() {
 
 export default function AdminPage() {
   return (
-    <Suspense fallback={<div className="h-80 animate-pulse rounded-2xl border border-paper/10 bg-night-2" />}>
+    <Suspense fallback={<div className="h-80 animate-pulse rounded-2xl border border-fg/10 bg-page-2" />}>
       <Cards />
     </Suspense>
   );

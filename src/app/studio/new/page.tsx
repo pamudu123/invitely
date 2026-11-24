@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { Studio } from "@/components/studio/Studio";
 import { occasions } from "@/lib/invitation/occasions";
 import { getTemplate } from "@/lib/invitation/templates";
+import { palettes } from "@/lib/invitation/theme";
 import type { OccasionId } from "@/lib/invitation/types";
 
 export const metadata: Metadata = { title: "Design studio", robots: { index: false } };
@@ -11,12 +12,13 @@ async function NewStudio({ searchParams }: { searchParams: PageProps<"/studio/ne
   const sp = await searchParams;
   const template = typeof sp.template === "string" && getTemplate(sp.template) ? sp.template : undefined;
   const occasion = occasions.find((o) => o.id === sp.occasion)?.id as OccasionId | undefined;
-  return <Studio templateId={template} occasion={occasion} />;
+  const palette = palettes.find((p) => p.id === sp.palette)?.id;
+  return <Studio templateId={template} occasion={occasion} paletteId={palette} />;
 }
 
 export default function Page({ searchParams }: PageProps<"/studio/new">) {
   return (
-    <Suspense fallback={<div className="fixed inset-0 bg-night" />}>
+    <Suspense fallback={<div className="fixed inset-0 bg-page" />}>
       <NewStudio searchParams={searchParams} />
     </Suspense>
   );

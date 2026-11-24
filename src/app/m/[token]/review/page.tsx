@@ -18,12 +18,12 @@ async function Content({ params }: { params: Props["params"] }) {
   const rounds = await listReviews(inv.id);
   return (
     <>
-      <Link href={`/m/${inv.manageToken}`} className="inline-flex items-center gap-2 text-sm text-paper/55 hover:text-paper">
+      <Link href={`/m/${inv.manageToken}`} className="inline-flex items-center gap-2 text-sm text-fg/85 hover:text-fg">
         <ArrowLeft size={15} strokeWidth={1.5} aria-hidden /> {inv.title}
       </Link>
-      <p className="label mt-7 text-flame">Review</p>
+      <p className="label mt-7 text-brand">Review</p>
       <h1 className="display mt-3 text-5xl sm:text-6xl">Point at it. We will fix it.</h1>
-      <p className="mb-9 mt-4 max-w-2xl text-sm leading-relaxed text-paper/60">
+      <p className="mb-9 mt-4 max-w-2xl text-sm leading-relaxed text-fg/85">
         Finished editing but something is still not right? Tap the spot on your card, say what should change and send it
         to our team. You can do this as often as you like until you confirm the card.
       </p>
@@ -40,7 +40,7 @@ async function Content({ params }: { params: Props["params"] }) {
 
 export default function Page({ params }: Props) {
   return (
-    <Suspense fallback={<div className="h-96 animate-pulse rounded-2xl border border-paper/10 bg-night-2" />}>
+    <Suspense fallback={<div className="h-96 animate-pulse rounded-2xl border border-fg/10 bg-page-2" />}>
       <Content params={params} />
     </Suspense>
   );
