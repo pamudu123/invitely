@@ -43,3 +43,6 @@ next-env.d.ts
 
 # local database
 /.data/
+
+# cards pulled for editing hold customer data
+/cards/

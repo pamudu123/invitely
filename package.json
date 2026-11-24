@@ -6,12 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "card": "node scripts/card.mjs"
   },
   "dependencies": {
     "@libsql/client": "^0.18.0",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.45.4",
+    "html-to-image": "^1.11.13",
     "lucide-react": "^1.79.0",
     "next": "16.4.6",
     "qrcode": "^1.5.4",

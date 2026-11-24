@@ -135,6 +135,46 @@ Every design is a preset over shared parts, so a host can mix them: any of the 9
 
 Ideas held for later: an ola leaf manuscript scroll, a Vesak lantern opening, a photo booth strip, a painted venue scene that shifts from day to night, a "find your seat" table finder, and couple caricatures.
 
+### Review by the team
+
+After editing, a host can ask the team to finish the card for them.
+
+1. On the review page the host taps any spot on their card. A numbered pin drops there and they type what should change. Each pin records the section and the words under the tap.
+2. They send the list. The card shows as "With our team".
+3. The team sees a queue at `/admin`, opens the card with its pins, and edits it in the studio or with Claude Code.
+4. The team marks it ready with a short reply. The host sees "Ready for you to check".
+5. The host confirms, or pins more changes for another round. Review stays open until the host confirms. After that it closes.
+
+**Editing one card with Claude Code.** `npm run card -- pull <slug>` saves that card as `cards/<slug>/card.json` with the host's notes in `REVIEW.md`. `npm run card -- push <slug> --ready "message"` sends it back and tells the host. The `/revise-card <slug>` command in Claude Code does the whole loop and is told to touch only that one file. Pushed data goes through the same checks as the studio, so a wrong value cannot break a card.
+
+### Image cards and printed cards
+
+Two separate features sit on top of every web card.
+
+**Image card (included).** The web design as a picture, for WhatsApp, a status or a family group. Seven layouts follow the card's colours, lettering and ornament, in portrait, story, square and wide shapes. It can carry a guest's name, and it is shared straight to the phone's share sheet or downloaded as a PNG.
+
+**Printed card (optional add-on).** A separate collection of designs for physical cards. Research into what print shops sell showed that arch tops are the leading shaped card this year, followed by scalloped edges, circles, tickets and hexagons, and that nobody sells a betel leaf, moonstone or lotus petal card. So most of the collection is not rectangular:
+
+| Shape | Design |
+| --- | --- |
+| Temple arch | Thorana |
+| Betel leaf | Bulath Kole |
+| Arch top | Archway |
+| Round | Sanda |
+| Moonstone half circle | Sandakada |
+| Scalloped flower | Araliya |
+| Lotus petal | Nelum Pethi |
+| Long strip with string holes | Ola Leaf |
+| Scooped corners | Deco Plaque |
+| Hexagon | Kavaya |
+| Luggage tag with punched hole | Journey Tag |
+| Ticket with stub | Admit One |
+| Rectangle | Heirloom, Pahana, Twilight, Margin |
+
+Every printed card has a back with a QR code that opens the web card, so paper and screen work together. A guest can be picked to print their name and their personal QR code. The download is a PDF with the front and back at 300 dpi and a 3 mm bleed, plus a page with the cut line as a vector outline, which is what print shops ask for when a card is die cut or laser cut.
+
+Ideas held for later: gatefold and pocket folds, a sesath fan, a pun kalasa pot, a standing lamp silhouette, vellum overlays and belly bands.
+
 ## 4. Pricing proposal
 
 One payment per event, no subscription, unlimited guests. Free to design, pay to publish. Numbers sit in `src/lib/plans.ts`.
@@ -146,6 +186,7 @@ One payment per event, no subscription, unlimited guests. Free to design, pay to
 | Signature | 6,900 | 35 | Personal links, languages, auspicious times, day-of view, check-in, link never expires |
 | Duo | 9,900 | 49 | Wedding plus homecoming |
 | Atelier | from 20,000 | from 99 | Designed for you |
+| Printed card design (add-on) | 1,500 | 7 | Print-ready file for a physical card, per design |
 
 Reasoning: Essential sits inside the LKR 3,500 to 5,500 band where most local buyers shop. Signature is priced above the band because nothing local combines its features, and stays below Invitation.lk's LKR 10,000 bundle. USD prices undercut Join Wedding (59), Vowberry (39 to 59) and Wedvite (89).
 
