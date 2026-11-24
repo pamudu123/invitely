@@ -14,6 +14,9 @@ export interface InvitationRecord {
   ownerName: string;
   ownerContact: string;
   hasPin: boolean;
+  /** none, requested (waiting for the team), ready (waiting for the host) or confirmed */
+  reviewStatus: ReviewStatus;
+  confirmedAt: number | null;
   slug: string;
   occasion: string;
   title: string;
@@ -25,6 +28,8 @@ export interface InvitationRecord {
   updatedAt: number;
   publishedAt: number | null;
 }
+
+export type ReviewStatus = "none" | "requested" | "ready" | "confirmed";
 
 export interface InvitationSummary extends Omit<InvitationRecord, "data"> {
   templateId: string;
@@ -235,6 +240,8 @@ function toRecord(row: Row): InvitationRecord {
     ownerName: String(row.owner_name ?? ""),
     ownerContact: String(row.owner_contact ?? ""),
     hasPin: Boolean(row.pin_hash),
+    reviewStatus: (["requested", "ready", "confirmed"].includes(String(row.review_status)) ? String(row.review_status) : "none") as ReviewStatus,
+    confirmedAt: row.confirmed_at === null || row.confirmed_at === undefined ? null : Number(row.confirmed_at),
     slug: String(row.slug),
     occasion: String(row.occasion),
     title: String(row.title),

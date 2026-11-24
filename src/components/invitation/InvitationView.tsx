@@ -126,22 +126,29 @@ export function InvitationView({
 
   const common: SectionProps = { data, labels, lang: activeLang, guest, phase };
 
-  const renderSection = (id: SectionId) => {
+  const sectionBody = (id: SectionId) => {
     switch (id) {
-      case "message": return <MessageSection key={id} {...common} />;
-      case "countdown": return <CountdownSection key={id} {...common} />;
-      case "nekath": return <NekathSection key={id} {...common} />;
-      case "schedule": return <ScheduleSection key={id} {...common} />;
-      case "venue": return <VenueSection key={id} {...common} showMap={!lite} />;
-      case "story": return <StorySection key={id} {...common} />;
-      case "gallery": return <GallerySection key={id} {...common} fixed={!embedded} />;
-      case "details": return <DetailsSection key={id} {...common} />;
-      case "gift": return <GiftSection key={id} {...common} />;
-      case "rsvp": return <RsvpSection key={id} {...common} onSubmit={onRsvp} prior={priorRsvp} />;
-      case "wishes": return <WishesSection key={id} {...common} wishes={wishes} />;
+      case "message": return <MessageSection {...common} />;
+      case "countdown": return <CountdownSection {...common} />;
+      case "nekath": return <NekathSection {...common} />;
+      case "schedule": return <ScheduleSection {...common} />;
+      case "venue": return <VenueSection {...common} showMap={!lite} />;
+      case "story": return <StorySection {...common} />;
+      case "gallery": return <GallerySection {...common} fixed={!embedded} />;
+      case "details": return <DetailsSection {...common} />;
+      case "gift": return <GiftSection {...common} />;
+      case "rsvp": return <RsvpSection {...common} onSubmit={onRsvp} prior={priorRsvp} />;
+      case "wishes": return <WishesSection {...common} wishes={wishes} />;
       default: return null;
     }
   };
+
+  // Each part sits in a named wrapper, so a review note can say exactly where it points.
+  const renderSection = (id: SectionId) => (
+    <div key={id} data-section={id} style={{ position: "relative" }}>
+      {sectionBody(id)}
+    </div>
+  );
 
   // After the day, lead with the thank you note even if the message section was hidden.
   const sections: SectionId[] =
@@ -149,9 +156,13 @@ export function InvitationView({
 
   const content = (
     <div className={`inv-root ${opened ? "" : "inv-waiting"}`} lang={activeLang}>
-      <Hero {...common} />
+      <div data-section="cover" style={{ position: "relative" }}>
+        <Hero {...common} />
+      </div>
       {sections.map(renderSection)}
-      <Footer {...common} branding={branding} />
+      <div data-section="footer" style={{ position: "relative" }}>
+        <Footer {...common} branding={branding} />
+      </div>
     </div>
   );
 

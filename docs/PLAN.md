@@ -135,6 +135,18 @@ Every design is a preset over shared parts, so a host can mix them: any of the 9
 
 Ideas held for later: an ola leaf manuscript scroll, a Vesak lantern opening, a photo booth strip, a painted venue scene that shifts from day to night, a "find your seat" table finder, and couple caricatures.
 
+### Review by the team
+
+After editing, a host can ask the team to finish the card for them.
+
+1. On the review page the host taps any spot on their card. A numbered pin drops there and they type what should change. Each pin records the section and the words under the tap.
+2. They send the list. The card shows as "With our team".
+3. The team sees a queue at `/admin`, opens the card with its pins, and edits it in the studio or with Claude Code.
+4. The team marks it ready with a short reply. The host sees "Ready for you to check".
+5. The host confirms, or pins more changes for another round. Review stays open until the host confirms. After that it closes.
+
+**Editing one card with Claude Code.** `npm run card -- pull <slug>` saves that card as `cards/<slug>/card.json` with the host's notes in `REVIEW.md`. `npm run card -- push <slug> --ready "message"` sends it back and tells the host. The `/revise-card <slug>` command in Claude Code does the whole loop and is told to touch only that one file. Pushed data goes through the same checks as the studio, so a wrong value cannot break a card.
+
 ### Image cards and printed cards
 
 Two separate features sit on top of every web card.

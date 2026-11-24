@@ -199,6 +199,7 @@ async function Manage({ params, searchParams }: Props) {
     { id: "guests", label: "Guests", href: `${base}?tab=guests`, count: guests.length },
     { id: "replies", label: "Replies", href: `${base}?tab=replies`, count: rsvps.length },
     { id: "share", label: "Share", href: `${base}?tab=share` },
+    { id: "review", label: inv.reviewStatus === "ready" ? "Review (ready)" : "Review", href: `${base}/review` },
     { id: "image", label: "Image card", href: `${base}/image` },
     { id: "print", label: "Print card", href: `${base}/print` },
     { id: "settings", label: "Settings", href: `${base}?tab=settings` },
@@ -258,6 +259,30 @@ async function Manage({ params, searchParams }: Props) {
     panel = (
       <div className="grid grid-cols-1 gap-6 [&>*]:min-w-0">
         {nudge ? <ManageAccess token={inv.manageToken} slug={inv.slug} title={inv.title} hasPin={inv.hasPin} highlight /> : null}
+        {inv.reviewStatus !== "confirmed" ? (
+          <div className={`flex flex-col gap-4 rounded-2xl border p-5 sm:flex-row sm:items-center sm:justify-between ${inv.reviewStatus === "ready" ? "border-teal/40 bg-teal/5" : "border-paper/10 bg-night-2"}`}>
+            <div className="max-w-xl">
+              <p className={`label ${inv.reviewStatus === "ready" ? "text-teal" : "text-flame"}`}>
+                {inv.reviewStatus === "ready" ? "Ready for you to check" : inv.reviewStatus === "requested" ? "With our team" : "Need a hand?"}
+              </p>
+              <p className="mt-2 font-serif text-2xl leading-tight">
+                {inv.reviewStatus === "ready"
+                  ? "We have made your changes."
+                  : inv.reviewStatus === "requested"
+                    ? "Your notes are with us."
+                    : "Tap what should change and we will fix it."}
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-paper/55">
+                {inv.reviewStatus === "ready"
+                  ? "Look through your card and confirm it, or send more notes."
+                  : "Mark spots on your card and send them to our team. You can do this until you confirm the card."}
+              </p>
+            </div>
+            <ButtonLink href={`${base}/review`} variant={inv.reviewStatus === "ready" ? "primary" : "secondary"} className="shrink-0">
+              {inv.reviewStatus === "ready" ? "Check my card" : "Send for review"}
+            </ButtonLink>
+          </div>
+        ) : null}
         <Overview inv={inv} guests={guests} rsvps={rsvps} now={now} />
       </div>
     );

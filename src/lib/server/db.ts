@@ -55,7 +55,9 @@ const schema = [
     owner_contact TEXT NOT NULL DEFAULT '',
     pin_hash TEXT NOT NULL DEFAULT '',
     pin_fails INTEGER NOT NULL DEFAULT 0,
-    pin_locked_until INTEGER NOT NULL DEFAULT 0
+    pin_locked_until INTEGER NOT NULL DEFAULT 0,
+    review_status TEXT NOT NULL DEFAULT 'none',
+    confirmed_at INTEGER
   )`,
   `CREATE INDEX IF NOT EXISTS invitations_user ON invitations(user_id)`,
   `CREATE TABLE IF NOT EXISTS guests (
@@ -87,6 +89,18 @@ const schema = [
     updated_at INTEGER NOT NULL
   )`,
   `CREATE INDEX IF NOT EXISTS rsvps_invitation ON rsvps(invitation_id)`,
+  `CREATE TABLE IF NOT EXISTS reviews (
+    id TEXT PRIMARY KEY,
+    invitation_id TEXT NOT NULL REFERENCES invitations(id) ON DELETE CASCADE,
+    round INTEGER NOT NULL,
+    status TEXT NOT NULL DEFAULT 'open',
+    note TEXT NOT NULL DEFAULT '',
+    pins TEXT NOT NULL DEFAULT '[]',
+    reply TEXT NOT NULL DEFAULT '',
+    created_at INTEGER NOT NULL,
+    updated_at INTEGER NOT NULL
+  )`,
+  `CREATE INDEX IF NOT EXISTS reviews_invitation ON reviews(invitation_id)`,
   `CREATE TABLE IF NOT EXISTS media (
     id TEXT PRIMARY KEY,
     user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -107,6 +121,8 @@ const addedColumns: [string, string][] = [
   ["pin_hash", "TEXT NOT NULL DEFAULT ''"],
   ["pin_fails", "INTEGER NOT NULL DEFAULT 0"],
   ["pin_locked_until", "INTEGER NOT NULL DEFAULT 0"],
+  ["review_status", "TEXT NOT NULL DEFAULT 'none'"],
+  ["confirmed_at", "INTEGER"],
 ];
 
 async function ensureSchema() {
