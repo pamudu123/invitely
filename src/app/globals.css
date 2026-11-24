@@ -1,0 +1,134 @@
+@import "tailwindcss";
+@import "./invitation.css" layer(components);
+
+@theme inline {
+  --font-serif: var(--font-brand-serif), "Iowan Old Style", Georgia, serif;
+  --font-sans: var(--font-brand-sans), system-ui, sans-serif;
+  --font-mono: var(--font-brand-mono), ui-monospace, monospace;
+
+  /* Brand: a room at night, lit by one lamp */
+  --color-night: #060b0b;
+  --color-night-2: #0b1413;
+  --color-night-3: #111f1d;
+  --color-night-4: #1a2c2a;
+  --color-paper: #f4eddf;
+  --color-paper-2: #ebe2d0;
+  --color-flame: #e8b565;
+  --color-flame-hot: #ffdca6;
+  --color-ember: #c8743a;
+  --color-teal: #63c7b6;
+  --color-ink: #151b1a;
+  --color-ink-2: #5a625d;
+  --color-peacock: #0e3b3c;
+
+  /* Invitation theme tokens, set per invitation */
+  --color-inv-bg: var(--inv-bg);
+  --color-inv-surface: var(--inv-surface);
+  --color-inv-ink: var(--inv-ink);
+  --color-inv-accent: var(--inv-accent);
+  --color-inv-deep: var(--inv-deep);
+  --color-inv-on-deep: var(--inv-on-deep);
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-flicker: flicker 2.6s ease-in-out infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-fade-up: fade-up 0.9s var(--ease-out-soft) both;
+  --animate-pulse-ring: pulse-ring 2.4s ease-out infinite;
+  --animate-sheen: sheen 5s ease-in-out infinite;
+}
+
+@keyframes flicker {
+  0%, 100% { transform: scale(1) rotate(-1deg); opacity: 1; }
+  25% { transform: scale(1.04, 0.97) rotate(1.5deg); opacity: 0.94; }
+  50% { transform: scale(0.97, 1.05) rotate(-0.5deg); opacity: 1; }
+  75% { transform: scale(1.03, 0.98) rotate(1deg); opacity: 0.96; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes pulse-ring {
+  0% { transform: scale(0.85); opacity: 0.7; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+@keyframes sheen {
+  0%, 60% { background-position: 200% 0; }
+  100% { background-position: -100% 0; }
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-night);
+  color: var(--color-paper);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-flame) 45%, transparent);
+}
+
+@layer components {
+/* Small tracked label, used everywhere in the site chrome */
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.display {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 0.95;
+}
+
+/* Site paper theme (dashboard) */
+.theme-paper {
+  background: #f5f0e6;
+  color: var(--color-ink);
+}
+
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.thin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, currentColor 25%, transparent) transparent;
+}
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
