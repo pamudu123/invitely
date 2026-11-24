@@ -6,9 +6,9 @@ import { compressImage } from "@/lib/client/image";
 
 export function Group({ title, hint, children }: { title: string; hint?: string; children: ReactNode }) {
   return (
-    <section className="border-b border-paper/8 px-5 py-5 last:border-b-0">
-      <h3 className="label text-flame">{title}</h3>
-      {hint ? <p className="mt-1.5 text-[0.8rem] leading-snug text-paper/45">{hint}</p> : null}
+    <section className="border-b border-fg/8 px-5 py-5 last:border-b-0">
+      <h3 className="label text-brand">{title}</h3>
+      {hint ? <p className="mt-1.5 text-[0.8rem] leading-snug text-fg/85">{hint}</p> : null}
       <div className="mt-3.5 grid grid-cols-1 gap-3.5 [&>*]:min-w-0">{children}</div>
     </section>
   );
@@ -34,11 +34,11 @@ export function Toggle({
       className="flex min-h-11 w-full items-center justify-between gap-4 text-left"
     >
       <span>
-        <span className="block text-[0.92rem] text-paper">{label}</span>
-        {hint ? <span className="block text-[0.76rem] text-paper/45">{hint}</span> : null}
+        <span className="block text-[0.92rem] text-fg">{label}</span>
+        {hint ? <span className="block text-[0.76rem] text-fg/85">{hint}</span> : null}
       </span>
-      <span className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${checked ? "bg-flame" : "bg-paper/15"}`}>
-        <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-night transition-all ${checked ? "left-[1.4rem]" : "left-0.5"}`} />
+      <span className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${checked ? "bg-brand" : "bg-fg/55"}`}>
+        <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-all ${checked ? "left-[1.4rem]" : "left-0.5"}`} />
       </span>
     </button>
   );
@@ -65,7 +65,7 @@ export function Tile({
       aria-pressed={active}
       aria-label={label}
       className={`relative overflow-hidden rounded-xl border text-left transition-all ${
-        active ? "border-flame bg-flame/10 shadow-[0_0_0_1px_var(--color-flame)]" : "border-paper/12 bg-night-3/50 hover:border-paper/35"
+        active ? "border-brand bg-brand/10 shadow-[0_0_0_1px_var(--color-brand)]" : "border-fg/12 bg-page-3/50 hover:border-fg/35"
       } ${className}`}
     >
       {children}
@@ -93,8 +93,8 @@ export function IconButton({
       aria-label={label}
       title={label}
       disabled={disabled}
-      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-paper/10 transition-colors disabled:opacity-25 ${
-        tone === "danger" ? "text-red-300/80 hover:bg-red-400/10" : "text-paper/60 hover:bg-paper/8 hover:text-paper"
+      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-fg/10 transition-colors disabled:opacity-25 ${
+        tone === "danger" ? "text-red-700 hover:bg-red-600/8" : "text-fg/85 hover:bg-fg/8 hover:text-fg"
       }`}
     >
       {children}
@@ -157,7 +157,7 @@ export function PhotoPicker({
         <button
           type="button"
           onClick={() => input.current?.click()}
-          className="relative flex w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-dashed border-paper/25 bg-night-3/60 text-paper/50 transition-colors hover:border-flame/60 hover:text-flame"
+          className="relative flex w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-dashed border-fg/25 bg-page-3/60 text-fg/85 transition-colors hover:border-brand/60 hover:text-brand"
           style={{ aspectRatio: aspect }}
           aria-label={label}
         >
@@ -169,20 +169,20 @@ export function PhotoPicker({
           )}
         </button>
         <div className="grid gap-2">
-          <p className="text-[0.9rem] text-paper">{label}</p>
+          <p className="text-[0.9rem] text-fg">{label}</p>
           <div className="flex gap-2">
-            <button type="button" onClick={() => input.current?.click()} className="rounded-full border border-paper/20 px-3.5 py-1.5 text-[0.8rem] text-paper/80 hover:border-paper/50">
+            <button type="button" onClick={() => input.current?.click()} className="rounded-full border border-fg/20 px-3.5 py-1.5 text-[0.8rem] text-fg/90 hover:border-fg/50">
               {busy ? "Adding…" : value ? "Replace" : "Choose photo"}
             </button>
             {value ? (
-              <button type="button" onClick={() => onChange(undefined)} className="rounded-full px-3 py-1.5 text-[0.8rem] text-paper/50 hover:text-red-300">
+              <button type="button" onClick={() => onChange(undefined)} className="rounded-full px-3 py-1.5 text-[0.8rem] text-fg/85 hover:text-red-700">
                 Remove
               </button>
             ) : null}
           </div>
         </div>
       </div>
-      {error ? <p className="mt-2 text-[0.8rem] text-red-300">{error}</p> : null}
+      {error ? <p className="mt-2 text-[0.8rem] text-red-700">{error}</p> : null}
       <input ref={input} type="file" accept="image/*" className="hidden" onChange={(e) => void pick(e.target.files?.[0])} />
     </div>
   );

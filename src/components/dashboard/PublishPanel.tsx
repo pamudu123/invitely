@@ -37,14 +37,14 @@ export function PublishPanel({ id, slug, published }: { id: string; slug: string
     return (
       <Card className="p-5 sm:p-6">
         <div className="flex items-center justify-between gap-3">
-          <p className="label text-paper/50">Publishing</p>
+          <p className="label text-fg/85">Publishing</p>
           <Badge tone="teal">
-            <span aria-hidden className="size-1.5 rounded-full bg-teal" />
+            <span aria-hidden className="size-1.5 rounded-full bg-aqua" />
             Live
           </Badge>
         </div>
         <h2 className="display mt-4 text-3xl">Your invitation is live</h2>
-        <p className="mt-3 text-sm leading-relaxed text-paper/60">Anyone with this link can open it and reply.</p>
+        <p className="mt-3 text-sm leading-relaxed text-fg/85">Anyone with this link can open it and reply.</p>
         <LinkField slug={slug} className="mt-5" />
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <a href={`/i/${slug}`} target="_blank" rel="noopener" className={buttonClass("secondary", "md")}>
@@ -56,7 +56,7 @@ export function PublishPanel({ id, slug, published }: { id: string; slug: string
           </Button>
         </div>
         {error ? (
-          <p role="alert" className="mt-4 rounded-xl border border-red-400/30 bg-red-400/10 px-3.5 py-2.5 text-sm text-red-200">
+          <p role="alert" className="mt-4 rounded-xl border border-red-600/50 bg-red-600/8 px-3.5 py-2.5 text-sm text-red-700">
             {error}
           </p>
         ) : null}
@@ -65,13 +65,13 @@ export function PublishPanel({ id, slug, published }: { id: string; slug: string
   }
 
   return (
-    <Card className="border-flame/25 p-5 sm:p-6">
+    <Card className="border-brand/25 p-5 sm:p-6">
       <div className="flex items-center justify-between gap-3">
-        <p className="label text-flame">Publishing</p>
+        <p className="label text-brand">Publishing</p>
         <Badge>Draft</Badge>
       </div>
       <h2 className="display mt-4 text-3xl">Ready when you are</h2>
-      <p className="mt-3 text-sm leading-relaxed text-paper/60">
+      <p className="mt-3 text-sm leading-relaxed text-fg/85">
         This invitation is a draft, so only you can see it. Publish it to switch on the public link, personal guest links and replies.
       </p>
       <Button type="button" size="lg" onClick={publish} disabled={pending} className="mt-6 w-full sm:w-auto">
@@ -79,11 +79,11 @@ export function PublishPanel({ id, slug, published }: { id: string; slug: string
         {pending ? "Publishing…" : "Publish invitation"}
       </Button>
       {error === "payment" ? (
-        <p role="alert" className="mt-4 rounded-xl border border-flame/30 bg-flame/10 px-3.5 py-3 text-sm leading-relaxed text-paper/85">
+        <p role="alert" className="mt-4 rounded-xl border border-brand/30 bg-brand/10 px-3.5 py-3 text-sm leading-relaxed text-fg/85">
           We need to confirm your payment before this invitation can go live. Please contact support and we will get it published for you.
         </p>
       ) : error ? (
-        <p role="alert" className="mt-4 rounded-xl border border-red-400/30 bg-red-400/10 px-3.5 py-2.5 text-sm text-red-200">
+        <p role="alert" className="mt-4 rounded-xl border border-red-600/50 bg-red-600/8 px-3.5 py-2.5 text-sm text-red-700">
           {error}
         </p>
       ) : null}

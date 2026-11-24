@@ -22,8 +22,8 @@ function monogram(title: string): string {
 function Count({ value, label }: { value: number; label: string }) {
   return (
     <div className="min-w-0 px-1 py-3 text-center">
-      <dd className="font-serif text-[1.7rem] leading-none tracking-tight text-paper">{value.toLocaleString("en-GB")}</dd>
-      <dt className="label mt-2 truncate !text-[0.56rem] !tracking-[0.14em] text-paper/45">{label}</dt>
+      <dd className="font-serif text-[1.7rem] leading-none tracking-tight text-fg">{value.toLocaleString("en-GB")}</dd>
+      <dt className="label mt-2 truncate !text-[0.75rem] !tracking-[0.14em] text-fg/85">{label}</dt>
     </div>
   );
 }
@@ -46,23 +46,23 @@ function InvitationCard({ inv }: { inv: InvitationSummary }) {
             {monogram(inv.title)}
           </span>
           <div className="min-w-0">
-            <p className="label truncate text-flame">{occasion.label}</p>
-            {template ? <p className="mt-1 truncate text-xs text-paper/45">{template.name} design</p> : null}
+            <p className="label truncate text-brand">{occasion.label}</p>
+            {template ? <p className="mt-1 truncate text-xs text-fg/85">{template.name} design</p> : null}
           </div>
         </div>
         <Badge tone={live ? "teal" : "neutral"}>
-          {live ? <span aria-hidden className="size-1.5 rounded-full bg-teal" /> : null}
+          {live ? <span aria-hidden className="size-1.5 rounded-full bg-aqua" /> : null}
           {live ? "Live" : "Draft"}
         </Badge>
       </div>
 
       <h2 className="display mt-5 break-words text-[2rem] leading-[1.02] sm:text-4xl">{inv.title}</h2>
-      <p className="mt-3 flex items-center gap-2 text-sm text-paper/60">
-        <CalendarDays size={16} strokeWidth={1.5} aria-hidden className="shrink-0 text-paper/40" />
+      <p className="mt-3 flex items-center gap-2 text-sm text-fg/85">
+        <CalendarDays size={16} strokeWidth={1.5} aria-hidden className="shrink-0 text-fg/85" />
         {formatEventDate(inv.date)}
       </p>
 
-      <dl className="mt-5 grid grid-cols-4 divide-x divide-paper/10 rounded-xl border border-paper/10 bg-night-3/40">
+      <dl className="mt-5 grid grid-cols-4 divide-x divide-fg/10 rounded-xl border border-fg/10 bg-page-3/40">
         <Count value={inv.attending} label="Attending" />
         <Count value={inv.declined} label="Declined" />
         <Count value={inv.headcount} label="Headcount" />
@@ -105,12 +105,12 @@ function FindCard() {
   return (
     <Card className="p-5 sm:p-6">
       <div className="flex items-start gap-3">
-        <span className="grid size-11 shrink-0 place-items-center rounded-full border border-flame/30 bg-flame/10 text-flame">
+        <span className="grid size-11 shrink-0 place-items-center rounded-full border border-brand/30 bg-brand/10 text-brand">
           <KeyRound size={18} strokeWidth={1.5} aria-hidden />
         </span>
         <div>
           <h2 className="font-serif text-2xl leading-tight">Find a card</h2>
-          <p className="mt-1 text-sm leading-relaxed text-paper/55">
+          <p className="mt-1 text-sm leading-relaxed text-fg/85">
             On a new phone, or lost your manage link? Enter the invitation link you share with guests and your edit PIN.
           </p>
         </div>
@@ -124,7 +124,7 @@ function FindCard() {
         </Field>
         <Button type="submit" variant="secondary" disabled={pending}>{pending ? "Checking…" : "Open"}</Button>
       </form>
-      {error ? <p role="alert" className="mt-3 text-sm text-red-300">{error}</p> : null}
+      {error ? <p role="alert" className="mt-3 text-sm text-red-700">{error}</p> : null}
     </Card>
   );
 }
@@ -147,7 +147,7 @@ export function MyCards() {
       {cards === null ? (
         <div className="grid gap-4 sm:gap-5 md:grid-cols-2 xl:grid-cols-3" aria-hidden>
           {[0, 1].map((i) => (
-            <div key={i} className="h-80 animate-pulse rounded-2xl border border-paper/10 bg-night-2" />
+            <div key={i} className="h-80 animate-pulse rounded-2xl border border-fg/10 bg-page-2" />
           ))}
         </div>
       ) : cards.length ? (
@@ -160,11 +160,11 @@ export function MyCards() {
         </ul>
       ) : (
         <Card className="flex flex-col items-center px-6 py-12 text-center">
-          <span className="grid size-16 place-items-center rounded-full border border-flame/30 bg-flame/10 text-flame">
+          <span className="grid size-16 place-items-center rounded-full border border-brand/30 bg-brand/10 text-brand">
             <MailOpen size={26} strokeWidth={1.5} aria-hidden />
           </span>
           <h2 className="display mt-6 text-4xl">No cards on this device yet</h2>
-          <p className="mt-4 max-w-sm text-sm leading-relaxed text-paper/60">
+          <p className="mt-4 max-w-sm text-sm leading-relaxed text-fg/85">
             Pick a design, add your names and date, and your invitation will be ready to share in a few minutes.
           </p>
           <ButtonLink href="/templates" size="lg" className="mt-8">

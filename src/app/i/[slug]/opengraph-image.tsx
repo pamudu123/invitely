@@ -13,7 +13,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
   const { slug } = await params;
   const inv = await getInvitationBySlug(slug);
   const live = inv && inv.status === "published" ? inv : null;
-  const p = live ? getPalette(live.data.theme) : { bg: "#060b0b", ink: "#f4eddf", accent: "#e8b565", deep: "#060b0b", onDeep: "#f4eddf" };
+  const p = live ? getPalette(live.data.theme) : { bg: "#eef7ff", ink: "#0f1c5c", accent: "#a9fbe4", deep: "#16249a", onDeep: "#ffffff" };
   const names = live ? [live.data.name1, live.data.name2].filter(Boolean) : ["Invitely"];
   const label = live ? `${getOccasion(live.data.occasion).label} invitation` : "Digital invitations";
   const footer = live ? `${formatLongDate(live.data.date)}  ·  ${live.data.venueName}` : "Invitations that open like a ceremony";

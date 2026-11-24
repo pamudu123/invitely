@@ -4,7 +4,6 @@ export interface PlanDef {
   id: PlanId;
   name: string;
   tagline: string;
-  lkr: number | null;
   usd: number | null;
   /** Shown as "from" pricing */
   from?: boolean;
@@ -22,7 +21,6 @@ export const plans: PlanDef[] = [
     id: "free",
     name: "Design",
     tagline: "Build and preview. Pay only when you publish.",
-    lkr: 0,
     usd: 0,
     features: [
       "Every template and opening",
@@ -36,7 +34,6 @@ export const plans: PlanDef[] = [
     id: "essential",
     name: "Essential",
     tagline: "One beautiful invitation with everything guests need.",
-    lkr: 3900,
     usd: 19,
     features: [
       "One published invitation",
@@ -52,14 +49,12 @@ export const plans: PlanDef[] = [
     id: "signature",
     name: "Signature",
     tagline: "The full living invitation, personal to every guest.",
-    lkr: 6900,
     usd: 35,
     highlight: true,
     features: [
       "Everything in Essential",
       "Personal link for every guest or family",
-      "Sinhala, Tamil and English switch",
-      "Auspicious times with live countdowns",
+      "Key moments with live countdowns",
       "Day-of live view and after-event thank you",
       "QR check-in at the door",
       "Wishes wall",
@@ -70,8 +65,7 @@ export const plans: PlanDef[] = [
   {
     id: "duo",
     name: "Duo",
-    tagline: "Wedding and homecoming, two invitations, one price.",
-    lkr: 9900,
+    tagline: "Two events, two invitations, one price.",
     usd: 49,
     features: [
       "Two Signature invitations",
@@ -84,7 +78,6 @@ export const plans: PlanDef[] = [
     id: "atelier",
     name: "Atelier",
     tagline: "Our designers build it for you, with custom artwork.",
-    lkr: 20000,
     usd: 99,
     from: true,
     features: [
@@ -101,12 +94,10 @@ export function getPlan(id: string): PlanDef {
   return plans.find((p) => p.id === id) ?? plans[0];
 }
 
-export function formatPrice(plan: PlanDef, currency: "LKR" | "USD"): string {
-  const amount = currency === "LKR" ? plan.lkr : plan.usd;
-  if (amount === null) return "Custom";
-  if (amount === 0) return "Free";
-  const text = currency === "LKR" ? `LKR ${amount.toLocaleString("en-LK")}` : `$${amount}`;
-  return plan.from ? `From ${text}` : text;
+export function formatPrice(plan: PlanDef): string {
+  if (plan.usd === null) return "Custom";
+  if (plan.usd === 0) return "Free";
+  return plan.from ? `From $${plan.usd}` : `$${plan.usd}`;
 }
 
 /**

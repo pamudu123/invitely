@@ -1,6 +1,5 @@
 import {
-  Instrument_Serif,
-  Instrument_Sans,
+  Figtree,
   Geist_Mono,
   Cormorant_Garamond,
   Playfair_Display,
@@ -21,14 +20,13 @@ import {
 } from "next/font/google";
 
 // Brand fonts (site chrome)
-export const brandSerif = Instrument_Serif({
+export const brandSerif = Marcellus({
   weight: "400",
-  style: ["normal", "italic"],
   subsets: ["latin"],
   variable: "--font-brand-serif",
   display: "swap",
 });
-export const brandSans = Instrument_Sans({
+export const brandSans = Figtree({
   subsets: ["latin"],
   variable: "--font-brand-sans",
   display: "swap",

@@ -3,7 +3,6 @@
 import {
   ArrowLeft,
   Clock,
-  Languages,
   LayoutList,
   MailCheck,
   Monitor,
@@ -34,7 +33,6 @@ import type { InvitationData, OccasionId, ThemeConfig } from "@/lib/invitation/t
 import {
   DesignPanel,
   DetailsPanel,
-  LanguagePanel,
   RsvpPanel,
   SchedulePanel,
   SectionsPanel,
@@ -43,7 +41,7 @@ import {
 
 const DRAFT_KEY = "invitely:draft:v1";
 
-type TabId = "design" | "details" | "schedule" | "sections" | "rsvp" | "languages";
+type TabId = "design" | "details" | "schedule" | "sections" | "rsvp";
 
 const tabs: { id: TabId; label: string; icon: typeof Palette; Panel: (p: PanelProps) => React.ReactElement }[] = [
   { id: "design", label: "Design", icon: Palette, Panel: DesignPanel },
@@ -51,7 +49,6 @@ const tabs: { id: TabId; label: string; icon: typeof Palette; Panel: (p: PanelPr
   { id: "schedule", label: "Schedule", icon: Clock, Panel: SchedulePanel },
   { id: "sections", label: "Sections", icon: LayoutList, Panel: SectionsPanel },
   { id: "rsvp", label: "RSVP", icon: MailCheck, Panel: RsvpPanel },
-  { id: "languages", label: "Language", icon: Languages, Panel: LanguagePanel },
 ];
 
 type SaveState = "idle" | "dirty" | "saving" | "saved" | "local" | "error";
@@ -61,6 +58,8 @@ export interface StudioProps {
   saved?: { id: string; slug: string; status: "draft" | "published"; data: InvitationData };
   templateId?: string;
   occasion?: OccasionId;
+  /** Start in this colour, for example from a design card on the home page */
+  paletteId?: string;
 }
 
 /** Swap inline images for the stored URLs returned by the server, without touching anything typed since. */
@@ -83,7 +82,7 @@ function adoptStoredImages(current: InvitationData, stored: InvitationData): Inv
   return changed ? next : current;
 }
 
-export function Studio({ saved, templateId, occasion }: StudioProps) {
+export function Studio({ saved, templateId, occasion, paletteId }: StudioProps) {
   const router = useRouter();
   const [id, setId] = useState<string | null>(saved?.id ?? null);
   const [data, setData] = useState<InvitationData>(() => saved?.data ?? createFromTemplate(templateId ?? "pahana", occasion));
@@ -131,11 +130,14 @@ export function Studio({ saved, templateId, occasion }: StudioProps) {
       // Sample hashtags belong to the sample names, so a fresh draft starts without one.
       next = { ...createFromTemplate(tpl?.id ?? "pahana", occasion, todayPlus(0)), hashtag: "" };
     }
+    if (paletteId) next = { ...next, theme: { ...next.theme, paletteId, custom: undefined } };
+    // The site is English only, so an older draft drops its other languages.
+    next = { ...next, language: "en", languages: ["en"], translations: {} };
     // The draft lives in localStorage, so it can only be read after hydration.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setData(next);
     setReady(true);
-  }, [saved, templateId, occasion]);
+  }, [saved, templateId, occasion, paletteId]);
 
   // Measure the preview stage so the phone always fits.
   useEffect(() => {
@@ -271,11 +273,11 @@ export function Studio({ saved, templateId, occasion }: StudioProps) {
       <button
         type="button"
         onClick={panelProps.replay}
-        className="flex h-9 items-center gap-1.5 rounded-full border border-paper/15 bg-night-2/80 px-3.5 text-[0.78rem] text-paper/80 backdrop-blur hover:border-paper/40"
+        className="flex h-9 items-center gap-1.5 rounded-full border border-fg/15 bg-page-2/80 px-3.5 text-[0.78rem] text-fg/90 backdrop-blur hover:border-fg/40"
       >
         <RotateCcw size={13} /> Replay opening
       </button>
-      <div className="flex h-9 items-center rounded-full border border-paper/15 bg-night-2/80 p-0.5 backdrop-blur" role="group" aria-label="Preview moment">
+      <div className="flex h-9 items-center rounded-full border border-fg/15 bg-page-2/80 p-0.5 backdrop-blur" role="group" aria-label="Preview moment">
         {(["before", "today", "after"] as Phase[]).map((p) => (
           <button
             key={p}
@@ -285,17 +287,17 @@ export function Studio({ saved, templateId, occasion }: StudioProps) {
               setSkipRitual(true);
               setPhase(p);
             }}
-            className={`h-8 rounded-full px-3 text-[0.76rem] transition-colors ${phase === p ? "bg-flame text-night" : "text-paper/65 hover:text-paper"}`}
+            className={`h-8 rounded-full px-3 text-[0.76rem] transition-colors ${phase === p ? "bg-brand text-on-brand" : "text-fg/90 hover:text-fg"}`}
           >
             {p === "before" ? "Before" : p === "today" ? "On the day" : "After"}
           </button>
         ))}
       </div>
-      <div className="hidden h-9 items-center rounded-full border border-paper/15 bg-night-2/80 p-0.5 backdrop-blur lg:flex" role="group" aria-label="Preview size">
-        <button type="button" aria-label="Phone preview" aria-pressed={device === "phone"} onClick={() => setDevice("phone")} className={`flex h-8 w-9 items-center justify-center rounded-full ${device === "phone" ? "bg-flame text-night" : "text-paper/65"}`}>
+      <div className="hidden h-9 items-center rounded-full border border-fg/15 bg-page-2/80 p-0.5 backdrop-blur lg:flex" role="group" aria-label="Preview size">
+        <button type="button" aria-label="Phone preview" aria-pressed={device === "phone"} onClick={() => setDevice("phone")} className={`flex h-8 w-9 items-center justify-center rounded-full ${device === "phone" ? "bg-brand text-on-brand" : "text-fg/90"}`}>
           <Smartphone size={15} />
         </button>
-        <button type="button" aria-label="Wide preview" aria-pressed={device === "wide"} onClick={() => setDevice("wide")} className={`flex h-8 w-9 items-center justify-center rounded-full ${device === "wide" ? "bg-flame text-night" : "text-paper/65"}`}>
+        <button type="button" aria-label="Wide preview" aria-pressed={device === "wide"} onClick={() => setDevice("wide")} className={`flex h-8 w-9 items-center justify-center rounded-full ${device === "wide" ? "bg-brand text-on-brand" : "text-fg/90"}`}>
           <Monitor size={15} />
         </button>
       </div>
@@ -303,19 +305,19 @@ export function Studio({ saved, templateId, occasion }: StudioProps) {
   );
 
   return (
-    <div className="fixed inset-0 flex flex-col bg-night text-paper">
+    <div className="fixed inset-0 flex flex-col bg-page text-fg">
       {/* Top bar */}
-      <header className="flex h-14 shrink-0 items-center gap-3 border-b border-paper/10 px-3 sm:px-4">
+      <header className="flex h-14 shrink-0 items-center gap-3 border-b border-fg/10 px-3 sm:px-4">
         <Link
           href={id ? `/m/${id}` : "/templates"}
           aria-label="Back"
-          className="flex h-10 w-10 items-center justify-center rounded-full text-paper/70 hover:bg-paper/8 hover:text-paper"
+          className="flex h-10 w-10 items-center justify-center rounded-full text-fg/90 hover:bg-fg/8 hover:text-fg"
         >
           <ArrowLeft size={18} />
         </Link>
         <div className="min-w-0 flex-1">
           <p className="truncate font-serif text-[1.15rem] leading-tight">{displayNames(data)}</p>
-          <p className="truncate text-[0.7rem] text-paper/45" aria-live="polite">{status || "Design studio"}</p>
+          <p className="truncate text-[0.75rem] text-fg/85" aria-live="polite">{status || "Design studio"}</p>
         </div>
         <Button size="sm" onClick={() => void finish()} disabled={saveState === "saving"}>
           {id ? "Done" : "Save & continue"}
@@ -324,16 +326,16 @@ export function Studio({ saved, templateId, occasion }: StudioProps) {
 
       <div className="flex min-h-0 flex-1">
         {/* Desktop editor */}
-        <aside className="hidden w-[27rem] shrink-0 border-r border-paper/10 lg:flex">
-          <nav className="flex w-[4.6rem] shrink-0 flex-col gap-1 border-r border-paper/10 p-2" aria-label="Editor sections">
+        <aside className="hidden w-[27rem] shrink-0 border-r border-fg/10 lg:flex">
+          <nav className="flex w-[4.6rem] shrink-0 flex-col gap-1 border-r border-fg/10 p-2" aria-label="Editor sections">
             {tabs.map((t) => (
               <button
                 key={t.id}
                 type="button"
                 onClick={() => setDesktopTab(t.id)}
                 aria-pressed={desktopTab === t.id}
-                className={`flex flex-col items-center gap-1 rounded-xl py-2.5 text-[0.64rem] transition-colors ${
-                  desktopTab === t.id ? "bg-flame/12 text-flame" : "text-paper/55 hover:bg-paper/5 hover:text-paper"
+                className={`flex flex-col items-center gap-1 rounded-xl py-2.5 text-[0.75rem] transition-colors ${
+                  desktopTab === t.id ? "bg-brand/12 text-brand" : "text-fg/85 hover:bg-fg/5 hover:text-fg"
                 }`}
               >
                 <t.icon size={19} strokeWidth={1.5} />
@@ -350,7 +352,7 @@ export function Studio({ saved, templateId, occasion }: StudioProps) {
         <main className="relative flex min-w-0 flex-1 flex-col">
           <div
             className="pointer-events-none absolute inset-0 hidden lg:block"
-            style={{ background: "radial-gradient(60% 50% at 50% 40%, rgba(232,181,101,0.09), transparent 70%)" }}
+            style={{ background: "radial-gradient(60% 50% at 50% 40%, rgba(39,64,201,0.10), transparent 70%)" }}
           />
           <div ref={stageRef} className="relative min-h-0 flex-1">
             {stage && ready ? (
@@ -359,7 +361,7 @@ export function Studio({ saved, templateId, occasion }: StudioProps) {
                   {device === "phone" ? (
                     <PhoneFrame width={phoneWidth}>{preview}</PhoneFrame>
                   ) : (
-                    <div className="relative h-full w-full max-w-5xl overflow-hidden rounded-2xl border border-paper/10">{preview}</div>
+                    <div className="relative h-full w-full max-w-5xl overflow-hidden rounded-2xl border border-fg/10">{preview}</div>
                   )}
                 </div>
               ) : (
@@ -367,7 +369,7 @@ export function Studio({ saved, templateId, occasion }: StudioProps) {
               )
             ) : (
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="h-8 w-8 animate-spin rounded-full border-2 border-paper/15 border-t-flame" />
+                <span className="h-8 w-8 animate-spin rounded-full border-2 border-fg/15 border-t-brand" />
               </div>
             )}
           </div>
@@ -378,11 +380,11 @@ export function Studio({ saved, templateId, occasion }: StudioProps) {
 
       {/* First save: no account, just a way back in */}
       {asking ? (
-        <div className="fixed inset-0 z-[70] flex items-end justify-center bg-black/70 p-0 backdrop-blur-sm sm:items-center sm:p-6" role="dialog" aria-modal="true" aria-labelledby="owner-title">
-          <form onSubmit={createCard} className="w-full max-w-md rounded-t-3xl border border-paper/15 bg-night-2 p-6 sm:rounded-3xl sm:p-8">
-            <p className="label text-flame">Save your card</p>
+        <div className="fixed inset-0 z-[70] flex items-end justify-center bg-[#0f1c5c]/60 p-0 backdrop-blur-sm sm:items-center sm:p-6" role="dialog" aria-modal="true" aria-labelledby="owner-title">
+          <form onSubmit={createCard} className="w-full max-w-md rounded-t-3xl border border-fg/15 bg-page-2 p-6 sm:rounded-3xl sm:p-8">
+            <p className="label text-brand">Save your card</p>
             <h2 id="owner-title" className="display mt-3 text-4xl">No account needed.</h2>
-            <p className="mt-3 text-sm leading-relaxed text-paper/60">
+            <p className="mt-3 text-sm leading-relaxed text-fg/85">
               Your card gets a private manage link. Keep it safe, because anyone with it can edit the card. Add a PIN so you
               can get back in from any phone.
             </p>
@@ -397,7 +399,7 @@ export function Studio({ saved, templateId, occasion }: StudioProps) {
                 <Input value={owner.pin} inputMode="numeric" maxLength={8} autoComplete="off" placeholder="For example 4827" onChange={(e) => setOwner({ ...owner, pin: e.target.value })} />
               </Field>
             </div>
-            {ownerError ? <p role="alert" className="mt-4 text-sm text-red-300">{ownerError}</p> : null}
+            {ownerError ? <p role="alert" className="mt-4 text-sm text-red-700">{ownerError}</p> : null}
             <div className="mt-6 flex gap-2">
               <Button type="button" variant="secondary" onClick={() => setAsking(false)} className="flex-1">Keep editing</Button>
               <Button type="submit" disabled={saveState === "saving"} className="flex-1">{saveState === "saving" ? "Saving…" : "Create my card"}</Button>
@@ -409,10 +411,10 @@ export function Studio({ saved, templateId, occasion }: StudioProps) {
       {/* Mobile editor: bottom tabs with a sheet */}
       <div className="shrink-0 lg:hidden">
         {tab && SheetPanel ? (
-          <div className="fixed inset-x-0 bottom-[4.25rem] z-40 flex max-h-[58dvh] flex-col rounded-t-3xl border-t border-paper/15 bg-night-2 shadow-[0_-20px_60px_rgba(0,0,0,0.6)]">
+          <div className="fixed inset-x-0 bottom-[4.25rem] z-40 flex max-h-[58dvh] flex-col rounded-t-3xl border-t border-fg/15 bg-page-2 shadow-[0_-20px_60px_rgba(15,28,92,0.25)]">
             <div className="flex shrink-0 items-center justify-between px-5 pb-1 pt-3">
               <p className="font-serif text-xl">{tabs.find((t) => t.id === tab)!.label}</p>
-              <button type="button" aria-label="Close editor" onClick={() => setTab(null)} className="flex h-10 w-10 items-center justify-center rounded-full bg-paper/8 text-paper/80">
+              <button type="button" aria-label="Close editor" onClick={() => setTab(null)} className="flex h-10 w-10 items-center justify-center rounded-full bg-fg/8 text-fg/90">
                 <X size={18} />
               </button>
             </div>
@@ -421,14 +423,14 @@ export function Studio({ saved, templateId, occasion }: StudioProps) {
             </div>
           </div>
         ) : null}
-        <nav className="relative z-50 grid h-[4.25rem] grid-cols-6 border-t border-paper/10 bg-night-2 pb-[env(safe-area-inset-bottom)]" aria-label="Editor sections">
+        <nav className="relative z-50 grid h-[4.25rem] grid-cols-5 border-t border-fg/10 bg-page-2 pb-[env(safe-area-inset-bottom)]" aria-label="Editor sections">
           {tabs.map((t) => (
             <button
               key={t.id}
               type="button"
               onClick={() => setTab(tab === t.id ? null : t.id)}
               aria-pressed={tab === t.id}
-              className={`flex flex-col items-center justify-center gap-1 text-[0.62rem] ${tab === t.id ? "text-flame" : "text-paper/60"}`}
+              className={`flex flex-col items-center justify-center gap-1 text-[0.75rem] ${tab === t.id ? "text-brand" : "text-fg/85"}`}
             >
               <t.icon size={20} strokeWidth={1.5} />
               {t.label}

@@ -33,7 +33,7 @@ export const templates: TemplateDef[] = [
     description: "Guests light a brass lamp and its glow reveals your invitation. Ivory paper, liyawel scrollwork and classic script.",
     occasion: "wedding",
     alsoFor: ["homecoming", "engagement", "housewarming"],
-    tags: ["Traditional", "Sinhala", "Signature"],
+    tags: ["Traditional", "Heritage", "Signature"],
     theme: t("ivory-brass", "heirloom", "liyawel", "classic", "lamp", "serene", "sparkles"),
     sample: {
       name1: "Amaya", name2: "Dinuka",
@@ -137,10 +137,10 @@ export const templates: TemplateDef[] = [
     id: "kolam",
     name: "Kolam",
     meaning: "Drawn at the threshold",
-    description: "Kumkum red and turmeric gold with kolam dot patterns, for Hindu and Tamil weddings. Opens with the kuthu vilakku lamp.",
+    description: "Kumkum red and turmeric gold with kolam dot patterns, for Hindu weddings. Opens with the kuthu vilakku lamp.",
     occasion: "wedding",
     alsoFor: ["engagement", "coming-of-age", "housewarming"],
-    tags: ["Traditional", "Tamil", "Hindu"],
+    tags: ["Traditional", "Heritage", "Hindu"],
     theme: t("kumkum", "regal", "kolam", "classic", "lamp", "warm", "petals"),
     sample: {
       name1: "Priya", name2: "Arjun",
@@ -310,7 +310,7 @@ export const templates: TemplateDef[] = [
     description: "The oldest way to invite someone in Sri Lanka is to offer a sheaf of betel leaves. Guests accept it and the leaves fan open into your invitation.",
     occasion: "wedding",
     alsoFor: ["homecoming", "engagement", "coming-of-age", "housewarming"],
-    tags: ["Traditional", "Sinhala", "Signature"],
+    tags: ["Traditional", "Heritage", "Signature"],
     theme: t("betel", "heirloom", "betel", "frame", "betel", "serene", "none"),
     sample: {
       name1: "Sachini", name2: "Lahiru",
@@ -527,7 +527,7 @@ export const templates: TemplateDef[] = [
     id: "suriya",
     name: "Suriya",
     meaning: "The new year sun",
-    description: "For the Sinhala and Tamil New Year table. The lamp is lit, and each auspicious time for the hearth, the first meal and the first transaction counts down.",
+    description: "For the April New Year table. The lamp is lit, and each auspicious time for the hearth, the first meal and the first transaction counts down.",
     occasion: "festive",
     alsoFor: ["housewarming", "celebration"],
     tags: ["Avurudu", "New Year", "Family"],
@@ -568,7 +568,7 @@ export const templates: TemplateDef[] = [
     description: "Deep ruby and gold with kolam at the corners, for Deepavali, Thai Pongal and temple festivals. It opens by lighting the lamp.",
     occasion: "festive",
     alsoFor: ["housewarming", "wedding", "celebration"],
-    tags: ["Deepavali", "Tamil", "Dark"],
+    tags: ["Deepavali", "Festival", "Dark"],
     theme: t("ruby", "regal", "kolam", "frame", "lamp", "warm", "sparkles"),
     sample: {
       name1: "The Sivakumar family", name2: "",
@@ -871,7 +871,8 @@ export function createFromTemplate(
     ritualHint: "Tap to open",
   };
 
-  return { ...base, ...sample, theme: { ...tpl.theme } };
+  // New cards are English only. Older cards keep the languages they were saved with.
+  return { ...base, ...sample, theme: { ...tpl.theme }, language: "en", languages: ["en"], translations: {} };
 }
 
 /** Keep content, switch the design. */

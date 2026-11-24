@@ -24,7 +24,7 @@ export interface GuestRow {
 }
 
 const iconButton =
-  "grid size-11 shrink-0 place-items-center rounded-full text-paper/55 outline-none transition-colors hover:bg-paper/5 hover:text-paper focus-visible:ring-2 focus-visible:ring-flame/60";
+  "grid size-11 shrink-0 place-items-center rounded-full text-fg/85 outline-none transition-colors hover:bg-fg/5 hover:text-fg focus-visible:ring-2 focus-visible:ring-brand/60";
 
 function AddGuests({ invitationId }: { invitationId: string }) {
   const [text, setText] = useState("");
@@ -52,7 +52,7 @@ function AddGuests({ invitationId }: { invitationId: string }) {
 
   return (
     <Card className="p-5 sm:p-6">
-      <p className="label text-flame">Add guests</p>
+      <p className="label text-brand">Add guests</p>
       <form onSubmit={submit} className="mt-4 grid gap-3">
         <Field
           label="One guest or family per line"
@@ -72,7 +72,7 @@ function AddGuests({ invitationId }: { invitationId: string }) {
             <UserPlus size={17} strokeWidth={1.5} aria-hidden />
             {pending ? "Adding…" : "Add guests"}
           </Button>
-          <p role="status" className={`text-sm ${note?.tone === "error" ? "text-red-300" : "text-teal"}`}>
+          <p role="status" className={`text-sm ${note?.tone === "error" ? "text-red-700" : "text-aqua"}`}>
             {note?.text}
           </p>
         </div>
@@ -126,7 +126,7 @@ function EditGuest({ invitationId, guest, onDone }: { invitationId: string; gues
         <Input name="phone" type="tel" defaultValue={guest.phone} maxLength={30} autoComplete="off" placeholder="0771234567" />
       </Field>
       {error ? (
-        <p role="alert" className="text-sm text-red-300">
+        <p role="alert" className="text-sm text-red-700">
           {error}
         </p>
       ) : null}
@@ -181,14 +181,14 @@ export function GuestsPanel({
     <div className="grid grid-cols-1 gap-6">
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
         <div>
-          <p className="label text-paper/50">Guest list</p>
+          <p className="label text-fg/85">Guest list</p>
           <h2 className="display mt-3 text-4xl">A link for every guest</h2>
-          <p className="mt-4 text-sm leading-relaxed text-paper/60">
+          <p className="mt-4 text-sm leading-relaxed text-fg/85">
             Each guest or family gets a personal link. It greets them by name and reserves their seats, so replies land against the right
             people without anyone typing a thing.
           </p>
           {!published ? (
-            <p className="mt-4 rounded-xl border border-flame/25 bg-flame/5 px-3.5 py-3 text-sm leading-relaxed text-paper/75">
+            <p className="mt-4 rounded-xl border border-brand/25 bg-brand/5 px-3.5 py-3 text-sm leading-relaxed text-fg/90">
               Personal links start working once you publish the invitation. You can build your list in the meantime.
             </p>
           ) : null}
@@ -203,13 +203,13 @@ export function GuestsPanel({
       {guests.length ? (
         <section aria-label="Guests">
           <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm text-paper/60">
+            <p className="text-sm text-fg/85">
               {plural(guests.length, "guest", "guests")} · {plural(seats, "seat", "seats")}
-              {q ? <span className="text-paper/40"> · showing {shown.length}</span> : null}
+              {q ? <span className="text-fg/85"> · showing {shown.length}</span> : null}
             </p>
             <label className="relative block sm:w-72">
               <span className="sr-only">Search guests</span>
-              <Search size={16} strokeWidth={1.5} aria-hidden className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-paper/40" />
+              <Search size={16} strokeWidth={1.5} aria-hidden className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-fg/85" />
               <Input
                 type="search"
                 value={query}
@@ -222,7 +222,7 @@ export function GuestsPanel({
 
           <Card className="overflow-hidden">
             {shown.length ? (
-              <ul className="divide-y divide-paper/10">
+              <ul className="divide-y divide-fg/10">
                 {shown.map((g) => {
                   const link = origin ? personalLink(origin, slug, g.token) : "";
                   return (
@@ -231,8 +231,8 @@ export function GuestsPanel({
                       className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-2 gap-y-3 p-4 sm:px-5 md:grid-cols-[minmax(0,1fr)_auto_auto] md:items-center"
                     >
                       <div className="min-w-0 self-center">
-                        <p className="break-words text-[0.98rem] font-medium text-paper">{g.name}</p>
-                        <p className="mt-1 text-[0.82rem] text-paper/55">
+                        <p className="break-words text-[0.98rem] font-medium text-fg">{g.name}</p>
+                        <p className="mt-1 text-[0.82rem] text-fg/85">
                           {plural(g.seats, "seat", "seats")}
                           {g.table ? ` · ${g.table}` : ""}
                           {g.phone ? ` · ${g.phone}` : ""}
@@ -253,7 +253,7 @@ export function GuestsPanel({
                         </button>
                         <button
                           type="button"
-                          className={`${iconButton} hover:!text-red-300`}
+                          className={`${iconButton} hover:!text-red-700`}
                           onClick={() => setRemoving(g)}
                           aria-label={`Delete ${g.name}`}
                           title="Delete"
@@ -281,14 +281,14 @@ export function GuestsPanel({
                 })}
               </ul>
             ) : (
-              <p className="px-5 py-10 text-center text-sm text-paper/55">No guests match that search.</p>
+              <p className="px-5 py-10 text-center text-sm text-fg/85">No guests match that search.</p>
             )}
           </Card>
         </section>
       ) : (
         <Card className="px-6 py-12 text-center">
           <h3 className="display text-3xl">No guests yet</h3>
-          <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-paper/60">
+          <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-fg/85">
             Paste your list above and every guest gets a personal link you can copy or send on WhatsApp.
           </p>
         </Card>
@@ -307,7 +307,7 @@ export function GuestsPanel({
         confirmLabel="Remove guest"
         body={
           <>
-            <span className="text-paper">{removing?.name}</span> will be removed from your list and their personal link will stop working. A
+            <span className="text-fg">{removing?.name}</span> will be removed from your list and their personal link will stop working. A
             reply they already sent stays in your replies.
           </>
         }

@@ -37,10 +37,10 @@ type Props = PageProps<"/m/[token]">;
 function Stat({ label, value, hint }: { label: string; value: string; hint?: string }) {
   return (
     <Card className="min-h-32 p-4 sm:p-5">
-      <dt className="label truncate !text-[0.6rem] !tracking-[0.14em] text-paper/50 sm:!text-[0.68rem] sm:!tracking-[0.2em]">{label}</dt>
+      <dt className="label truncate !text-[0.75rem] !tracking-[0.14em] text-fg/85 sm:!text-[0.75rem] sm:!tracking-[0.2em]">{label}</dt>
       <dd className="mt-4">
         <span className="display block text-[2.6rem] sm:text-5xl">{value}</span>
-        {hint ? <span className="mt-2 block text-xs leading-snug text-paper/45">{hint}</span> : null}
+        {hint ? <span className="mt-2 block text-xs leading-snug text-fg/85">{hint}</span> : null}
       </dd>
     </Card>
   );
@@ -61,20 +61,20 @@ function MealBreakdown({ rsvps }: { rsvps: RsvpRecord[] }) {
 
   return (
     <Card className="p-5 sm:p-6">
-      <p className="label text-paper/50">Meal preferences</p>
-      <p className="mt-2 text-xs text-paper/45">Counted by guests in attending parties.</p>
+      <p className="label text-fg/85">Meal preferences</p>
+      <p className="mt-2 text-xs text-fg/85">Counted by guests in attending parties.</p>
       <ul className="mt-5 grid gap-4">
         {rows.map(([meal, v]) => (
           <li key={meal}>
             <div className="flex items-baseline justify-between gap-3 text-sm">
-              <span className="min-w-0 truncate text-paper/85">{meal}</span>
-              <span className="shrink-0 text-paper/55">
-                <span className="font-medium text-paper">{v.guests}</span> {v.guests === 1 ? "guest" : "guests"}
-                <span className="text-paper/40"> · {plural(v.replies, "reply", "replies")}</span>
+              <span className="min-w-0 truncate text-fg/85">{meal}</span>
+              <span className="shrink-0 text-fg/85">
+                <span className="font-medium text-fg">{v.guests}</span> {v.guests === 1 ? "guest" : "guests"}
+                <span className="text-fg/85"> · {plural(v.replies, "reply", "replies")}</span>
               </span>
             </div>
-            <div className="mt-2 h-2 overflow-hidden rounded-full bg-paper/8" aria-hidden>
-              <div className="h-full rounded-full bg-flame" style={{ width: `${Math.max(3, (v.guests / max) * 100)}%` }} />
+            <div className="mt-2 h-2 overflow-hidden rounded-full bg-fg/8" aria-hidden>
+              <div className="h-full rounded-full bg-brand" style={{ width: `${Math.max(3, (v.guests / max) * 100)}%` }} />
             </div>
           </li>
         ))}
@@ -88,12 +88,12 @@ function LatestReplies({ inv, rsvps }: { inv: InvitationRecord; rsvps: RsvpRecor
   return (
     <Card className="p-5 sm:p-6">
       <div className="flex items-center justify-between gap-3">
-        <p className="label text-paper/50">Latest replies</p>
+        <p className="label text-fg/85">Latest replies</p>
         {rsvps.length ? (
           <Link
             href={`/m/${inv.manageToken}?tab=replies`}
             scroll={false}
-            className="-my-3 inline-flex min-h-11 items-center gap-1.5 text-sm text-flame underline-offset-4 hover:underline"
+            className="-my-3 inline-flex min-h-11 items-center gap-1.5 text-sm text-brand underline-offset-4 hover:underline"
           >
             See all
             <ArrowRight size={15} strokeWidth={1.5} aria-hidden />
@@ -101,12 +101,12 @@ function LatestReplies({ inv, rsvps }: { inv: InvitationRecord; rsvps: RsvpRecor
         ) : null}
       </div>
       {latest.length ? (
-        <ul className="mt-3 divide-y divide-paper/10">
+        <ul className="mt-3 divide-y divide-fg/10">
           {latest.map((r) => (
             <li key={r.id} className="flex items-center justify-between gap-3 py-3.5 last:pb-0">
               <div className="min-w-0">
-                <p className="truncate text-[0.95rem] font-medium text-paper">{r.name}</p>
-                <p className="mt-0.5 truncate text-xs text-paper/50">
+                <p className="truncate text-[0.95rem] font-medium text-fg">{r.name}</p>
+                <p className="mt-0.5 truncate text-xs text-fg/85">
                   {r.attending ? `${plural(r.partySize, "guest", "guests")} · ` : ""}
                   {formatWhen(r.updatedAt, inv.data.timezone)}
                 </p>
@@ -116,7 +116,7 @@ function LatestReplies({ inv, rsvps }: { inv: InvitationRecord; rsvps: RsvpRecor
           ))}
         </ul>
       ) : (
-        <p className="mt-4 text-sm leading-relaxed text-paper/55">
+        <p className="mt-4 text-sm leading-relaxed text-fg/85">
           No replies yet. They will appear here as soon as your guests respond.
         </p>
       )}
@@ -267,22 +267,22 @@ async function Manage({ params, searchParams }: Props) {
       <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-3">
-            <p className="label text-flame">{occasion.label}</p>
+            <p className="label text-brand">{occasion.label}</p>
             <Badge tone={published ? "teal" : "neutral"}>
-              {published ? <span aria-hidden className="size-1.5 rounded-full bg-teal" /> : null}
+              {published ? <span aria-hidden className="size-1.5 rounded-full bg-aqua" /> : null}
               {published ? "Live" : "Draft"}
             </Badge>
           </div>
           <h1 className="display mt-4 break-words text-5xl sm:text-6xl">{inv.title}</h1>
-          <p className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-sm text-paper/60">
+          <p className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-sm text-fg/85">
             <span className="inline-flex items-center gap-2">
-              <CalendarDays size={16} strokeWidth={1.5} aria-hidden className="text-paper/40" />
+              <CalendarDays size={16} strokeWidth={1.5} aria-hidden className="text-fg/85" />
               {formatEventDate(inv.data.date)}
               {inv.data.time ? `, ${formatTime(inv.data.time)}` : ""}
             </span>
             {inv.data.venueName ? (
               <span className="inline-flex min-w-0 items-center gap-2">
-                <MapPin size={16} strokeWidth={1.5} aria-hidden className="shrink-0 text-paper/40" />
+                <MapPin size={16} strokeWidth={1.5} aria-hidden className="shrink-0 text-fg/85" />
                 <span className="truncate">{inv.data.venueName}</span>
               </span>
             ) : null}
@@ -316,13 +316,13 @@ async function Manage({ params, searchParams }: Props) {
 function ManageFallback() {
   return (
     <div aria-hidden className="animate-pulse">
-      <div className="h-3 w-24 rounded-full bg-paper/10" />
-      <div className="mt-5 h-12 w-3/4 max-w-md rounded-xl bg-paper/8" />
-      <div className="mt-5 h-4 w-48 rounded-full bg-paper/8" />
-      <div className="mt-9 h-12 border-b border-paper/10" />
+      <div className="h-3 w-24 rounded-full bg-fg/10" />
+      <div className="mt-5 h-12 w-3/4 max-w-md rounded-xl bg-fg/8" />
+      <div className="mt-5 h-4 w-48 rounded-full bg-fg/8" />
+      <div className="mt-9 h-12 border-b border-fg/10" />
       <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
         {[0, 1, 2, 3, 4, 5].map((i) => (
-          <div key={i} className="h-32 rounded-2xl border border-paper/10 bg-night-2" />
+          <div key={i} className="h-32 rounded-2xl border border-fg/10 bg-page-2" />
         ))}
       </div>
     </div>
@@ -334,7 +334,7 @@ export default function ManagePage({ params, searchParams }: Props) {
     <>
       <Link
         href="/my"
-        className="-ml-2 mb-6 inline-flex min-h-11 items-center gap-2 rounded-full px-2 text-sm text-paper/60 outline-none transition-colors hover:text-paper focus-visible:ring-2 focus-visible:ring-flame/60"
+        className="-ml-2 mb-6 inline-flex min-h-11 items-center gap-2 rounded-full px-2 text-sm text-fg/85 outline-none transition-colors hover:text-fg focus-visible:ring-2 focus-visible:ring-brand/60"
       >
         <ArrowLeft size={16} strokeWidth={1.5} aria-hidden />
         My cards

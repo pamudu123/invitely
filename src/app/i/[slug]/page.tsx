@@ -60,7 +60,7 @@ async function Invitation({ params, searchParams }: Props) {
   return (
     <>
       {isDraft ? (
-        <div className="fixed inset-x-0 top-0 z-[60] flex items-center justify-center gap-3 bg-flame px-4 py-2 text-center text-[0.78rem] text-night">
+        <div className="fixed inset-x-0 top-0 z-[60] flex items-center justify-center gap-3 bg-brand px-4 py-2 text-center text-[0.78rem] text-on-brand">
           <span>Preview. Only you can see this until you publish.</span>
           <Link href={`/m/${inv.manageToken}`} className="font-semibold underline underline-offset-2">Manage</Link>
         </div>
@@ -78,7 +78,7 @@ async function Invitation({ params, searchParams }: Props) {
 
 function Loading() {
   return (
-    <div className="flex min-h-dvh items-center justify-center bg-night">
+    <div className="flex min-h-dvh items-center justify-center bg-page">
       <svg width="34" height="34" viewBox="0 0 24 24" className="animate-flicker" aria-label="Loading">
         <path d="M12 1.5c4 5.2 6.5 8.7 6.5 12.4a6.5 6.5 0 0 1-13 0c0-3.700 2.500-7.200 6.500-12.400z" fill="#e8b565" />
       </svg>

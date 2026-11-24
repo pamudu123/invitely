@@ -76,10 +76,10 @@ export function SharePanel({
   return (
     <div className="grid grid-cols-1 gap-5">
       {!published ? (
-        <Card className="flex flex-col gap-4 border-flame/25 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+        <Card className="flex flex-col gap-4 border-brand/25 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
           <div>
-            <p className="label text-flame">Still a draft</p>
-            <p className="mt-2.5 text-sm leading-relaxed text-paper/70">
+            <p className="label text-brand">Still a draft</p>
+            <p className="mt-2.5 text-sm leading-relaxed text-fg/90">
               Guests cannot open this link yet. Publish the invitation first, then come back here to share it.
             </p>
           </div>
@@ -92,9 +92,9 @@ export function SharePanel({
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <div className="grid min-w-0 grid-cols-1 content-start gap-5">
           <Card className="p-5 sm:p-6">
-            <p className="label text-paper/50">Public link</p>
+            <p className="label text-fg/85">Public link</p>
             <h2 className="display mt-3 text-3xl">One link for everyone</h2>
-            <p className="mt-3 text-sm leading-relaxed text-paper/60">
+            <p className="mt-3 text-sm leading-relaxed text-fg/85">
               Post it in a family group or add it to your social profiles. Anyone who opens it can view the invitation and reply.
             </p>
             <LinkField slug={slug} className="mt-5" />
@@ -110,14 +110,14 @@ export function SharePanel({
           </Card>
 
           <Card className="flex items-start gap-4 p-5 sm:p-6">
-            <span className="grid size-11 shrink-0 place-items-center rounded-full border border-paper/15 text-flame">
+            <span className="grid size-11 shrink-0 place-items-center rounded-full border border-fg/15 text-brand">
               <Users size={19} strokeWidth={1.5} aria-hidden />
             </span>
             <div>
-              <p className="text-[0.95rem] font-medium text-paper">Looking for personal links?</p>
-              <p className="mt-1.5 text-sm leading-relaxed text-paper/60">
+              <p className="text-[0.95rem] font-medium text-fg">Looking for personal links?</p>
+              <p className="mt-1.5 text-sm leading-relaxed text-fg/85">
                 Links that greet each guest by name and reserve their seats live in the{" "}
-                <Link href={`/m/${invitationId}?tab=guests`} className="text-flame underline-offset-4 hover:underline">
+                <Link href={`/m/${invitationId}?tab=guests`} className="text-brand underline-offset-4 hover:underline">
                   Guests tab
                 </Link>
                 .
@@ -127,11 +127,11 @@ export function SharePanel({
         </div>
 
         <Card className="p-5 sm:p-6">
-          <p className="label text-paper/50">QR code</p>
+          <p className="label text-fg/85">QR code</p>
           <div className="mx-auto mt-5 aspect-square w-full max-w-64 overflow-hidden rounded-2xl bg-white">
-            {link ? <QrCode value={link} label={`QR code for ${title}`} /> : <div className="size-full animate-pulse bg-paper-2" />}
+            {link ? <QrCode value={link} label={`QR code for ${title}`} /> : <div className="size-full animate-pulse bg-fg-2" />}
           </div>
-          <p className="mt-5 text-sm leading-relaxed text-paper/60">
+          <p className="mt-5 text-sm leading-relaxed text-fg/85">
             Print it on a card or show it on a screen at the venue. Scanning it opens the public link.
           </p>
           <Button type="button" variant="secondary" onClick={download} disabled={!link} className="mt-4 w-full">
@@ -139,7 +139,7 @@ export function SharePanel({
             Download QR
           </Button>
           {downloadError ? (
-            <p role="alert" className="mt-3 text-sm text-red-300">
+            <p role="alert" className="mt-3 text-sm text-red-700">
               We could not create the image. Please try again.
             </p>
           ) : null}

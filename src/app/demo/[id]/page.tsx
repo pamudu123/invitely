@@ -25,7 +25,7 @@ async function Demo({ params }: { params: PageProps<"/demo/[id]">["params"] }) {
 
 export default function DemoPage({ params }: PageProps<"/demo/[id]">) {
   return (
-    <Suspense fallback={<div className="min-h-dvh bg-night" />}>
+    <Suspense fallback={<div className="min-h-dvh bg-page" />}>
       <Demo params={params} />
     </Suspense>
   );

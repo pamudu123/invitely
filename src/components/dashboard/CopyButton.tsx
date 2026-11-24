@@ -73,7 +73,7 @@ export function CopyButton({
       className={buttonClass(variant, size, `${iconOnly ? "!w-11 !px-0" : ""} ${className}`)}
     >
       {state === "copied" ? (
-        <Check size={16} strokeWidth={1.5} className="text-teal" aria-hidden />
+        <Check size={16} strokeWidth={1.5} className="text-aqua" aria-hidden />
       ) : (
         <Copy size={16} strokeWidth={1.5} aria-hidden />
       )}

@@ -9,11 +9,11 @@ export const metadata: Metadata = {
     template: "%s · Invitely",
   },
   description:
-    "Design a living digital invitation in minutes. Guests light the lamp, break the seal or draw the curtains to reveal your day, then RSVP in a tap.",
+    "Design a living digital invitation in minutes. Guests break the seal, draw the curtains or open the doors to reveal your day, then RSVP in a tap.",
   openGraph: {
     title: "Invitely · Invitations that open like a ceremony",
     description:
-      "Living digital invitations for weddings, homecomings, birthdays and every celebration. Personal guest links, RSVP tracking and auspicious time countdowns.",
+      "Living digital invitations for weddings, birthdays and every celebration. Personal guest links, RSVP tracking and live countdowns.",
     type: "website",
   },
 };
@@ -22,7 +22,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#060b0b",
+  themeColor: "#16249a",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

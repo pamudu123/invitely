@@ -1,25 +1,27 @@
 @import "tailwindcss";
 @import "./invitation.css" layer(components);
 
+/* Frost: ice-light pages, navy text, royal blue actions. Not inline, so a section
+   can swap these roles (see .on-deep). Text pairs are kept at 4.5:1 or better. */
+@theme {
+  --color-page: #eef7ff;
+  --color-page-2: #ffffff;
+  --color-page-3: #e3f1ff;
+  --color-page-4: #cfe6ff;
+  --color-fg: #0f1c5c;
+  --color-fg-2: #24337a;
+  --color-brand: #2740c9;
+  --color-brand-hot: #1b2f9e;
+  --color-on-brand: #ffffff;
+  --color-violet: #4f38c8;
+  --color-aqua: #085a6c;
+  --color-mint: #a9fbe4;
+}
+
 @theme inline {
   --font-serif: var(--font-brand-serif), "Iowan Old Style", Georgia, serif;
   --font-sans: var(--font-brand-sans), system-ui, sans-serif;
   --font-mono: var(--font-brand-mono), ui-monospace, monospace;
-
-  /* Brand: a room at night, lit by one lamp */
-  --color-night: #060b0b;
-  --color-night-2: #0b1413;
-  --color-night-3: #111f1d;
-  --color-night-4: #1a2c2a;
-  --color-paper: #f4eddf;
-  --color-paper-2: #ebe2d0;
-  --color-flame: #e8b565;
-  --color-flame-hot: #ffdca6;
-  --color-ember: #c8743a;
-  --color-teal: #63c7b6;
-  --color-ink: #151b1a;
-  --color-ink-2: #5a625d;
-  --color-peacock: #0e3b3c;
 
   /* Invitation theme tokens, set per invitation */
   --color-inv-bg: var(--inv-bg);
@@ -67,37 +69,47 @@ html {
 }
 
 body {
-  background: var(--color-night);
-  color: var(--color-paper);
+  background: var(--color-page);
+  color: var(--color-fg);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--color-flame) 45%, transparent);
+  background: #c9dcff;
 }
 
 @layer components {
-/* Small tracked label, used everywhere in the site chrome */
+/* Small label, used everywhere in the site chrome */
 .label {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  font-family: var(--font-sans);
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0;
 }
 
 .display {
   font-family: var(--font-serif);
   font-weight: 400;
-  letter-spacing: -0.035em;
-  line-height: 0.95;
+  letter-spacing: -0.015em;
+  line-height: 1.06;
 }
 
-/* Site paper theme (dashboard) */
-.theme-paper {
-  background: #f5f0e6;
-  color: var(--color-ink);
+/* Deep blue sections: same roles, light text */
+.on-deep {
+  --color-page: #141f86;
+  --color-page-2: #1b2a9e;
+  --color-page-3: #2234b4;
+  --color-page-4: #2b40c8;
+  --color-fg: #ffffff;
+  --color-fg-2: #e6f1ff;
+  --color-brand: #a9fbe4;
+  --color-brand-hot: #d3fff2;
+  --color-on-brand: #0f1c5c;
+  --color-aqua: #a9fbe4;
+  background: var(--color-page);
+  color: var(--color-fg);
 }
 
 .grain::after {

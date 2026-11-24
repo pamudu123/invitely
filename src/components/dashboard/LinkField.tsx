@@ -10,11 +10,11 @@ export function LinkField({ slug, className = "" }: { slug: string; className?: 
   return (
     <div className={`flex flex-col gap-2.5 sm:flex-row sm:items-center ${className}`}>
       <div
-        className="flex min-h-11 min-w-0 flex-1 items-center rounded-xl border border-paper/12 bg-night-3/70 px-3.5 font-mono text-[0.82rem] text-paper/85"
+        className="flex min-h-11 min-w-0 flex-1 items-center rounded-xl border border-fg/12 bg-page-3/70 px-3.5 font-mono text-[0.82rem] text-fg/85"
         title={link}
       >
         <span className="truncate">
-          <span className="text-paper/45">{origin ? `${bareHost(origin)}/i/` : "/i/"}</span>
+          <span className="text-fg/85">{origin ? `${bareHost(origin)}/i/` : "/i/"}</span>
           {slug}
         </span>
       </div>

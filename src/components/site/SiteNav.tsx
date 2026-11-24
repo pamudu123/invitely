@@ -13,15 +13,7 @@ const links = [
 ];
 
 export function SiteNav({ account }: { account: ReactNode }) {
-  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   useEffect(() => {
     document.documentElement.style.overflow = open ? "hidden" : "";
@@ -32,28 +24,24 @@ export function SiteNav({ account }: { account: ReactNode }) {
 
   return (
     <>
-      <header
-        className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
-          scrolled || open ? "border-b border-paper/10 bg-night/75 backdrop-blur-xl" : "border-b border-transparent"
-        }`}
-      >
-        <div className="mx-auto flex h-16 max-w-[84rem] items-center justify-between gap-6 px-5 sm:px-8">
-          <Link href="/" aria-label="Invitely home" className="text-paper" onClick={() => setOpen(false)}>
+      <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5">
+        <div className="mx-auto flex h-14 max-w-[82rem] items-center justify-between gap-6 rounded-full border border-fg/10 bg-page-2 pl-5 pr-2 shadow-[0_8px_30px_-12px_rgba(15,28,92,0.4)]">
+          <Link href="/" aria-label="Invitely home" className="text-fg" onClick={() => setOpen(false)}>
             <Logo />
           </Link>
           <nav className="hidden items-center gap-8 md:flex" aria-label="Main">
             {links.map((l) => (
-              <Link key={l.href} href={l.href} className="text-[0.88rem] text-paper/65 transition-colors hover:text-paper">
+              <Link key={l.href} href={l.href} className="text-[0.95rem] font-semibold text-fg transition-colors hover:text-brand">
                 {l.label}
               </Link>
             ))}
           </nav>
           <div className="flex items-center gap-2">
             <div className="hidden sm:block">{account}</div>
-            <ButtonLink href="/templates" size="sm" className="hidden sm:inline-flex">Create invitation</ButtonLink>
+            <ButtonLink href="/templates" size="md" className="max-sm:hidden">Create invitation</ButtonLink>
             <button
               type="button"
-              className="flex h-11 w-11 items-center justify-center rounded-full text-paper md:hidden"
+              className="flex h-11 w-11 items-center justify-center rounded-full text-fg md:hidden"
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
               onClick={() => setOpen((v) => !v)}
@@ -65,14 +53,14 @@ export function SiteNav({ account }: { account: ReactNode }) {
       </header>
 
       {open ? (
-        <div className="fixed inset-0 z-40 flex flex-col bg-night px-6 pb-8 pt-24 md:hidden">
+        <div className="fixed inset-0 z-40 flex flex-col bg-page px-6 pb-8 pt-24 md:hidden">
           <nav className="flex flex-col" aria-label="Mobile">
             {links.map((l, i) => (
               <Link
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="display animate-fade-up border-b border-paper/10 py-5 text-4xl"
+                className="display animate-fade-up border-b border-fg/10 py-5 text-4xl"
                 style={{ animationDelay: `${i * 60}ms` }}
               >
                 {l.label}

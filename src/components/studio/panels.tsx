@@ -6,7 +6,6 @@ import { Crest, Divider, ornamentLabels } from "@/components/invitation/ornament
 import { ritualInfo } from "@/lib/invitation/rituals";
 import { Field, Input, Select, Textarea } from "@/components/ui/kit";
 import { compressImage } from "@/lib/client/image";
-import { languageNames } from "@/lib/invitation/labels";
 import { allSections, getOccasion, occasions, sectionLabels } from "@/lib/invitation/occasions";
 import { applyTemplateDesign, templates } from "@/lib/invitation/templates";
 import { fontPairs, getPalette, palettes } from "@/lib/invitation/theme";
@@ -14,7 +13,6 @@ import type {
   EffectId,
   HeroLayout,
   InvitationData,
-  LanguageId,
   MusicId,
   OccasionId,
   OrnamentId,
@@ -101,15 +99,15 @@ export function DesignPanel({ data, setTheme, replace, set, replay }: PanelProps
                   <span className="h-1 w-8 rounded-full" style={{ background: p.deep }} />
                 </span>
                 <span className="block px-2.5 py-2">
-                  <span className="block truncate text-[0.82rem] text-paper">{tpl.name}</span>
-                  <span className="block truncate text-[0.68rem] text-paper/45">{tpl.meaning}</span>
+                  <span className="block truncate text-[0.82rem] text-fg">{tpl.name}</span>
+                  <span className="block truncate text-[0.75rem] text-fg/85">{tpl.meaning}</span>
                 </span>
               </Tile>
             );
           })}
         </div>
         {matching.length && matching.length < templates.length ? (
-          <button type="button" className="justify-self-start text-[0.8rem] text-flame underline-offset-4 hover:underline" onClick={() => setShowAllTemplates((v) => !v)}>
+          <button type="button" className="justify-self-start text-[0.8rem] text-brand underline-offset-4 hover:underline" onClick={() => setShowAllTemplates((v) => !v)}>
             {showAllTemplates ? "Show designs for this occasion" : `Show all ${templates.length} designs`}
           </button>
         ) : null}
@@ -132,14 +130,14 @@ export function DesignPanel({ data, setTheme, replace, set, replay }: PanelProps
                   <span className="flex-1" style={{ background: p.ink }} />
                 </span>
               </span>
-              <span className="block truncate px-1.5 py-1.5 text-center text-[0.64rem] text-paper/70">{p.label}</span>
+              <span className="block truncate px-1.5 py-1.5 text-center text-[0.75rem] text-fg/90">{p.label}</span>
             </Tile>
           ))}
         </div>
         <div className="grid grid-cols-4 gap-2">
           {customKeys.map(({ key, label }) => (
             <label key={key} className="grid gap-1 text-center">
-              <span className="relative block h-10 overflow-hidden rounded-xl border border-paper/15">
+              <span className="relative block h-10 overflow-hidden rounded-xl border border-fg/15">
                 <input
                   type="color"
                   value={palette[key]}
@@ -148,12 +146,12 @@ export function DesignPanel({ data, setTheme, replace, set, replay }: PanelProps
                   aria-label={`${label} colour`}
                 />
               </span>
-              <span className="text-[0.66rem] text-paper/55">{label}</span>
+              <span className="text-[0.75rem] text-fg/85">{label}</span>
             </label>
           ))}
         </div>
         {theme.custom ? (
-          <button type="button" className="justify-self-start text-[0.8rem] text-paper/55 hover:text-paper" onClick={() => setTheme({ custom: undefined })}>
+          <button type="button" className="justify-self-start text-[0.8rem] text-fg/85 hover:text-fg" onClick={() => setTheme({ custom: undefined })}>
             Reset to the palette colours
           </button>
         ) : null}
@@ -164,7 +162,7 @@ export function DesignPanel({ data, setTheme, replace, set, replay }: PanelProps
           {fontPairs.map((f) => (
             <Tile key={f.id} active={theme.fontPair === f.id} onClick={() => setTheme({ fontPair: f.id })} className="px-2 py-3 text-center">
               <span
-                className="block text-paper"
+                className="block text-fg"
                 style={{
                   fontFamily: f.names,
                   fontWeight: f.namesWeight,
@@ -176,7 +174,7 @@ export function DesignPanel({ data, setTheme, replace, set, replay }: PanelProps
               >
                 Aa
               </span>
-              <span className="mt-1.5 block text-[0.72rem] text-paper/70">{f.label}</span>
+              <span className="mt-1.5 block text-[0.75rem] text-fg/90">{f.label}</span>
             </Tile>
           ))}
         </div>
@@ -186,8 +184,8 @@ export function DesignPanel({ data, setTheme, replace, set, replay }: PanelProps
         <div className="grid grid-cols-2 gap-2">
           {(Object.keys(ornamentLabels) as OrnamentId[]).map((o) => (
             <Tile key={o} active={theme.ornament === o} onClick={() => setTheme({ ornament: o })} className="px-2.5 py-2.5 text-center">
-              <Divider kind={o} className="mx-auto h-6 w-full text-flame" />
-              <span className="mt-1 block text-[0.72rem] text-paper/70">{ornamentLabels[o]}</span>
+              <Divider kind={o} className="mx-auto h-6 w-full text-brand" />
+              <span className="mt-1 block text-[0.75rem] text-fg/90">{ornamentLabels[o]}</span>
             </Tile>
           ))}
         </div>
@@ -197,8 +195,8 @@ export function DesignPanel({ data, setTheme, replace, set, replay }: PanelProps
         <div className="grid grid-cols-2 gap-2">
           {heroOptions.map((h) => (
             <Tile key={h.id} active={theme.hero === h.id} onClick={() => setTheme({ hero: h.id })} className="px-3 py-2.5">
-              <span className="block text-[0.86rem] text-paper">{h.label}</span>
-              <span className="block text-[0.7rem] text-paper/45">{h.hint}</span>
+              <span className="block text-[0.86rem] text-fg">{h.label}</span>
+              <span className="block text-[0.75rem] text-fg/85">{h.hint}</span>
             </Tile>
           ))}
         </div>
@@ -220,8 +218,8 @@ export function DesignPanel({ data, setTheme, replace, set, replay }: PanelProps
               }}
               className="px-3 py-2.5"
             >
-              <span className="block text-[0.86rem] text-paper">{ritualInfo[r].label}</span>
-              <span className="mt-0.5 block text-[0.68rem] leading-snug text-paper/45">{ritualInfo[r].description}</span>
+              <span className="block text-[0.86rem] text-fg">{ritualInfo[r].label}</span>
+              <span className="mt-0.5 block text-[0.75rem] leading-snug text-fg/85">{ritualInfo[r].description}</span>
             </Tile>
           ))}
         </div>
@@ -236,8 +234,8 @@ export function DesignPanel({ data, setTheme, replace, set, replay }: PanelProps
         <div className="grid grid-cols-3 gap-2">
           {musicOptions.map((m) => (
             <Tile key={m.id} active={theme.music === m.id} onClick={() => setTheme({ music: m.id })} className="px-2.5 py-2.5">
-              <span className="block text-[0.84rem] text-paper">{m.label}</span>
-              <span className="block text-[0.68rem] text-paper/45">{m.hint}</span>
+              <span className="block text-[0.84rem] text-fg">{m.label}</span>
+              <span className="block text-[0.75rem] text-fg/85">{m.hint}</span>
             </Tile>
           ))}
         </div>
@@ -252,7 +250,7 @@ export function DesignPanel({ data, setTheme, replace, set, replay }: PanelProps
         <div className="grid grid-cols-5 gap-2">
           {effectOptions.map((e) => (
             <Tile key={e.id} active={theme.effect === e.id} onClick={() => setTheme({ effect: e.id })} className="px-1 py-2.5 text-center">
-              <span className="text-[0.78rem] text-paper">{e.label}</span>
+              <span className="text-[0.78rem] text-fg">{e.label}</span>
             </Tile>
           ))}
         </div>
@@ -293,7 +291,7 @@ export function DetailsPanel({ data, set }: PanelProps) {
         </Select>
       </Group>
 
-      <Group title="Names" hint="Type in any language. Sinhala and Tamil letters are fully supported.">
+      <Group title="Names">
         <Field label={occ.name1Label}>
           <Input value={data.name1} maxLength={60} onChange={(e) => set({ name1: e.target.value })} />
         </Field>
@@ -371,7 +369,7 @@ export function SchedulePanel({ data, set }: PanelProps) {
     <>
       <Group title="Order of the day">
         {events.map((e, i) => (
-          <div key={e.id} className="grid gap-2 rounded-xl border border-paper/10 bg-night-3/40 p-3">
+          <div key={e.id} className="grid gap-2 rounded-xl border border-fg/10 bg-page-3/40 p-3">
             <div className="flex items-center gap-2">
               <Input type="time" value={e.time} onChange={(ev) => ev.target.value && patchEvent(i, { time: ev.target.value })} className="!w-[7.2rem] shrink-0" aria-label="Time" />
               <Input value={e.title} placeholder="What happens" maxLength={100} onChange={(ev) => patchEvent(i, { title: ev.target.value })} aria-label="Title" />
@@ -386,7 +384,7 @@ export function SchedulePanel({ data, set }: PanelProps) {
         <button
           type="button"
           onClick={() => set({ events: [...events, { id: newId(), title: "", time: "18:00" }] })}
-          className="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-dashed border-paper/20 text-[0.86rem] text-paper/70 hover:border-flame/60 hover:text-flame"
+          className="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-dashed border-fg/20 text-[0.86rem] text-fg/90 hover:border-brand/60 hover:text-brand"
         >
           <Plus size={16} /> Add a moment
         </button>
@@ -396,8 +394,8 @@ export function SchedulePanel({ data, set }: PanelProps) {
         title="Auspicious times"
         hint={
           occ.nekath
-            ? "Nekath or muhurtham. Each one gets its own live countdown on the invitation."
-            : "Optional. Add nekath or muhurtham times if your celebration has them."
+            ? "Key times in the ceremony. Each one gets its own live countdown on the invitation."
+            : "Optional. Add key ceremony times if your celebration has them."
         }
       >
         <Toggle
@@ -415,13 +413,13 @@ export function SchedulePanel({ data, set }: PanelProps) {
         {showNekath ? (
           <>
             {nekath.map((n, i) => (
-              <div key={n.id} className="grid gap-2 rounded-xl border border-paper/10 bg-night-3/40 p-3">
+              <div key={n.id} className="grid gap-2 rounded-xl border border-fg/10 bg-page-3/40 p-3">
                 <div className="flex items-center gap-2">
                   <Input type="time" value={n.time} onChange={(ev) => ev.target.value && patchNekath(i, { time: ev.target.value })} className="!w-[7.2rem] shrink-0" aria-label="Time" />
                   <Input value={n.title} placeholder="Ritual" maxLength={100} onChange={(ev) => patchNekath(i, { title: ev.target.value })} aria-label="Ritual" />
                 </div>
                 <div className="flex items-center justify-between gap-2">
-                  <Input value={n.note ?? ""} placeholder="Note, for example Facing east" maxLength={200} onChange={(ev) => patchNekath(i, { note: ev.target.value })} aria-label="Note" />
+                  <Input value={n.note ?? ""} placeholder="Note, for example At the main door" maxLength={200} onChange={(ev) => patchNekath(i, { note: ev.target.value })} aria-label="Note" />
                   <RowActions index={i} count={nekath.length} onMove={(a, b) => set({ nekath: moveItem(nekath, a, b) })} onRemove={() => set({ nekath: nekath.filter((_, idx) => idx !== i) })} />
                 </div>
               </div>
@@ -429,7 +427,7 @@ export function SchedulePanel({ data, set }: PanelProps) {
             <button
               type="button"
               onClick={() => set({ nekath: [...nekath, { id: newId(), title: "", time: "09:00" }] })}
-              className="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-dashed border-paper/20 text-[0.86rem] text-paper/70 hover:border-flame/60 hover:text-flame"
+              className="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-dashed border-fg/20 text-[0.86rem] text-fg/90 hover:border-brand/60 hover:text-brand"
             >
               <Plus size={16} /> Add an auspicious time
             </button>
@@ -471,14 +469,14 @@ function GalleryEditor({ data, set }: Pick<PanelProps, "data" | "set">) {
     <div className="grid gap-2">
       <div className="grid grid-cols-4 gap-2">
         {data.gallery.map((src, i) => (
-          <div key={`${i}-${src.slice(-12)}`} className="group relative aspect-square overflow-hidden rounded-lg border border-paper/10">
+          <div key={`${i}-${src.slice(-12)}`} className="group relative aspect-square overflow-hidden rounded-lg border border-fg/10">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={src} alt="" className="h-full w-full object-cover" />
             <button
               type="button"
               aria-label="Remove photo"
               onClick={() => set({ gallery: data.gallery.filter((_, idx) => idx !== i) })}
-              className="absolute right-1 top-1 flex h-7 w-7 items-center justify-center rounded-full bg-black/70 text-white"
+              className="absolute right-1 top-1 flex h-7 w-7 items-center justify-center rounded-full bg-black/70 text-on-brand"
             >
               <X size={14} />
             </button>
@@ -488,15 +486,15 @@ function GalleryEditor({ data, set }: Pick<PanelProps, "data" | "set">) {
           <button
             type="button"
             onClick={() => input.current?.click()}
-            className="flex aspect-square items-center justify-center rounded-lg border border-dashed border-paper/25 text-paper/50 hover:border-flame/60 hover:text-flame"
+            className="flex aspect-square items-center justify-center rounded-lg border border-dashed border-fg/25 text-fg/85 hover:border-brand/60 hover:text-brand"
             aria-label="Add photos"
           >
             <ImagePlus size={20} strokeWidth={1.4} />
           </button>
         ) : null}
       </div>
-      <p className="text-[0.76rem] text-paper/45">{busy ? "Adding photos…" : `${data.gallery.length} of ${max} photos. They are resized on your phone before upload.`}</p>
-      {error ? <p className="text-[0.8rem] text-red-300">{error}</p> : null}
+      <p className="text-[0.76rem] text-fg/85">{busy ? "Adding photos…" : `${data.gallery.length} of ${max} photos. They are resized on your phone before upload.`}</p>
+      {error ? <p className="text-[0.8rem] text-red-700">{error}</p> : null}
       <input ref={input} type="file" accept="image/*" multiple className="hidden" onChange={(e) => void add(e.target.files)} />
     </div>
   );
@@ -517,7 +515,7 @@ function SectionBody({ id, data, set }: { id: SectionId } & Pick<PanelProps, "da
           <Textarea rows={3} value={data.notes} maxLength={600} onChange={(e) => set({ notes: e.target.value })} />
         </Field>
         <div className="grid gap-2">
-          <span className="text-[0.78rem] font-medium text-paper/70">Contacts</span>
+          <span className="text-[0.78rem] font-medium text-fg/90">Contacts</span>
           {data.contacts.map((c, i) => (
             <div key={c.id} className="flex items-center gap-2">
               <Input value={c.name} placeholder="Name" maxLength={60} onChange={(e) => set({ contacts: data.contacts.map((x, idx) => (idx === i ? { ...x, name: e.target.value } : x)) })} aria-label="Contact name" />
@@ -526,7 +524,7 @@ function SectionBody({ id, data, set }: { id: SectionId } & Pick<PanelProps, "da
             </div>
           ))}
           {data.contacts.length < 6 ? (
-            <button type="button" className="justify-self-start text-[0.82rem] text-flame hover:underline" onClick={() => set({ contacts: [...data.contacts, { id: newId(), name: "", phone: "" }] })}>
+            <button type="button" className="justify-self-start text-[0.82rem] text-brand hover:underline" onClick={() => set({ contacts: [...data.contacts, { id: newId(), name: "", phone: "" }] })}>
               Add a contact
             </button>
           ) : null}
@@ -538,7 +536,7 @@ function SectionBody({ id, data, set }: { id: SectionId } & Pick<PanelProps, "da
     return (
       <div className="grid gap-3">
         {data.story.map((s, i) => (
-          <div key={s.id} className="grid gap-2 rounded-xl border border-paper/10 bg-night-3/40 p-3">
+          <div key={s.id} className="grid gap-2 rounded-xl border border-fg/10 bg-page-3/40 p-3">
             <div className="flex gap-2">
               <Input value={s.when ?? ""} placeholder="Year" maxLength={40} className="!w-24 shrink-0" onChange={(e) => set({ story: data.story.map((x, idx) => (idx === i ? { ...x, when: e.target.value } : x)) })} aria-label="When" />
               <Input value={s.title} placeholder="Title" maxLength={100} onChange={(e) => set({ story: data.story.map((x, idx) => (idx === i ? { ...x, title: e.target.value } : x)) })} aria-label="Title" />
@@ -551,7 +549,7 @@ function SectionBody({ id, data, set }: { id: SectionId } & Pick<PanelProps, "da
           </div>
         ))}
         {data.story.length < 6 ? (
-          <button type="button" className="justify-self-start text-[0.82rem] text-flame hover:underline" onClick={() => set({ story: [...data.story, { id: newId(), title: "", when: "", text: "" }] })}>
+          <button type="button" className="justify-self-start text-[0.82rem] text-brand hover:underline" onClick={() => set({ story: [...data.story, { id: newId(), title: "", when: "", text: "" }] })}>
             Add a chapter
           </button>
         ) : null}
@@ -568,7 +566,7 @@ export function SectionsPanel({ data, set }: PanelProps) {
   const hidden = allSections.filter((s) => !data.sections.includes(s));
 
   const row = (id: SectionId, on: boolean, index: number) => (
-    <div key={id} className={`rounded-xl border ${on ? "border-paper/12 bg-night-3/40" : "border-paper/8"}`}>
+    <div key={id} className={`rounded-xl border ${on ? "border-fg/12 bg-page-3/40" : "border-fg/8"}`}>
       <div className="flex items-center gap-2 px-3 py-2">
         <button
           type="button"
@@ -576,7 +574,7 @@ export function SectionsPanel({ data, set }: PanelProps) {
           aria-checked={on}
           aria-label={`${on ? "Hide" : "Show"} ${sectionLabels[id].label}`}
           onClick={() => set({ sections: on ? data.sections.filter((s) => s !== id) : [...data.sections, id] })}
-          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md border transition-colors ${on ? "border-flame bg-flame text-night" : "border-paper/25 text-transparent"}`}
+          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md border transition-colors ${on ? "border-brand bg-brand text-on-brand" : "border-fg/25 text-transparent"}`}
         >
           <Check size={15} strokeWidth={2.4} />
         </button>
@@ -585,8 +583,8 @@ export function SectionsPanel({ data, set }: PanelProps) {
           className="min-w-0 flex-1 py-1.5 text-left"
           onClick={() => editable.includes(id) && setOpen(open === id ? null : id)}
         >
-          <span className={`block text-[0.9rem] ${on ? "text-paper" : "text-paper/50"}`}>{sectionLabels[id].label}</span>
-          <span className="block truncate text-[0.72rem] text-paper/40">
+          <span className={`block text-[0.9rem] ${on ? "text-fg" : "text-fg/85"}`}>{sectionLabels[id].label}</span>
+          <span className="block truncate text-[0.75rem] text-fg/85">
             {editable.includes(id) ? (open === id ? "Tap to close" : "Tap to edit") : sectionLabels[id].hint}
           </span>
         </button>
@@ -598,7 +596,7 @@ export function SectionsPanel({ data, set }: PanelProps) {
         ) : null}
       </div>
       {open === id && editable.includes(id) ? (
-        <div className="border-t border-paper/8 p-3">
+        <div className="border-t border-fg/8 p-3">
           <SectionBody id={id} data={data} set={set} />
         </div>
       ) : null}
@@ -608,7 +606,7 @@ export function SectionsPanel({ data, set }: PanelProps) {
   return (
     <Group title="Sections" hint="Tick what you want to show and put it in your order.">
       {data.sections.map((id, i) => row(id, true, i))}
-      {hidden.length ? <p className="label mt-2 text-paper/40">Hidden</p> : null}
+      {hidden.length ? <p className="label mt-2 text-fg/85">Hidden</p> : null}
       {hidden.map((id) => row(id, false, -1))}
     </Group>
   );
@@ -643,7 +641,7 @@ export function RsvpPanel({ data, set }: PanelProps) {
                 <Input type="number" min={1} max={20} value={rsvp.maxPartySize} onChange={(e) => patch({ maxPartySize: Math.min(20, Math.max(1, Number(e.target.value) || 1)) })} />
               </Field>
             </div>
-            <p className="text-[0.76rem] leading-snug text-paper/45">
+            <p className="text-[0.76rem] leading-snug text-fg/85">
               Guests with a personal link can only bring the seats you reserved for them.
             </p>
             <Toggle checked={rsvp.askMeal} onChange={(v) => patch({ askMeal: v })} label="Ask for a meal preference" />
@@ -668,57 +666,6 @@ export function RsvpPanel({ data, set }: PanelProps) {
           <Textarea rows={3} value={data.thankYou} maxLength={600} onChange={(e) => set({ thankYou: e.target.value })} />
         </Field>
       </Group>
-    </>
-  );
-}
-
-/* ----------------------------- Languages ----------------------------- */
-
-const langs: LanguageId[] = ["en", "si", "ta"];
-
-export function LanguagePanel({ data, set }: PanelProps) {
-  const extras = data.languages.filter((l) => l !== data.language);
-
-  return (
-    <>
-      <Group title="Languages" hint="Guests can switch language on the invitation. Buttons, dates and labels are translated for you.">
-        <Field label="Main language">
-          <Select
-            value={data.language}
-            onChange={(e) => {
-              const language = e.target.value as LanguageId;
-              set({ language, languages: [language, ...data.languages.filter((l) => l !== language)] });
-            }}
-          >
-            {langs.map((l) => (
-              <option key={l} value={l}>{languageNames[l].native} ({languageNames[l].english})</option>
-            ))}
-          </Select>
-        </Field>
-        {langs.filter((l) => l !== data.language).map((l) => (
-          <Toggle
-            key={l}
-            checked={data.languages.includes(l)}
-            onChange={(v) => set({ languages: v ? [...data.languages, l] : data.languages.filter((x) => x !== l) })}
-            label={`Also offer ${languageNames[l].english}`}
-            hint={languageNames[l].native}
-          />
-        ))}
-      </Group>
-      {extras.map((l) => {
-        const t = data.translations[l] ?? {};
-        const patch = (p: Partial<typeof t>) => set({ translations: { ...data.translations, [l]: { ...t, ...p } } });
-        return (
-          <Group key={l} title={`Your words in ${languageNames[l].english}`} hint="Leave blank to show the main language for these lines.">
-            <Field label="Line above the names">
-              <Input value={t.kicker ?? ""} maxLength={160} lang={l} onChange={(e) => patch({ kicker: e.target.value })} />
-            </Field>
-            <Field label="Invitation message">
-              <Textarea rows={4} value={t.message ?? ""} maxLength={900} lang={l} onChange={(e) => patch({ message: e.target.value })} />
-            </Field>
-          </Group>
-        );
-      })}
     </>
   );
 }
