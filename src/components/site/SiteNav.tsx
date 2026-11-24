@@ -7,6 +7,7 @@ import { ButtonLink, Logo } from "@/components/ui/kit";
 
 const links = [
   { href: "/templates", label: "Designs" },
+  { href: "/print-cards", label: "Printed cards" },
   { href: "/#openings", label: "Openings" },
   { href: "/#features", label: "Features" },
   { href: "/pricing", label: "Pricing" },
@@ -29,7 +30,7 @@ export function SiteNav({ account }: { account: ReactNode }) {
           <Link href="/" aria-label="Invitely home" className="text-fg" onClick={() => setOpen(false)}>
             <Logo />
           </Link>
-          <nav className="hidden items-center gap-8 md:flex" aria-label="Main">
+          <nav className="hidden items-center gap-8 lg:flex" aria-label="Main">
             {links.map((l) => (
               <Link key={l.href} href={l.href} className="text-[0.95rem] font-semibold text-fg transition-colors hover:text-brand">
                 {l.label}
@@ -41,7 +42,7 @@ export function SiteNav({ account }: { account: ReactNode }) {
             <ButtonLink href="/templates" size="md" className="max-sm:hidden">Create invitation</ButtonLink>
             <button
               type="button"
-              className="flex h-11 w-11 items-center justify-center rounded-full text-fg md:hidden"
+              className="flex h-11 w-11 items-center justify-center rounded-full text-fg lg:hidden"
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
               onClick={() => setOpen((v) => !v)}
@@ -53,7 +54,7 @@ export function SiteNav({ account }: { account: ReactNode }) {
       </header>
 
       {open ? (
-        <div className="fixed inset-0 z-40 flex flex-col bg-page px-6 pb-8 pt-24 md:hidden">
+        <div className="fixed inset-0 z-40 flex flex-col bg-page px-6 pb-8 pt-24 lg:hidden">
           <nav className="flex flex-col" aria-label="Mobile">
             {links.map((l, i) => (
               <Link

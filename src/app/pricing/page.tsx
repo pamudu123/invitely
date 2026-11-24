@@ -3,6 +3,7 @@ import { Faq, type FaqItem } from "@/components/site/Faq";
 import { PlanCards } from "@/components/site/PlanCards";
 import { SiteFooter, SiteHeader } from "@/components/site/chrome";
 import { ButtonLink } from "@/components/ui/kit";
+import { addOns } from "@/lib/plans";
 
 export const metadata: Metadata = {
   title: "Pricing",
@@ -47,6 +48,22 @@ export default function PricingPage() {
             </p>
           </div>
           <PlanCards />
+          <section className="mx-auto mt-16 max-w-4xl">
+            <p className="label text-brand">Optional extras</p>
+            {addOns.map((a) => (
+              <div key={a.id} className="mt-4 flex flex-col gap-4 rounded-3xl border border-fg/10 bg-page-2 p-6 sm:flex-row sm:items-center sm:justify-between">
+                <div className="max-w-xl">
+                  <h2 className="font-serif text-3xl">{a.name}</h2>
+                  <p className="mt-2 text-sm leading-relaxed text-fg/85">{a.description}</p>
+                </div>
+                <div className="shrink-0 sm:text-right">
+                  <p className="display text-4xl">${a.usd}</p>
+                  <p className="mt-1 text-sm text-fg/85">per design</p>
+                  <ButtonLink href="/print-cards" variant="secondary" size="sm" className="mt-3">See the card shapes</ButtonLink>
+                </div>
+              </div>
+            ))}
+          </section>
           <section className="mx-auto mt-28 grid max-w-6xl gap-12 lg:grid-cols-[0.8fr_1.2fr]">
             <div>
               <p className="label text-brand">Questions</p>

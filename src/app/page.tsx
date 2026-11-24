@@ -1,5 +1,6 @@
 import { ArrowRight, CalendarHeart, Infinity as InfinityIcon, Link2, MailCheck, Music, QrCode } from "lucide-react";
 import Link from "next/link";
+import { PrintPreview } from "@/components/cards/PrintPreview";
 import { Faq } from "@/components/site/Faq";
 import { PlanCards } from "@/components/site/PlanCards";
 import { SiteFooter, SiteHeader } from "@/components/site/chrome";
@@ -26,6 +27,12 @@ const steps = [
   { title: "Choose a design", text: "Start from a design made for your occasion. Every colour, letter and ornament can change." },
   { title: "Make it yours", text: "Add your names, times, venue and photos. Watch it update on a phone as you type." },
   { title: "Share and relax", text: "Publish, send personal links on WhatsApp and follow the replies as they come in." },
+];
+
+const printed = [
+  { design: "archway", template: "atelier", palette: "frost-royal", width: 190 },
+  { design: "sanda", template: "tharu", palette: "amethyst-ice", width: 200 },
+  { design: "deco", template: "promise", palette: "lagoon-ice", width: 190 },
 ];
 
 const openingCount = Object.keys(ritualInfo).length - 1;
@@ -66,6 +73,25 @@ export default function Home() {
                   <h3>{f.title}</h3>
                   <p>{f.text}</p>
                 </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="frost-section" style={{ background: "linear-gradient(180deg, #e3f1ff, #c4f3ea)" }}>
+          <div className="frost-in grid grid-cols-1 items-center gap-12 lg:grid-cols-[1fr_auto] [&>*]:min-w-0">
+            <div>
+              <h2 className="frost-h2">One design. Web, image and paper.</h2>
+              <p className="frost-lede">
+                Every web card also comes as an image to send on WhatsApp or post as a status. And for the guests who
+                should receive something in the hand, add a printed card in a shape that is anything but a rectangle. Its
+                back carries a QR code that opens your invitation.
+              </p>
+              <Link href="/print-cards" className="frost-link mt-6">See the printed cards <ArrowRight size={17} /></Link>
+            </div>
+            <div className="no-scrollbar -mx-5 flex items-end gap-5 overflow-x-auto px-5 pb-16 pt-2 lg:mx-0 lg:overflow-visible lg:px-0 lg:pb-0">
+              {printed.map((x) => (
+                <PrintPreview key={x.design} design={x.design} data={showcaseData(x.template, x.palette)} width={x.width} />
               ))}
             </div>
           </div>
