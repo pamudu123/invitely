@@ -1,5 +1,6 @@
 import type { OrnamentId } from "@/lib/invitation/types";
 import type { ReactElement, SVGProps } from "react";
+import { extraCorners, extraCrests, extraDividers, extraOrnamentLabels } from "./ornaments-extra";
 
 type P = SVGProps<SVGSVGElement>;
 
@@ -31,7 +32,7 @@ const leaf = (len: number, wid: number) =>
 /* Dividers: wide, short flourishes placed between sections. 240 x 28  */
 /* ------------------------------------------------------------------ */
 
-const dividers: Record<OrnamentId, () => ReactElement> = {
+const dividersBase: Partial<Record<OrnamentId, () => ReactElement>> = {
   liyawel: () => (
     <>
       <path d="M120 5l5.5 9-5.5 9-5.5-9z" {...stroke} />
@@ -159,6 +160,8 @@ const dividers: Record<OrnamentId, () => ReactElement> = {
   ),
 };
 
+const dividers = { ...dividersBase, ...extraDividers } as Record<OrnamentId, () => ReactElement>;
+
 export function Divider({ kind, ...props }: { kind: OrnamentId } & P) {
   const Body = dividers[kind] ?? dividers.minimal;
   return (
@@ -186,7 +189,7 @@ function laurel(side: 1 | -1) {
   return items;
 }
 
-const crests: Record<OrnamentId, () => ReactElement> = {
+const crestsBase: Partial<Record<OrnamentId, () => ReactElement>> = {
   liyawel: () => (
     <>
       <path d="M80 6c15 17 18 30 0 46c-18-16-15-29 0-46z" {...stroke} />
@@ -307,6 +310,8 @@ const crests: Record<OrnamentId, () => ReactElement> = {
   ),
 };
 
+const crests = { ...crestsBase, ...extraCrests } as Record<OrnamentId, () => ReactElement>;
+
 export function Crest({ kind, ...props }: { kind: OrnamentId } & P) {
   const Body = crests[kind] ?? crests.minimal;
   return (
@@ -320,7 +325,7 @@ export function Crest({ kind, ...props }: { kind: OrnamentId } & P) {
 /* Corners: drawn for the top-left corner, flipped for the others.     */
 /* ------------------------------------------------------------------ */
 
-const corners: Record<OrnamentId, () => ReactElement> = {
+const cornersBase: Partial<Record<OrnamentId, () => ReactElement>> = {
   liyawel: () => (
     <>
       <path d="M4 96V30C4 14 14 4 30 4h66" {...stroke} />
@@ -431,6 +436,8 @@ const corners: Record<OrnamentId, () => ReactElement> = {
   minimal: () => <path d="M4 44V4h40" {...stroke} />,
 };
 
+const corners = { ...cornersBase, ...extraCorners } as Record<OrnamentId, () => ReactElement>;
+
 export function Corner({ kind, ...props }: { kind: OrnamentId } & P) {
   const Body = corners[kind] ?? corners.minimal;
   return (
@@ -453,7 +460,7 @@ export function CornerFrame({ kind, size = 72, inset = 14, className = "", color
   );
 }
 
-export const ornamentLabels: Record<OrnamentId, string> = {
+const baseLabels: Partial<Record<OrnamentId, string>> = {
   liyawel: "Liyawel scroll",
   lotus: "Lotus",
   botanical: "Botanical",
@@ -465,3 +472,5 @@ export const ornamentLabels: Record<OrnamentId, string> = {
   waves: "Waves",
   minimal: "Minimal",
 };
+
+export const ornamentLabels = { ...baseLabels, ...extraOrnamentLabels } as Record<OrnamentId, string>;

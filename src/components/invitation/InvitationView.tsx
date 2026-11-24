@@ -170,7 +170,7 @@ export function InvitationView({
         content
       )}
 
-      {coverGone ? <AmbientEffect kind={data.theme.effect} color={palette.accent} fixed={!embedded} /> : null}
+      {coverGone ? <AmbientEffect kind={data.theme.effect} color={data.theme.effect === "snow" && palette.dark ? "#ffffff" : palette.accent} fixed={!embedded} /> : null}
 
       {!coverGone ? (
         <RitualOverlay

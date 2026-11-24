@@ -303,7 +303,378 @@ export const templates: TemplateDef[] = [
       hashtag: "", ritualHint: "Light the lamp",
     },
   },
+  {
+    id: "bulath",
+    name: "Bulath",
+    meaning: "The betel sheaf",
+    description: "The oldest way to invite someone in Sri Lanka is to offer a sheaf of betel leaves. Guests accept it and the leaves fan open into your invitation.",
+    occasion: "wedding",
+    alsoFor: ["homecoming", "engagement", "coming-of-age", "housewarming"],
+    tags: ["Traditional", "Sinhala", "Signature"],
+    theme: t("betel", "heirloom", "betel", "frame", "betel", "serene", "none"),
+    sample: {
+      name1: "Sachini", name2: "Lahiru",
+      kicker: "With the blessings of our parents",
+      hostsLine: "Mr & Mrs Rathnayake and Mr & Mrs Bandara",
+      venueName: "Mount Lavinia Hotel", venueAddress: "100 Hotel Road, Mount Lavinia", mapQuery: "Mount Lavinia Hotel",
+      hashtag: "#SachiniWedsLahiru", ritualHint: "Accept the betel leaves",
+      languages: ["en", "si"],
+      translations: {
+        si: {
+          kicker: "දෙමාපියන්ගේ ආශිර්වාදයෙන්",
+          message: "බුලත් හුරුල්ලක් පිළිගන්වා අපගේ විවාහ මංගල්‍යයට ඔබට ආරාධනා කරමු.",
+        },
+      },
+    },
+  },
+  {
+    id: "dorakada",
+    name: "Dorakada",
+    meaning: "The doorway",
+    description: "Carved teak doors with brass studs swing open onto a formal card with mandala corners. Made for grand entrances.",
+    occasion: "wedding",
+    alsoFor: ["homecoming", "housewarming", "anniversary"],
+    tags: ["Traditional", "Grand", "Mandala"],
+    theme: t("teak", "regal", "mandala", "frame", "doors", "warm", "none"),
+    sample: {
+      name1: "Dulani", name2: "Isuru",
+      hostsLine: "The Weerasinghe and Karunaratne families",
+      venueName: "The Grand Kandyan", venueAddress: "Lady Longden Drive, Kandy", mapQuery: "The Grand Kandyan Hotel",
+      hashtag: "#DulaniAndIsuru", ritualHint: "Open the doors",
+    },
+  },
+  {
+    id: "pihatu",
+    name: "Pihatu",
+    meaning: "Feathers",
+    description: "Peacock feather eyes in teal and deep blue, with fashion lettering. Elegant for garden weddings and engagements.",
+    occasion: "wedding",
+    alsoFor: ["engagement", "homecoming", "mehendi"],
+    tags: ["Peacock", "Elegant", "Garden"],
+    theme: t("feather", "couture", "peacock", "classic", "curtain", "serene", "sparkles"),
+    sample: {
+      name1: "Anjali", name2: "Kasun",
+      hostsLine: "Together with their families",
+      venueName: "Jetwing Lagoon", venueAddress: "Pamunugama Road, Negombo", mapQuery: "Jetwing Lagoon Negombo",
+      hashtag: "#AnjaliAndKasun", ritualHint: "Draw the curtains",
+    },
+  },
+  {
+    id: "cathedral",
+    name: "Cathedral",
+    meaning: "Stone and stained glass",
+    description: "Gothic window tracery, cool stone tones and flowing script for church weddings. The doors open as the service begins.",
+    occasion: "wedding",
+    alsoFor: ["engagement", "anniversary", "save-the-date"],
+    tags: ["Church", "Christian", "Classic"],
+    theme: t("stone", "romance", "tracery", "arch", "doors", "warm", "none"),
+    sample: {
+      name1: "Shanelle", name2: "Ryan",
+      kicker: "With joy and thanksgiving",
+      subline: "invite you to witness their holy matrimony",
+      hostsLine: "Mr & Mrs De Mel and Mr & Mrs Pereira",
+      venueName: "St Lucia's Cathedral", venueAddress: "St Lucia's Street, Kotahena, Colombo 13", mapQuery: "St Lucia's Cathedral Colombo",
+      hashtag: "#ShanelleAndRyan", ritualHint: "Open the doors",
+      time: "15:00",
+      sections: ["message", "countdown", "schedule", "venue", "story", "gallery", "details", "rsvp", "wishes"],
+      events: [
+        { id: "c1", title: "Guests are seated", time: "14:30" },
+        { id: "c2", title: "Holy matrimony", time: "15:00", place: "St Lucia's Cathedral" },
+        { id: "c3", title: "Reception", time: "18:30", place: "The Kingsbury, Colombo" },
+        { id: "c4", title: "First dance", time: "20:00" },
+      ],
+    },
+  },
+  {
+    id: "ran",
+    name: "Ran",
+    meaning: "Gold",
+    description: "Black and gold with art deco fans and a monogram crest. Heavy doors open onto an evening to remember.",
+    occasion: "homecoming",
+    alsoFor: ["wedding", "anniversary", "celebration", "corporate"],
+    tags: ["Dark", "Luxury", "Evening"],
+    theme: t("onyx", "couture", "deco", "monogram", "doors", "warm", "sparkles"),
+    sample: {
+      name1: "Yasodha", name2: "Chathura",
+      hostsLine: "Hosted by Mr & Mrs Samarasekara",
+      venueName: "Cinnamon Life, Grand Ballroom", venueAddress: "Sir James Peiris Mawatha, Colombo 02", mapQuery: "Cinnamon Life Colombo",
+      hashtag: "#YasodhaAndChathura", ritualHint: "Open the doors",
+    },
+  },
+  {
+    id: "maruthani",
+    name: "Maruthani",
+    meaning: "Henna",
+    description: "Marigold and magenta with paisley motifs for mehendi nights, sangeet and haldi. Loud, warm and ready to dance.",
+    occasion: "mehendi",
+    alsoFor: ["wedding", "engagement", "birthday"],
+    tags: ["Mehendi", "Colourful", "Pre-wedding"],
+    theme: t("mehendi", "romance", "paisley", "classic", "lotus", "joyful", "petals"),
+    sample: {
+      name1: "Meera", name2: "Vikram",
+      venueName: "Taj Samudra, The Lawn", venueAddress: "25 Galle Face Centre Road, Colombo 03", mapQuery: "Taj Samudra Colombo",
+      hashtag: "#MeeraKiMehendi", ritualHint: "Touch the lotus to open",
+      dressCode: "Bright colours. Yellow, pink and orange are perfect",
+    },
+  },
+  {
+    id: "first-class",
+    name: "First Class",
+    meaning: "Now boarding",
+    description: "A boarding pass with a tear-off stub and barcode. A playful save the date for destination weddings and guests flying in.",
+    occasion: "save-the-date",
+    alsoFor: ["wedding", "engagement", "anniversary", "celebration"],
+    tags: ["Travel", "Destination", "Playful"],
+    theme: t("airmail", "press", "waves", "ticket", "seal", "joyful", "none"),
+    sample: {
+      name1: "Olivia", name2: "Tharindu",
+      kicker: "Boarding pass",
+      subline: "are getting married in Sri Lanka",
+      message: "Pack light and keep the week free. Flights, hotels and the full invitation will follow soon.",
+      venueName: "Galle Fort", venueAddress: "Church Street, Galle", mapQuery: "Galle Fort",
+      hashtag: "#OliviaAndTharindu", ritualHint: "Break the seal",
+    },
+  },
+  {
+    id: "udarata",
+    name: "Udarata Menike",
+    meaning: "The hill country train",
+    description: "A train ticket to the tea country, for weddings in Kandy, Nuwara Eliya and Ella. Guests scratch the foil to find the date.",
+    occasion: "wedding",
+    alsoFor: ["save-the-date", "engagement", "anniversary"],
+    tags: ["Hill country", "Destination", "Ticket"],
+    theme: t("tea", "press", "botanical", "ticket", "scratch", "serene", "none"),
+    sample: {
+      name1: "Hannah", name2: "Dilshan",
+      kicker: "Colombo Fort to Ella · One way",
+      subline: "invite you up the hills for their wedding",
+      hostsLine: "Together with their families",
+      venueName: "98 Acres Resort", venueAddress: "Greenland Estate, Ella", mapQuery: "98 Acres Resort Ella",
+      hashtag: "#HannahAndDilshan", ritualHint: "Scratch to reveal the date",
+      notes: "The train from Colombo takes about nine hours and is worth every minute. Book early, and bring a jumper for the evening.",
+    },
+  },
+  {
+    id: "gazette",
+    name: "The Gazette",
+    meaning: "Front page news",
+    description: "Your news as a newspaper front page, with a masthead, a headline and a story set in columns. Add a photo and it prints in black and white.",
+    occasion: "engagement",
+    alsoFor: ["wedding", "save-the-date", "birthday", "anniversary"],
+    tags: ["Newspaper", "Witty", "Typographic"],
+    theme: t("newsprint", "press", "minimal", "gazette", "seal", "warm", "none"),
+    sample: {
+      name1: "Kavya", name2: "Nipun",
+      kicker: "The Engagement Gazette",
+      subline: "Colombo couple to make it official after seven years",
+      message: "After seven years, two cities and one very patient cat, the pair have decided to make it official. Family and friends are invited to witness the exchange of rings and to stay for dinner. Sources close to the couple expect dancing.",
+      venueName: "Barefoot Garden Café", venueAddress: "704 Galle Road, Colombo 03", mapQuery: "Barefoot Garden Cafe Colombo",
+      hashtag: "#KavyaAndNipun", ritualHint: "Break the seal",
+    },
+  },
+  {
+    id: "mathaka",
+    name: "Mathaka",
+    meaning: "Memories",
+    description: "Instant photos taped to the page with a handwritten caption. Add two of your own for anniversaries, birthdays and save the dates.",
+    occasion: "anniversary",
+    alsoFor: ["birthday", "engagement", "save-the-date", "wedding"],
+    tags: ["Photo", "Casual", "Handwritten"],
+    theme: t("snapshot", "handwritten", "minimal", "polaroid", "gift", "warm", "none"),
+    sample: {
+      name1: "Shirani", name2: "Ranjith",
+      kicker: "Thirty years of us",
+      subline: "invite you to their pearl anniversary",
+      venueName: "Ministry of Crab", venueAddress: "Old Dutch Hospital, Colombo 01", mapQuery: "Ministry of Crab Colombo",
+      hashtag: "#30YearsOfUs", ritualHint: "Open the gift",
+    },
+  },
+  {
+    id: "manel",
+    name: "Manel",
+    meaning: "The water lily",
+    description: "Soft lavender blue and the national flower, for baby showers, naming ceremonies and gentle celebrations.",
+    occasion: "baby-shower",
+    alsoFor: ["coming-of-age", "birthday", "engagement"],
+    tags: ["Baby", "Soft", "Floral"],
+    theme: t("lavender", "romance", "lotus", "arch", "lotus", "serene", "petals"),
+    sample: {
+      name1: "Dilki & Roshan", name2: "",
+      venueName: "Paradise Road, The Gallery Café", venueAddress: "2 Alfred House Road, Colombo 03", mapQuery: "Gallery Cafe Colombo",
+      hashtag: "", ritualHint: "Touch the lotus to open",
+    },
+  },
+  {
+    id: "premiere",
+    name: "Premiere",
+    meaning: "Now showing",
+    description: "A film poster in black and gold. With a personal link the cover reads as a private screening for that guest, then the clapperboard snaps.",
+    occasion: "birthday",
+    alsoFor: ["anniversary", "wedding", "engagement", "celebration", "corporate"],
+    tags: ["Cinema", "Dark", "Bold"],
+    theme: t("cinema", "poster", "film", "poster", "clapper", "warm", "sparkles"),
+    sample: {
+      name1: "Dinesh", name2: "",
+      kicker: "Now showing · One night only",
+      subline: "The big four-oh, a feature presentation",
+      message: "Forty years in the making. Join the cast and crew for dinner, drinks and a late show on the dance floor.",
+      venueName: "Scope Cinemas, Colombo City Centre", venueAddress: "137 Sir James Peiris Mawatha, Colombo 02", mapQuery: "Colombo City Centre",
+      hashtag: "#DineshAt40", ritualHint: "Tap for action",
+      dressCode: "Red carpet ready",
+    },
+  },
+  {
+    id: "suriya",
+    name: "Suriya",
+    meaning: "The new year sun",
+    description: "For the Sinhala and Tamil New Year table. The lamp is lit, and each auspicious time for the hearth, the first meal and the first transaction counts down.",
+    occasion: "festive",
+    alsoFor: ["housewarming", "celebration"],
+    tags: ["Avurudu", "New Year", "Family"],
+    theme: t("avurudu", "classic", "sun", "classic", "lamp", "joyful", "none"),
+    sample: {
+      name1: "The Jayawardena family", name2: "",
+      kicker: "Suba aluth avuruddak wewa",
+      subline: "invite you to their Avurudu table",
+      message: "Join us as we light the hearth, boil the milk and share kiribath, kavum and kokis. Come early for the nekath and stay for the games.",
+      venueName: "At our home", venueAddress: "17 Temple Road, Maharagama", mapQuery: "Maharagama",
+      hashtag: "", ritualHint: "Light the lamp to begin",
+      time: "09:26",
+      sections: ["message", "countdown", "nekath", "schedule", "venue", "details", "rsvp"],
+      nekath: [
+        { id: "a1", title: "Lighting the hearth", time: "08:41", note: "Facing south, dressed in white" },
+        { id: "a2", title: "First meal and first transaction", time: "09:26", note: "Facing south" },
+        { id: "a3", title: "Anointing with oil", time: "10:16", note: "Facing north" },
+      ],
+      events: [
+        { id: "a4", title: "Family arrives", time: "08:00" },
+        { id: "a5", title: "Avurudu table", time: "09:26" },
+        { id: "a6", title: "Games in the garden", time: "14:00", note: "Kotta pora, kana mutti and tug of war" },
+      ],
+      dressCode: "Something new, in this year's lucky colour",
+      languages: ["en", "si"],
+      translations: {
+        si: {
+          kicker: "සුබ අලුත් අවුරුද්දක් වේවා",
+          message: "ලිප ගිනි මොළවා, කිරි උතුරවා, අවුරුදු මේසය සමඟ සතුට බෙදා ගැනීමට අප හා එක්වන්න.",
+        },
+      },
+    },
+  },
+  {
+    id: "deepam",
+    name: "Deepam",
+    meaning: "The festival lamp",
+    description: "Deep ruby and gold with kolam at the corners, for Deepavali, Thai Pongal and temple festivals. It opens by lighting the lamp.",
+    occasion: "festive",
+    alsoFor: ["housewarming", "wedding", "celebration"],
+    tags: ["Deepavali", "Tamil", "Dark"],
+    theme: t("ruby", "regal", "kolam", "frame", "lamp", "warm", "sparkles"),
+    sample: {
+      name1: "The Sivakumar family", name2: "",
+      kicker: "Happy Deepavali",
+      subline: "invite you to celebrate the festival of lights",
+      message: "Join us for an evening of lamps, sweets and family. Come hungry. There will be more murukku and laddu than anyone can finish.",
+      venueName: "At our home", venueAddress: "42 Ramakrishna Road, Wellawatte, Colombo 06", mapQuery: "Wellawatte",
+      hashtag: "", ritualHint: "Light the lamp to begin",
+      sections: ["message", "countdown", "schedule", "venue", "details", "rsvp"],
+      languages: ["en", "ta"],
+      translations: {
+        ta: {
+          kicker: "இனிய தீபாவளி நல்வாழ்த்துகள்",
+          message: "விளக்குகள், இனிப்புகள் மற்றும் குடும்பத்துடன் ஒரு மாலைப் பொழுதைக் கொண்டாட எங்களுடன் இணையுங்கள்.",
+        },
+      },
+    },
+  },
+  {
+    id: "hilal",
+    name: "Hilal",
+    meaning: "The crescent",
+    description: "A crescent moon over a deep green night with gold stars, for Eid feasts, iftar evenings and walima dinners.",
+    occasion: "festive",
+    alsoFor: ["wedding", "celebration"],
+    tags: ["Eid", "Islamic", "Dark"],
+    theme: t("hilal", "classic", "stars", "classic", "curtain", "serene", "sparkles"),
+    sample: {
+      name1: "The Hameed family", name2: "",
+      kicker: "Eid Mubarak",
+      subline: "invite you to share the Eid feast",
+      message: "After a month of fasting, our doors and our table are open. Please join us for biryani, watalappan and good company.",
+      venueName: "At our home", venueAddress: "8 Mosque Lane, Dehiwala", mapQuery: "Dehiwala",
+      hashtag: "", ritualHint: "Draw the curtains",
+      sections: ["message", "countdown", "schedule", "venue", "details", "rsvp"],
+    },
+  },
+  {
+    id: "nattal",
+    name: "Nattal",
+    meaning: "Christmas",
+    description: "Snow falling on deep green and gold. Guests lift the lid off a wrapped gift to find your Christmas lunch, carol night or office party.",
+    occasion: "festive",
+    alsoFor: ["celebration", "corporate", "birthday"],
+    tags: ["Christmas", "Snow", "Dark"],
+    theme: t("noel", "couture", "snow", "classic", "gift", "joyful", "snow"),
+    sample: {
+      name1: "The Fernando family", name2: "",
+      kicker: "Joy to the world",
+      subline: "invite you to Christmas lunch",
+      message: "Come for breudher and Christmas cake, stay for carols round the piano. Bring a small gift for the Secret Santa sack.",
+      venueName: "At our home", venueAddress: "21 St Mary's Road, Negombo", mapQuery: "Negombo",
+      hashtag: "", ritualHint: "Open the gift",
+      sections: ["message", "countdown", "schedule", "venue", "details", "rsvp"],
+    },
+  },
+  {
+    id: "laurel",
+    name: "Laurel",
+    meaning: "Well earned",
+    description: "Navy and gold with a laurel wreath and a monogram, for convocations, graduation dinners and award nights.",
+    occasion: "graduation",
+    alsoFor: ["celebration", "birthday", "corporate"],
+    tags: ["Graduation", "Formal", "Navy"],
+    theme: t("royal", "couture", "botanical", "monogram", "seal", "warm", "none"),
+    sample: {
+      name1: "Tharushi Perera", name2: "",
+      hostsLine: "With love from her proud family",
+      venueName: "Hilton Colombo, Blue Elephant Room", venueAddress: "2 Sir Chittampalam A Gardiner Mawatha, Colombo 02", mapQuery: "Hilton Colombo",
+      hashtag: "#DrTharushi", ritualHint: "Break the seal",
+    },
+  },
+  {
+    id: "keynote",
+    name: "Keynote",
+    meaning: "For launches and galas",
+    description: "Big confident type and one sharp colour. No opening and no ornament, so the event speaks for itself.",
+    occasion: "corporate",
+    alsoFor: ["celebration", "graduation"],
+    tags: ["Corporate", "Modern", "Minimal"],
+    theme: t("electric", "poster", "minimal", "poster", "none", "none", "none"),
+    sample: {
+      name1: "Horizon 2027", name2: "",
+      kicker: "Annual partner summit",
+      venueName: "Cinnamon Life, Colombo", venueAddress: "Sir James Peiris Mawatha, Colombo 02", mapQuery: "Cinnamon Life Colombo",
+      hashtag: "#Horizon2027", ritualHint: "",
+      dressCode: "Business formal",
+    },
+  },
 ];
+
+/** Order used in the gallery, so signature and new designs are mixed through the page. */
+const galleryOrder = [
+  "pahana", "bulath", "mahanuwara", "dorakada", "nelum", "gazette", "atelier", "first-class",
+  "kolam", "udarata", "noor", "cathedral", "tharu", "pihatu", "monara", "ran",
+  "maruthani", "verala", "promise", "mathaka", "premiere", "pop", "golden-year", "manel",
+  "little-star", "suriya", "deepam", "hilal", "nattal", "new-nest", "piyum", "pin", "laurel", "keynote",
+];
+
+export function galleryTemplates(): TemplateDef[] {
+  const rank = (id: string) => {
+    const i = galleryOrder.indexOf(id);
+    return i === -1 ? galleryOrder.length : i;
+  };
+  return [...templates].sort((a, b) => rank(a.id) - rank(b.id));
+}
 
 export function getTemplate(id: string): TemplateDef | undefined {
   return templates.find((tpl) => tpl.id === id);
@@ -363,6 +734,31 @@ function defaultEvents(occasion: OccasionId, uid: Uid): InvitationData["events"]
       return [
         { id: uid("e"), title: "Ceremony", time: "07:12" },
         { id: uid("e"), title: "Lunch", time: "12:00" },
+      ];
+    case "mehendi":
+      return [
+        { id: uid("e"), title: "Henna artists begin", time: "16:00" },
+        { id: uid("e"), title: "Dinner", time: "19:30" },
+        { id: uid("e"), title: "Sangeet performances", time: "20:30" },
+      ];
+    case "save-the-date":
+      return [];
+    case "graduation":
+      return [
+        { id: uid("e"), title: "Convocation ceremony", time: "10:00" },
+        { id: uid("e"), title: "Celebration dinner", time: "19:00" },
+      ];
+    case "festive":
+      return [
+        { id: uid("e"), title: "Guests arrive", time: "11:00" },
+        { id: uid("e"), title: "Lunch is served", time: "12:30" },
+        { id: uid("e"), title: "Games and tea", time: "15:00" },
+      ];
+    case "corporate":
+      return [
+        { id: uid("e"), title: "Registration and welcome drinks", time: "17:30" },
+        { id: uid("e"), title: "Keynote", time: "18:15" },
+        { id: uid("e"), title: "Dinner and networking", time: "19:30" },
       ];
     case "almsgiving":
       return [
@@ -518,7 +914,15 @@ export function displayNames(data: Pick<InvitationData, "name1" | "name2">): str
 }
 
 export function initials(data: Pick<InvitationData, "name1" | "name2">): string {
-  const a = data.name1.trim().charAt(0).toUpperCase();
-  const b = data.name2.trim().charAt(0).toUpperCase();
-  return b ? `${a}${b}` : a;
+  const first = (s: string) => s.trim().charAt(0).toUpperCase();
+  if (data.name2.trim()) return `${first(data.name1)}${first(data.name2)}`;
+  // One name field: drop titles and "The ... family", then use up to two initials.
+  const cleaned = data.name1
+    .trim()
+    .replace(/^the\s+/i, "")
+    .replace(/\s+family$/i, "")
+    .replace(/^(mr|mrs|ms|miss|dr|prof)\.?\s+/i, "");
+  const parts = cleaned.split(/\s*&\s*|\s+and\s+|\s+/).filter(Boolean);
+  if (parts.length <= 1) return first(cleaned || data.name1);
+  return `${first(parts[0])}${first(parts[parts.length - 1])}`;
 }

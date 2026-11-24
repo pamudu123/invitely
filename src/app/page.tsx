@@ -18,6 +18,7 @@ import { SiteFooter, SiteHeader } from "@/components/site/chrome";
 import { TemplateCover } from "@/components/site/TemplateCover";
 import { ButtonLink } from "@/components/ui/kit";
 import { occasions } from "@/lib/invitation/occasions";
+import { ritualInfo } from "@/lib/invitation/rituals";
 import { templates } from "@/lib/invitation/templates";
 
 const features = [
@@ -69,7 +70,8 @@ const steps = [
   { n: "03", title: "Share and relax", text: "Publish, send personal links on WhatsApp and follow the replies as they come in." },
 ];
 
-const showcaseTemplates = ["pahana", "mahanuwara", "nelum", "tharu", "kolam", "noor", "atelier", "monara", "pop", "golden-year"];
+const showcaseTemplates = ["pahana", "bulath", "gazette", "dorakada", "first-class", "nelum", "premiere", "kolam", "mathaka", "tharu", "suriya", "noor", "nattal", "pop"];
+const openingCount = Object.keys(ritualInfo).length - 1;
 
 function SectionHeading({ label, title, children }: { label: string; title: React.ReactNode; children?: React.ReactNode }) {
   return (
@@ -117,7 +119,7 @@ export default function Home() {
               <dl className="animate-fade-up mt-12 grid max-w-lg grid-cols-3 gap-6 border-t border-paper/10 pt-6" style={{ animationDelay: "320ms" }}>
                 {[
                   [String(templates.length), "designs"],
-                  ["6", "openings"],
+                  [String(openingCount), "openings"],
                   ["3", "languages"],
                 ].map(([n, l]) => (
                   <div key={l}>
@@ -135,7 +137,7 @@ export default function Home() {
 
         {/* Occasion strip */}
         <section aria-label="Occasions" className="border-y border-paper/10 py-5">
-          <div className="no-scrollbar flex gap-10 overflow-x-auto px-5 sm:justify-center sm:px-8">
+          <div className="no-scrollbar mx-auto flex max-w-6xl gap-x-10 gap-y-3 overflow-x-auto px-5 sm:flex-wrap sm:justify-center sm:overflow-visible sm:px-8">
             {occasions.map((o) => (
               <Link key={o.id} href={`/templates?occasion=${o.id}`} className="shrink-0 font-serif text-xl italic text-paper/50 transition-colors hover:text-flame">
                 {o.plural}
@@ -148,8 +150,8 @@ export default function Home() {
         <section id="openings" className="scroll-mt-20 px-5 py-24 sm:px-8 lg:py-36">
           <div className="mx-auto max-w-7xl">
             <SectionHeading label="The signature" title={<>Every invitation begins with a <em className="text-flame">gesture</em>.</>}>
-              Every celebration here starts by lighting the oil lamp. So does your invitation. Choose the opening that suits
-              your day and try each one below.
+              Every celebration here starts by lighting the oil lamp, and every invitation with a sheaf of betel. So does
+              yours. Choose the opening that suits your day and try each one below.
             </SectionHeading>
             <div className="mt-14">
               <RitualShowcase />
@@ -241,7 +243,7 @@ export default function Home() {
         {/* Designs rail */}
         <section className="border-y border-paper/10 bg-night-2 py-24 lg:py-32">
           <div className="mx-auto flex max-w-7xl flex-wrap items-end justify-between gap-6 px-5 sm:px-8">
-            <SectionHeading label="The collection" title="Sixteen designs. Endlessly yours.">
+            <SectionHeading label="The collection" title={`${templates.length} designs. Endlessly yours.`}>
               Named for the things they are drawn from. Every one can change colour, lettering, ornament and opening.
             </SectionHeading>
             <ButtonLink href="/templates" variant="secondary">

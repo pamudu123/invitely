@@ -8,6 +8,11 @@ export type OccasionId =
   | "housewarming"
   | "coming-of-age"
   | "almsgiving"
+  | "mehendi"
+  | "save-the-date"
+  | "graduation"
+  | "festive"
+  | "corporate"
   | "celebration";
 
 export type RitualId =
@@ -17,6 +22,10 @@ export type RitualId =
   | "lotus"
   | "scratch"
   | "balloon"
+  | "betel"
+  | "doors"
+  | "clapper"
+  | "gift"
   | "none";
 
 export type OrnamentId =
@@ -29,9 +38,26 @@ export type OrnamentId =
   | "geometric"
   | "confetti"
   | "waves"
+  | "mandala"
+  | "peacock"
+  | "paisley"
+  | "tracery"
+  | "film"
+  | "snow"
+  | "sun"
+  | "betel"
   | "minimal";
 
-export type HeroLayout = "classic" | "arch" | "photo" | "monogram";
+export type HeroLayout =
+  | "classic"
+  | "arch"
+  | "photo"
+  | "monogram"
+  | "frame"
+  | "poster"
+  | "ticket"
+  | "gazette"
+  | "polaroid";
 
 export type FontPairId =
   | "heirloom"
@@ -39,11 +65,16 @@ export type FontPairId =
   | "editorial"
   | "regal"
   | "modern"
-  | "playful";
+  | "playful"
+  | "couture"
+  | "romance"
+  | "handwritten"
+  | "press"
+  | "poster";
 
 export type MusicId = "none" | "serene" | "warm" | "joyful" | "custom";
 
-export type EffectId = "none" | "petals" | "sparkles" | "confetti";
+export type EffectId = "none" | "petals" | "sparkles" | "confetti" | "snow";
 
 export type LanguageId = "en" | "si" | "ta";
 

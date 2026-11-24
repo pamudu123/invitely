@@ -5,17 +5,17 @@ import { SiteFooter, SiteHeader } from "@/components/site/chrome";
 import { FluidCover } from "@/components/site/TemplateCover";
 import { TemplateGallery, type GalleryItem } from "@/components/site/TemplateGallery";
 import { occasions } from "@/lib/invitation/occasions";
-import { templates } from "@/lib/invitation/templates";
+import { galleryTemplates } from "@/lib/invitation/templates";
 import type { OccasionId } from "@/lib/invitation/types";
 
 export const metadata: Metadata = {
   title: "Invitation designs",
   description:
-    "Sixteen digital invitation designs for weddings, homecomings, engagements, birthdays and more. Preview each one live on a phone and make it yours.",
+    "Digital invitation designs for weddings, homecomings, mehendi nights, birthdays, Avurudu, Christmas and more. Preview each one live on a phone and make it yours.",
 };
 
 function items(): GalleryItem[] {
-  return templates.map((t) => ({
+  return galleryTemplates().map((t) => ({
     id: t.id,
     name: t.name,
     meaning: t.meaning,

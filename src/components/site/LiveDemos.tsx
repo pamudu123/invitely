@@ -51,12 +51,14 @@ export function HeroPhone() {
 }
 
 const showcase: { ritual: Exclude<RitualId, "none">; template: string; best: string }[] = [
-  { ritual: "lamp", template: "pahana", best: "Weddings, housewarmings, almsgivings" },
-  { ritual: "seal", template: "atelier", best: "Church weddings, engagements, formal dinners" },
-  { ritual: "curtain", template: "mahanuwara", best: "Poruwa ceremonies, homecomings, galas" },
-  { ritual: "lotus", template: "nelum", best: "Weddings, coming of age, anniversaries" },
-  { ritual: "scratch", template: "tharu", best: "Save the dates, milestone birthdays" },
-  { ritual: "balloon", template: "pop", best: "Birthdays, baby showers" },
+  { ritual: "lamp", template: "pahana", best: "Weddings, housewarmings, Avurudu, Deepavali" },
+  { ritual: "betel", template: "bulath", best: "Traditional weddings, homecomings" },
+  { ritual: "doors", template: "dorakada", best: "Grand weddings, church weddings, galas" },
+  { ritual: "curtain", template: "mahanuwara", best: "Poruwa ceremonies, homecomings" },
+  { ritual: "lotus", template: "nelum", best: "Weddings, mehendi, coming of age" },
+  { ritual: "seal", template: "atelier", best: "Engagements, save the dates, formal dinners" },
+  { ritual: "clapper", template: "premiere", best: "Milestone birthdays, anniversaries, launches" },
+  { ritual: "gift", template: "nattal", best: "Christmas, birthdays, anniversaries" },
 ];
 
 /** Pick an opening and try it in the phone. */
@@ -102,11 +104,11 @@ export function RitualShowcase() {
                 type="button"
                 onClick={() => select(i)}
                 aria-pressed={active === i}
-                className="group flex w-full items-baseline gap-6 border-b border-paper/10 py-5 text-left"
+                className="group flex w-full items-baseline gap-6 border-b border-paper/10 py-3.5 text-left"
               >
                 <span className={`label w-8 transition-colors ${active === i ? "text-flame" : "text-paper/30"}`}>0{i + 1}</span>
                 <span className="flex-1">
-                  <span className={`display block text-[2.6rem] transition-colors ${active === i ? "text-paper" : "text-paper/35 group-hover:text-paper/70"}`}>
+                  <span className={`display block text-[2.3rem] transition-colors ${active === i ? "text-paper" : "text-paper/35 group-hover:text-paper/70"}`}>
                     {ritualInfo[s.ritual].label}
                   </span>
                   <span

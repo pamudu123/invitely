@@ -91,11 +91,11 @@ async function resolveImage(value: unknown, userId: string): Promise<string | un
   return `/api/media/${id}`;
 }
 
-const ritualIds = ["lamp", "seal", "curtain", "lotus", "scratch", "balloon", "none"] as const;
-const ornamentIds = ["liyawel", "lotus", "botanical", "deco", "stars", "kolam", "geometric", "confetti", "waves", "minimal"] as const;
-const heroIds = ["classic", "arch", "photo", "monogram"] as const;
+const ritualIds = ["lamp", "seal", "curtain", "lotus", "scratch", "balloon", "betel", "doors", "clapper", "gift", "none"] as const;
+const ornamentIds = ["liyawel", "lotus", "botanical", "deco", "stars", "kolam", "geometric", "confetti", "waves", "mandala", "peacock", "paisley", "tracery", "film", "snow", "sun", "betel", "minimal"] as const;
+const heroIds = ["classic", "arch", "photo", "monogram", "frame", "poster", "ticket", "gazette", "polaroid"] as const;
 const musicIds = ["none", "serene", "warm", "joyful", "custom"] as const;
-const effectIds = ["none", "petals", "sparkles", "confetti"] as const;
+const effectIds = ["none", "petals", "sparkles", "confetti", "snow"] as const;
 const langIds = ["en", "si", "ta"] as const;
 
 /** Validate and clamp anything a client sends before it is stored. */

@@ -56,7 +56,7 @@ Every Sri Lankan celebration begins by lighting the oil lamp. Invitely makes tha
 
 Three ideas carry the brand:
 
-1. **Openings as rituals.** Six gestures: light the lamp, break the seal, draw the curtains, open the lotus, scratch the foil, pop the balloon. Each is drawn in code, themed to the invitation's colours, and works with a single thumb.
+1. **Openings as rituals.** Ten gestures: light the lamp, accept the betel sheaf, open the carved doors, draw the curtains, open the lotus, break the seal, scratch the foil, pop the balloon, snap the clapperboard, open the gift. Each is drawn in code, themed to the invitation's colours, and works with a single thumb.
 2. **One link, three lives.** Before the day it is an invitation with countdown and RSVP. On the day it shows what is happening now and next. Afterwards it becomes a thank you page with photos and wishes.
 3. **Made for how we celebrate.** Auspicious time countdowns, a language switch, personal links sent on WhatsApp, and designs named for what they are drawn from: Pahana, Mahanuwara, Nelum, Kolam, Noor.
 
@@ -76,8 +76,8 @@ The reference studio (Samana Studios) builds cinematic sites: near-black gradien
 
 | Area | What is built |
 | --- | --- |
-| Invitation engine | One theme-driven renderer. 13 palettes, 6 lettering pairs, 10 ornament sets drawn as SVG, 4 cover layouts, 6 openings, 3 generated soundscapes, 3 floating effects |
-| Designs | 16 templates across 10 occasions: wedding, homecoming, engagement, birthday, anniversary, baby shower, housewarming, coming of age, almsgiving, other |
+| Invitation engine | One theme-driven renderer. 32 palettes, 11 lettering pairs, 18 ornament sets drawn as SVG, 9 cover layouts, 10 openings, 3 generated soundscapes, 4 floating effects |
+| Designs | 34 templates across 15 occasions: wedding, homecoming, engagement, mehendi, save the date, birthday, anniversary, baby shower, housewarming, coming of age, almsgiving, graduation, festive gatherings (Avurudu, Christmas, Eid, Deepavali), corporate, other |
 | Sections | Cover, message, countdown, auspicious times, schedule, venue with map and calendar link, story, gallery, good to know, gift note, RSVP, wishes wall |
 | Studio | Live preview while typing. Phone frame on desktop, full screen with bottom sheet editor on mobile. Change design, colours, lettering, ornament, cover, opening, sound, sections, order, wording, photos |
 | Try before sign up | Design without an account. The draft is kept on the device and moved into the account at sign up |
@@ -118,6 +118,23 @@ The reference studio (Samana Studios) builds cinematic sites: near-black gradien
 3. Atelier workflow: brief form, proofs and revision rounds inside the product.
 4. Analytics for hosts: opens over time, reply rate, device split.
 5. More languages for diaspora and regional markets.
+
+### The design library
+
+A second research pass looked at the template catalogues of nine competitors. What everyone has: wax seal envelopes, watercolour florals, maroon or ivory with gold, minimal white, navy and gold, coastal. What nobody had: a boarding pass, a newspaper front page, a hill country train ticket, and any design for Avurudu, Eid, Deepavali, coming of age or almsgiving. The library was built to fill those gaps.
+
+| Group | Designs |
+| --- | --- |
+| Sri Lankan tradition | Pahana, Bulath, Mahanuwara, Dorakada, Nelum, Kolam, Noor, Cathedral |
+| Modern and evening | Atelier, Tharu, Pihatu, Monara, Ran, Verala, Promise |
+| Novelty | The Gazette (newspaper), First Class (boarding pass), Udarata Menike (train ticket), Mathaka (polaroids), Premiere (film poster) |
+| Pre-wedding and family | Maruthani (mehendi), Manel, Little Star, Piyum, Aluth Gedara, Pin |
+| Festive | Suriya (Avurudu), Deepam (Deepavali), Hilal (Eid), Nattal (Christmas) |
+| Parties and work | Pop!, Golden Year, Laurel (graduation), Keynote (corporate) |
+
+Every design is a preset over shared parts, so a host can mix them: any of the 9 cover layouts with any of the 10 openings, 18 ornament sets, 32 palettes and 11 lettering pairs.
+
+Ideas held for later: an ola leaf manuscript scroll, a Vesak lantern opening, a photo booth strip, a painted venue scene that shifts from day to night, a "find your seat" table finder, and couple caricatures.
 
 ## 4. Pricing proposal
 

@@ -43,6 +43,11 @@ const heroOptions: { id: HeroLayout; label: string; hint: string }[] = [
   { id: "arch", label: "Arch", hint: "Photo in an arch" },
   { id: "photo", label: "Full photo", hint: "Photo fills the cover" },
   { id: "monogram", label: "Monogram", hint: "Your initials" },
+  { id: "frame", label: "Framed card", hint: "Formal card on a dark mount" },
+  { id: "poster", label: "Poster", hint: "Big bold type" },
+  { id: "ticket", label: "Ticket", hint: "Boarding pass with a stub" },
+  { id: "gazette", label: "Front page", hint: "Newspaper headline" },
+  { id: "polaroid", label: "Polaroid", hint: "Instant photos" },
 ];
 
 const musicOptions: { id: MusicId; label: string; hint: string }[] = [
@@ -58,6 +63,7 @@ const effectOptions: { id: EffectId; label: string }[] = [
   { id: "petals", label: "Petals" },
   { id: "sparkles", label: "Sparkles" },
   { id: "confetti", label: "Confetti" },
+  { id: "snow", label: "Snow" },
 ];
 
 const customKeys: { key: keyof Palette; label: string }[] = [
@@ -196,7 +202,7 @@ export function DesignPanel({ data, setTheme, replace, set, replay }: PanelProps
             </Tile>
           ))}
         </div>
-        {theme.hero === "arch" || theme.hero === "photo" ? (
+        {["arch", "photo", "gazette", "polaroid"].includes(theme.hero) ? (
           <PhotoPicker label="Cover photo" value={data.heroPhoto} onChange={(v) => set({ heroPhoto: v })} />
         ) : null}
       </Group>
@@ -243,7 +249,7 @@ export function DesignPanel({ data, setTheme, replace, set, replay }: PanelProps
       </Group>
 
       <Group title="Floating effect">
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-5 gap-2">
           {effectOptions.map((e) => (
             <Tile key={e.id} active={theme.effect === e.id} onClick={() => setTheme({ effect: e.id })} className="px-1 py-2.5 text-center">
               <span className="text-[0.78rem] text-paper">{e.label}</span>

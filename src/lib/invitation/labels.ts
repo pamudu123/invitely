@@ -49,6 +49,9 @@ const en = {
   music: "Music",
   language: "Language",
   in: "in",
+  dateLabel: "Date",
+  timeLabel: "Time",
+  placeLabel: "Place",
 };
 
 export type Labels = typeof en;
@@ -98,6 +101,9 @@ const si: Labels = {
   music: "සංගීතය",
   language: "භාෂාව",
   in: "තව",
+  dateLabel: "දිනය",
+  timeLabel: "වේලාව",
+  placeLabel: "ස්ථානය",
 };
 
 const ta: Labels = {
@@ -145,6 +151,9 @@ const ta: Labels = {
   music: "இசை",
   language: "மொழி",
   in: "இன்னும்",
+  dateLabel: "தேதி",
+  timeLabel: "நேரம்",
+  placeLabel: "இடம்",
 };
 
 const all: Record<LanguageId, Labels> = { en, si, ta };

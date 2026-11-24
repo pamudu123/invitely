@@ -3,6 +3,10 @@
 import { useState } from "react";
 import type { InvitationData, RitualId } from "@/lib/invitation/types";
 import { BalloonRitual } from "./Balloon";
+import { BetelRitual } from "./Betel";
+import { ClapperRitual } from "./Clapper";
+import { DoorsRitual } from "./Doors";
+import { GiftRitual } from "./Gift";
 import { CurtainRitual } from "./Curtain";
 import { LampRitual } from "./Lamp";
 import { LotusRitual } from "./Lotus";
@@ -17,6 +21,10 @@ const map: Record<Exclude<RitualId, "none">, (p: RitualProps) => React.ReactElem
   lotus: LotusRitual,
   scratch: ScratchRitual,
   balloon: BalloonRitual,
+  betel: BetelRitual,
+  doors: DoorsRitual,
+  clapper: ClapperRitual,
+  gift: GiftRitual,
 };
 
 /** Full-screen cover shown before the invitation. Fades out once the guest completes the gesture. */

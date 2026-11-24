@@ -248,3 +248,8 @@
   from { transform: scaleY(0.25); }
   to { transform: scaleY(1); }
 }
+
+@keyframes inv-flash {
+  0% { opacity: 0.85; }
+  100% { opacity: 0; }
+}

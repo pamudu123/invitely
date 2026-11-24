@@ -22,7 +22,7 @@ Nothing here blocked the build. Each item has a working default in place. They a
 10. **Sinhala and Tamil wording.** I wrote the interface labels and two sample greetings in both languages (`src/lib/invitation/labels.ts`, `src/lib/invitation/templates.ts`). Please have a native speaker review them before launch.
 11. **Sample photographs.** The demo invitations have no photos, because I had no licensed images to use. Arch and full photo covers show a drawn placeholder until a host adds a photo. A set of 10 to 15 licensed wedding photos would lift the designs gallery a lot.
 12. **Samana Studios Instagram.** Instagram blocks automated viewing, so I could not see the posts. I studied their public website instead and followed that style: near-black background, oversized type, small tracked labels, hairline borders. If particular posts matter to you, send screenshots and I will adjust.
-13. **Cultural details.** Ritual names, nekath examples and wording for the Tamil, Muslim and almsgiving designs are my best understanding. Please check them with people from each tradition.
+13. **Cultural details.** Ritual names, nekath examples and wording for the Tamil, Muslim, church, mehendi and almsgiving designs are my best understanding. The Avurudu design shows sample auspicious times and directions only, which change every year. Please check all of these with people from each tradition.
 14. **Legal pages.** Terms, privacy policy and refund policy are not written.
 
 ## Known limits in this version

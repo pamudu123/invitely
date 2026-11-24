@@ -12,6 +12,12 @@ import {
   Fredoka,
   Noto_Serif_Sinhala,
   Noto_Sans_Tamil,
+  Bodoni_Moda,
+  Great_Vibes,
+  Marcellus,
+  Caveat,
+  Special_Elite,
+  Anton,
 } from "next/font/google";
 
 // Brand fonts (site chrome)
@@ -101,6 +107,48 @@ export const notoTamil = Noto_Sans_Tamil({
   preload: false,
 });
 
+export const bodoni = Bodoni_Moda({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  variable: "--font-bodoni",
+  display: "swap",
+  preload: false,
+});
+export const greatVibes = Great_Vibes({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-great-vibes",
+  display: "swap",
+  preload: false,
+});
+export const marcellus = Marcellus({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-marcellus",
+  display: "swap",
+  preload: false,
+});
+export const caveat = Caveat({
+  subsets: ["latin"],
+  variable: "--font-caveat",
+  display: "swap",
+  preload: false,
+});
+export const specialElite = Special_Elite({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-special-elite",
+  display: "swap",
+  preload: false,
+});
+export const anton = Anton({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-anton",
+  display: "swap",
+  preload: false,
+});
+
 export const allFontVariables = [
   brandSerif,
   brandSans,
@@ -115,6 +163,12 @@ export const allFontVariables = [
   fredoka,
   notoSinhala,
   notoTamil,
+  bodoni,
+  greatVibes,
+  marcellus,
+  caveat,
+  specialElite,
+  anton,
 ]
   .map((f) => f.variable)
   .join(" ");

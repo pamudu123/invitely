@@ -41,7 +41,7 @@ export const plans: PlanDef[] = [
     features: [
       "One published invitation",
       "Unlimited guests and RSVPs",
-      "All six openings and soundscapes",
+      "Every opening and soundscape",
       "Countdown, schedule, map and gallery",
       "RSVP dashboard with CSV export",
       "Live for 12 months",

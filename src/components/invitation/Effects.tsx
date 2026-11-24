@@ -38,13 +38,13 @@ export function AmbientEffect({ kind, color, fixed }: { kind: EffectId; color: s
     const ro = new ResizeObserver(resize);
     ro.observe(canvas);
 
-    const count = kind === "sparkles" ? 24 : kind === "confetti" ? 20 : 14;
+    const count = kind === "sparkles" ? 24 : kind === "confetti" ? 20 : kind === "snow" ? 34 : 14;
     const spawn = (anywhere: boolean): Particle => ({
       x: Math.random() * w,
       y: anywhere ? Math.random() * h : -20,
       vx: (Math.random() - 0.5) * 0.3,
       vy: kind === "sparkles" ? -(0.08 + Math.random() * 0.18) : 0.35 + Math.random() * 0.6,
-      size: kind === "sparkles" ? 1 + Math.random() * 2.2 : kind === "petals" ? 3 + Math.random() * 4 : 5 + Math.random() * 6,
+      size: kind === "sparkles" ? 1 + Math.random() * 2.2 : kind === "petals" ? 3 + Math.random() * 4 : kind === "snow" ? 1.2 + Math.random() * 2.6 : 5 + Math.random() * 6,
       rot: Math.random() * Math.PI * 2,
       vr: (Math.random() - 0.5) * 0.03,
       hue: Math.floor(Math.random() * festive.length),
@@ -80,6 +80,12 @@ export function AmbientEffect({ kind, color, fixed }: { kind: EffectId; color: s
           ctx.quadraticCurveTo(0, 0, 0, r);
           ctx.quadraticCurveTo(0, 0, -r, 0);
           ctx.quadraticCurveTo(0, 0, 0, -r);
+          ctx.fill();
+        } else if (kind === "snow") {
+          ctx.globalAlpha = 0.35 + 0.4 * Math.abs(Math.sin(p.life));
+          ctx.fillStyle = color;
+          ctx.beginPath();
+          ctx.arc(0, 0, p.size, 0, Math.PI * 2);
           ctx.fill();
         } else if (kind === "petals") {
           ctx.globalAlpha = 0.26;
