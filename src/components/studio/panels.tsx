@@ -631,7 +631,7 @@ export function RsvpPanel({ data, set }: PanelProps) {
             if (v && !data.sections.includes("rsvp")) set({ sections: [...data.sections, "rsvp"], rsvp: { ...rsvp, enabled: true } });
           }}
           label="Collect RSVPs"
-          hint="Replies arrive in your dashboard the moment guests send them."
+          hint="Replies arrive on your manage page the moment guests send them."
         />
         {on ? (
           <>

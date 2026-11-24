@@ -11,7 +11,7 @@ async function NewStudio({ searchParams }: { searchParams: PageProps<"/studio/ne
   const sp = await searchParams;
   const template = typeof sp.template === "string" && getTemplate(sp.template) ? sp.template : undefined;
   const occasion = occasions.find((o) => o.id === sp.occasion)?.id as OccasionId | undefined;
-  return <Studio templateId={template} occasion={occasion} resume={sp.resume === "1"} />;
+  return <Studio templateId={template} occasion={occasion} />;
 }
 
 export default function Page({ searchParams }: PageProps<"/studio/new">) {

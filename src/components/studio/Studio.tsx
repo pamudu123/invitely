@@ -16,10 +16,11 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { saveInvitationAction } from "@/app/actions/invitations";
+import { saveInvitationAction, type OwnerInput } from "@/app/actions/invitations";
 import { InvitationView } from "@/components/invitation/InvitationView";
 import type { Phase } from "@/components/invitation/sections";
-import { Button, PhoneFrame } from "@/components/ui/kit";
+import { Button, Field, Input, PhoneFrame } from "@/components/ui/kit";
+import { rememberCard } from "@/lib/client/cards";
 import { demoWishes } from "@/lib/invitation/demo";
 import {
   applyTemplateDesign,
@@ -56,12 +57,10 @@ const tabs: { id: TabId; label: string; icon: typeof Palette; Panel: (p: PanelPr
 type SaveState = "idle" | "dirty" | "saving" | "saved" | "local" | "error";
 
 export interface StudioProps {
-  /** Saved invitation being edited, or undefined for a new draft */
+  /** Saved card being edited, or undefined for a new draft. `id` is the card's manage token. */
   saved?: { id: string; slug: string; status: "draft" | "published"; data: InvitationData };
   templateId?: string;
   occasion?: OccasionId;
-  /** Came back from sign up with a local draft waiting to be saved */
-  resume?: boolean;
 }
 
 /** Swap inline images for the stored URLs returned by the server, without touching anything typed since. */
@@ -84,7 +83,7 @@ function adoptStoredImages(current: InvitationData, stored: InvitationData): Inv
   return changed ? next : current;
 }
 
-export function Studio({ saved, templateId, occasion, resume }: StudioProps) {
+export function Studio({ saved, templateId, occasion }: StudioProps) {
   const router = useRouter();
   const [id, setId] = useState<string | null>(saved?.id ?? null);
   const [data, setData] = useState<InvitationData>(() => saved?.data ?? createFromTemplate(templateId ?? "pahana", occasion));
@@ -97,6 +96,9 @@ export function Studio({ saved, templateId, occasion, resume }: StudioProps) {
   const [phase, setPhase] = useState<Phase>("before");
   const [device, setDevice] = useState<"phone" | "wide">("phone");
   const [stage, setStage] = useState<{ w: number; h: number } | null>(null);
+  const [asking, setAsking] = useState(false);
+  const [owner, setOwner] = useState<OwnerInput>({ name: "", contact: "", pin: "" });
+  const [ownerError, setOwnerError] = useState("");
   const stageRef = useRef<HTMLDivElement | null>(null);
   const dataRef = useRef(data);
   const idRef = useRef(id);
@@ -123,8 +125,8 @@ export function Studio({ saved, templateId, occasion, resume }: StudioProps) {
     const tpl = templateId ? getTemplate(templateId) : undefined;
     const wanted = occasion ?? tpl?.occasion;
     let next: InvitationData;
-    if (draft && (resume || !tpl || draft.occasion === wanted)) {
-      next = tpl && draft.templateId !== tpl.id && !resume ? applyTemplateDesign(draft, tpl.id) : draft;
+    if (draft && (!tpl || draft.occasion === wanted)) {
+      next = tpl && draft.templateId !== tpl.id ? applyTemplateDesign(draft, tpl.id) : draft;
     } else {
       // Sample hashtags belong to the sample names, so a fresh draft starts without one.
       next = { ...createFromTemplate(tpl?.id ?? "pahana", occasion, todayPlus(0)), hashtag: "" };
@@ -133,7 +135,7 @@ export function Studio({ saved, templateId, occasion, resume }: StudioProps) {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setData(next);
     setReady(true);
-  }, [saved, templateId, occasion, resume]);
+  }, [saved, templateId, occasion]);
 
   // Measure the preview stage so the phone always fits.
   useEffect(() => {
@@ -147,13 +149,13 @@ export function Studio({ saved, templateId, occasion, resume }: StudioProps) {
     return () => ro.disconnect();
   }, []);
 
-  const persist = useCallback(async (): Promise<"ok" | "auth" | "error"> => {
+  const persist = useCallback(async (newOwner?: OwnerInput): Promise<"ok" | "busy" | "error"> => {
     if (saving.current) return "ok";
     saving.current = true;
     setSaveState("saving");
     const snapshot = dataRef.current;
     try {
-      const res = await saveInvitationAction(idRef.current, snapshot);
+      const res = await saveInvitationAction(idRef.current, snapshot, newOwner);
       if (res.ok) {
         if (dataRef.current === snapshot) dirty.current = false;
         setData((cur) => adoptStoredImages(cur, res.data));
@@ -162,8 +164,8 @@ export function Studio({ saved, templateId, occasion, resume }: StudioProps) {
         setSaveState("saved");
         return "ok";
       }
-      setSaveState(res.error === "auth" ? "local" : "error");
-      return res.error === "auth" ? "auth" : "error";
+      setSaveState("error");
+      return res.error === "busy" ? "busy" : "error";
     } catch {
       setSaveState("error");
       return "error";
@@ -192,20 +194,6 @@ export function Studio({ saved, templateId, occasion, resume }: StudioProps) {
     return () => window.clearTimeout(t);
   }, [data, ready, persist, saveLocal]);
 
-  // Returning from sign up: store the waiting draft in the new account.
-  const resumed = useRef(false);
-  useEffect(() => {
-    if (!resume || !ready || saved || resumed.current) return;
-    resumed.current = true;
-    void (async () => {
-      const res = await persist();
-      if (res === "ok" && idRef.current) {
-        window.localStorage.removeItem(DRAFT_KEY);
-        router.replace(`/studio/${idRef.current}`);
-      }
-    })();
-  }, [resume, ready, saved, persist, router]);
-
   const change = useCallback((updater: (d: InvitationData) => InvitationData) => {
     dirty.current = true;
     setSaveState("dirty");
@@ -226,16 +214,30 @@ export function Studio({ saved, templateId, occasion, resume }: StudioProps) {
   const finish = async () => {
     if (idRef.current) {
       if (dirty.current) await persist();
-      router.push(`/dashboard/${idRef.current}`);
+      router.push(`/m/${idRef.current}`);
       return;
     }
+    // First save: there is no account, so ask how the host wants to get back in.
     saveLocal();
-    const res = await persist();
+    setOwnerError("");
+    setAsking(true);
+  };
+
+  const createCard = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const pin = owner.pin.replace(/\D/g, "");
+    if (owner.pin && (pin.length < 4 || pin.length > 8)) {
+      setOwnerError("Use 4 to 8 digits for the PIN, or leave it empty.");
+      return;
+    }
+    setOwnerError("");
+    const res = await persist({ ...owner, pin });
     if (res === "ok" && idRef.current) {
+      rememberCard(idRef.current);
       window.localStorage.removeItem(DRAFT_KEY);
-      router.push(`/dashboard/${idRef.current}`);
-    } else if (res === "auth") {
-      router.push(`/signup?next=${encodeURIComponent("/studio/new?resume=1")}`);
+      router.push(`/m/${idRef.current}?new=1`);
+    } else {
+      setOwnerError(res === "busy" ? "Too many cards were created from this network. Please try again in an hour." : "Could not save. Please check your connection and try again.");
     }
   };
 
@@ -305,7 +307,7 @@ export function Studio({ saved, templateId, occasion, resume }: StudioProps) {
       {/* Top bar */}
       <header className="flex h-14 shrink-0 items-center gap-3 border-b border-paper/10 px-3 sm:px-4">
         <Link
-          href={id ? `/dashboard/${id}` : "/templates"}
+          href={id ? `/m/${id}` : "/templates"}
           aria-label="Back"
           className="flex h-10 w-10 items-center justify-center rounded-full text-paper/70 hover:bg-paper/8 hover:text-paper"
         >
@@ -373,6 +375,36 @@ export function Studio({ saved, templateId, occasion, resume }: StudioProps) {
           <div className={`relative z-10 shrink-0 px-3 py-2.5 ${tab ? "hidden lg:block" : ""}`}>{previewTools}</div>
         </main>
       </div>
+
+      {/* First save: no account, just a way back in */}
+      {asking ? (
+        <div className="fixed inset-0 z-[70] flex items-end justify-center bg-black/70 p-0 backdrop-blur-sm sm:items-center sm:p-6" role="dialog" aria-modal="true" aria-labelledby="owner-title">
+          <form onSubmit={createCard} className="w-full max-w-md rounded-t-3xl border border-paper/15 bg-night-2 p-6 sm:rounded-3xl sm:p-8">
+            <p className="label text-flame">Save your card</p>
+            <h2 id="owner-title" className="display mt-3 text-4xl">No account needed.</h2>
+            <p className="mt-3 text-sm leading-relaxed text-paper/60">
+              Your card gets a private manage link. Keep it safe, because anyone with it can edit the card. Add a PIN so you
+              can get back in from any phone.
+            </p>
+            <div className="mt-6 grid gap-4">
+              <Field label="Your name (optional)">
+                <Input value={owner.name} maxLength={80} autoComplete="name" onChange={(e) => setOwner({ ...owner, name: e.target.value })} />
+              </Field>
+              <Field label="WhatsApp number or email (optional)" hint="Only used to help you if you lose your link.">
+                <Input value={owner.contact} maxLength={120} onChange={(e) => setOwner({ ...owner, contact: e.target.value })} />
+              </Field>
+              <Field label="Edit PIN (recommended)" hint="4 to 8 digits. With your invitation link, this opens the card on any device.">
+                <Input value={owner.pin} inputMode="numeric" maxLength={8} autoComplete="off" placeholder="For example 4827" onChange={(e) => setOwner({ ...owner, pin: e.target.value })} />
+              </Field>
+            </div>
+            {ownerError ? <p role="alert" className="mt-4 text-sm text-red-300">{ownerError}</p> : null}
+            <div className="mt-6 flex gap-2">
+              <Button type="button" variant="secondary" onClick={() => setAsking(false)} className="flex-1">Keep editing</Button>
+              <Button type="submit" disabled={saveState === "saving"} className="flex-1">{saveState === "saving" ? "Saving…" : "Create my card"}</Button>
+            </div>
+          </form>
+        </div>
+      ) : null}
 
       {/* Mobile editor: bottom tabs with a sheet */}
       <div className="shrink-0 lg:hidden">

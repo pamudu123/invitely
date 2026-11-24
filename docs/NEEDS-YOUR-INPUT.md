@@ -9,12 +9,12 @@ Nothing here blocked the build. Each item has a working default in place. They a
 3. **Free publishing during testing.** With no payment gateway yet, publishing is free and unlocks every feature (`PAYMENTS_MODE` unset). Set `PAYMENTS_MODE=manual` to hold invitations until payment is confirmed. That mode shows a message to the host, but the admin screen to confirm a payment is not built yet.
 4. **Refund and hosting promises.** The pricing page says "full refund within 7 days if the link has not been shared", "Essential lives 12 months" and "Signature never expires". These are placeholders for your policy. Edit them in `src/app/pricing/page.tsx`, `src/components/site/Faq.tsx` and `src/lib/plans.ts`.
 
-## Accounts and services to set up
+## Services to set up
 
 5. **Production database.** Create a libSQL database (Turso has a free tier) and set `DATABASE_URL` and `DATABASE_AUTH_TOKEN`. Without them the app writes to a local file, which does not survive on serverless hosting.
 6. **Hosting.** The project builds cleanly for Vercel. I did not deploy anything, because that creates resources on your account. Say the word and I will deploy a preview. Set `NEXT_PUBLIC_SITE_URL` to the public address so share links and previews use it.
 7. **Payment gateway.** PayHere for LKR and Stripe (or similar) for USD. I need merchant accounts and API keys to wire these in.
-8. **Email provider.** Needed for password reset, email verification and RSVP notifications. None of these exist yet. Until then, a host who forgets their password cannot recover the account alone.
+8. **Email or WhatsApp provider.** Needed for RSVP notifications and for sending a host their manage link if they lose it. Hosts have no accounts or passwords. They get back into a card with its private manage link, or with the invitation link plus the edit PIN they chose. A host who loses the link and set no PIN can only be helped by you, using the contact they left when creating the card.
 9. **Photo storage.** Photos are compressed on the phone and stored in the database. That is fine for a launch, and should move to object storage (Vercel Blob, S3 or Cloudinary) as volume grows.
 
 ## Content I could not produce or verify
@@ -27,8 +27,11 @@ Nothing here blocked the build. Each item has a working default in place. They a
 
 ## Known limits in this version
 
-15. **Sign-in protection.** There is no rate limit on sign-in attempts and no captcha on the public RSVP form. RSVP has a simple flood guard per invitation. Add proper rate limiting before a public launch.
+15. **Abuse protection.** Anyone can create a draft card without an account, so there is a light limit of 20 new cards per hour per network, and the public RSVP form has a simple flood guard per invitation. PIN entry locks for 15 minutes after five wrong tries. Add stronger rate limiting and a cleanup of old unpaid drafts before a public launch.
 16. **Plan limits are not enforced.** Every published invitation currently has every feature.
 17. **Music.** The three soundscapes are generated in the browser, so they are gentle ambience and not songs. Hosts can link their own MP3. A licensed music library is a later decision.
 18. **Share preview image.** Links shared on WhatsApp show a generated card with the names, date and venue. It uses a plain built-in font, and names written in Sinhala or Tamil script are left off the card (the occasion, date and venue still show). Adding the invitation fonts to the card is a small follow-up.
 19. **Competitor prices.** The figures in `docs/PLAN.md` were read from live sites on 24 November 2026 and will drift.
+
+20. **Check-in link.** The door check-in page lives under the private manage link. Sharing it with an usher gives them full control of the card. A separate check-in only link is a small follow-up.
+21. **Unused file.** `src/lib/server/auth.ts` is the old email and password code. Nothing uses it now. I could not remove it from this session, so please delete it, or keep it if you want a sign in for a future admin panel.

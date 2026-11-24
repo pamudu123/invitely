@@ -1,6 +1,5 @@
 import { connection } from "next/server";
-import { getUser } from "@/lib/server/auth";
-import { getInvitation, listRsvps } from "@/lib/server/invitations";
+import { getInvitationByToken, listRsvps } from "@/lib/server/invitations";
 
 /**
  * One CSV cell. Values that a spreadsheet would run as a formula get a leading
@@ -12,12 +11,10 @@ function cell(value: string | number): string {
   return `"${text.replace(/"/g, '""')}"`;
 }
 
-export async function GET(_req: Request, ctx: RouteContext<"/api/invitations/[id]/export">) {
+export async function GET(_req: Request, ctx: RouteContext<"/api/cards/[token]/export">) {
   await connection();
-  const { id } = await ctx.params;
-  const user = await getUser();
-  if (!user) return new Response("Please sign in to export replies.", { status: 401 });
-  const inv = await getInvitation(id, user.id);
+  const { token } = await ctx.params;
+  const inv = await getInvitationByToken(token);
   if (!inv) return new Response("Not found", { status: 404 });
 
   const rsvps = await listRsvps(inv.id);

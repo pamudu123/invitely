@@ -6,6 +6,7 @@ import { connection } from "next/server";
 import { Suspense } from "react";
 import { daysUntil, formatEventDate, formatWhen, plural } from "@/components/dashboard/format";
 import { GuestsPanel, type GuestRow } from "@/components/dashboard/GuestsPanel";
+import { ManageAccess, RememberCard } from "@/components/dashboard/ManageAccess";
 import { PublishPanel } from "@/components/dashboard/PublishPanel";
 import { RepliesPanel } from "@/components/dashboard/RepliesPanel";
 import { SettingsPanel } from "@/components/dashboard/SettingsPanel";
@@ -15,9 +16,8 @@ import { InvitationView } from "@/components/invitation/InvitationView";
 import { Badge, ButtonLink, Card, PhoneFrame, buttonClass } from "@/components/ui/kit";
 import { getOccasion } from "@/lib/invitation/occasions";
 import { formatTime } from "@/lib/invitation/time";
-import { requireUser } from "@/lib/server/auth";
 import {
-  getInvitation,
+  getInvitationByToken,
   listGuests,
   listRsvps,
   type GuestRecord,
@@ -30,7 +30,7 @@ export const metadata: Metadata = { title: "Manage invitation" };
 const tabIds = ["overview", "guests", "replies", "share", "settings"] as const;
 type TabId = (typeof tabIds)[number];
 
-type Props = PageProps<"/dashboard/[id]">;
+type Props = PageProps<"/m/[token]">;
 
 /* ------------------------------ Overview ------------------------------ */
 
@@ -91,7 +91,7 @@ function LatestReplies({ inv, rsvps }: { inv: InvitationRecord; rsvps: RsvpRecor
         <p className="label text-paper/50">Latest replies</p>
         {rsvps.length ? (
           <Link
-            href={`/dashboard/${inv.id}?tab=replies`}
+            href={`/m/${inv.manageToken}?tab=replies`}
             scroll={false}
             className="-my-3 inline-flex min-h-11 items-center gap-1.5 text-sm text-flame underline-offset-4 hover:underline"
           >
@@ -153,7 +153,7 @@ function Overview({ inv, guests, rsvps, now }: { inv: InvitationRecord; guests: 
           />
         </dl>
 
-        <PublishPanel id={inv.id} slug={inv.slug} published={published} />
+        <PublishPanel id={inv.manageToken} slug={inv.slug} published={published} />
         <MealBreakdown rsvps={rsvps} />
         <LatestReplies inv={inv} rsvps={rsvps} />
       </div>
@@ -163,7 +163,7 @@ function Overview({ inv, guests, rsvps, now }: { inv: InvitationRecord; guests: 
           <PhoneFrame width={248}>
             <InvitationView data={inv.data} embedded skipRitual lite />
           </PhoneFrame>
-          <ButtonLink href={`/studio/${inv.id}`} variant="ghost" className="mt-4">
+          <ButtonLink href={`/studio/${inv.manageToken}`} variant="ghost" className="mt-4">
             <PenLine size={16} strokeWidth={1.5} aria-hidden />
             Edit design
           </ButtonLink>
@@ -176,8 +176,8 @@ function Overview({ inv, guests, rsvps, now }: { inv: InvitationRecord; guests: 
 /* -------------------------------- Page -------------------------------- */
 
 /** Everything the page needs, read at request time, with the clock read alongside the data. */
-async function load(id: string, userId: string) {
-  const inv = await getInvitation(id, userId);
+async function load(token: string) {
+  const inv = await getInvitationByToken(token);
   if (!inv) return null;
   const [guests, rsvps] = await Promise.all([listGuests(inv.id), listRsvps(inv.id)]);
   return { inv, guests, rsvps, now: Date.now() };
@@ -185,16 +185,15 @@ async function load(id: string, userId: string) {
 
 async function Manage({ params, searchParams }: Props) {
   await connection();
-  const [{ id }, sp] = await Promise.all([params, searchParams]);
+  const [{ token }, sp] = await Promise.all([params, searchParams]);
   const tab: TabId = tabIds.find((t) => t === sp.tab) ?? "overview";
-  const user = await requireUser(tab === "overview" ? `/dashboard/${id}` : `/dashboard/${id}?tab=${tab}`);
-  const loaded = await load(id, user.id);
+  const loaded = await load(token);
   if (!loaded) notFound();
   const { inv, guests, rsvps, now } = loaded;
 
   const published = inv.status === "published";
   const occasion = getOccasion(inv.data.occasion);
-  const base = `/dashboard/${inv.id}`;
+  const base = `/m/${inv.manageToken}`;
   const tabs: TabItem[] = [
     { id: "overview", label: "Overview", href: `${base}?tab=overview` },
     { id: "guests", label: "Guests", href: `${base}?tab=guests`, count: guests.length },
@@ -221,11 +220,11 @@ async function Manage({ params, searchParams }: Props) {
       checkedIn: g.checkedInAt !== null,
       reply: replyByGuest.get(g.id) ?? null,
     }));
-    panel = <GuestsPanel invitationId={inv.id} slug={inv.slug} published={published} guests={rows} />;
+    panel = <GuestsPanel invitationId={inv.manageToken} slug={inv.slug} published={published} guests={rows} />;
   } else if (tab === "replies") {
     panel = (
       <RepliesPanel
-        invitationId={inv.id}
+        invitationId={inv.manageToken}
         timeZone={inv.data.timezone}
         question={inv.data.rsvp.customQuestion ?? ""}
         replies={rsvps.map((r) => ({
@@ -243,15 +242,28 @@ async function Manage({ params, searchParams }: Props) {
       />
     );
   } else if (tab === "share") {
-    panel = <SharePanel invitationId={inv.id} slug={inv.slug} title={inv.title} published={published} />;
+    panel = <SharePanel invitationId={inv.manageToken} slug={inv.slug} title={inv.title} published={published} />;
   } else if (tab === "settings") {
-    panel = <SettingsPanel id={inv.id} slug={inv.slug} title={inv.title} />;
+    panel = (
+      <div className="grid grid-cols-1 gap-6 [&>*]:min-w-0">
+        <ManageAccess token={inv.manageToken} slug={inv.slug} title={inv.title} hasPin={inv.hasPin} />
+        <SettingsPanel id={inv.manageToken} slug={inv.slug} title={inv.title} />
+      </div>
+    );
   } else {
-    panel = <Overview inv={inv} guests={guests} rsvps={rsvps} now={now} />;
+    // Right after creating a card, and until a PIN is set, lead with how to get back in.
+    const nudge = sp.new === "1" || !inv.hasPin;
+    panel = (
+      <div className="grid grid-cols-1 gap-6 [&>*]:min-w-0">
+        {nudge ? <ManageAccess token={inv.manageToken} slug={inv.slug} title={inv.title} hasPin={inv.hasPin} highlight /> : null}
+        <Overview inv={inv} guests={guests} rsvps={rsvps} now={now} />
+      </div>
+    );
   }
 
   return (
     <>
+      <RememberCard token={inv.manageToken} />
       <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-3">
@@ -277,16 +289,19 @@ async function Manage({ params, searchParams }: Props) {
           </p>
         </div>
         <div className="flex shrink-0 gap-2">
-          <ButtonLink href={`/studio/${inv.id}`} variant="secondary" className="flex-1 sm:flex-none">
+          <ButtonLink href={`/studio/${inv.manageToken}`} variant="secondary" className="flex-1 sm:flex-none">
             <PenLine size={16} strokeWidth={1.5} aria-hidden />
             Edit design
           </ButtonLink>
-          {published ? (
-            <a href={`/i/${inv.slug}`} target="_blank" rel="noopener" className={buttonClass("secondary", "md", "flex-1 sm:flex-none")}>
-              View
-              <ExternalLink size={15} strokeWidth={1.5} aria-hidden />
-            </a>
-          ) : null}
+          <a
+            href={published ? `/i/${inv.slug}` : `/i/${inv.slug}?k=${inv.manageToken}`}
+            target="_blank"
+            rel="noopener"
+            className={buttonClass("secondary", "md", "flex-1 sm:flex-none")}
+          >
+            {published ? "View" : "Preview"}
+            <ExternalLink size={15} strokeWidth={1.5} aria-hidden />
+          </a>
         </div>
       </div>
 
@@ -318,11 +333,11 @@ export default function ManagePage({ params, searchParams }: Props) {
   return (
     <>
       <Link
-        href="/dashboard"
+        href="/my"
         className="-ml-2 mb-6 inline-flex min-h-11 items-center gap-2 rounded-full px-2 text-sm text-paper/60 outline-none transition-colors hover:text-paper focus-visible:ring-2 focus-visible:ring-flame/60"
       >
         <ArrowLeft size={16} strokeWidth={1.5} aria-hidden />
-        All invitations
+        My cards
       </Link>
       <Suspense fallback={<ManageFallback />}>
         <Manage params={params} searchParams={searchParams} />

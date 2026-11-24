@@ -109,7 +109,7 @@ export function RepliesPanel({
             );
           })}
         </div>
-        <a href={`/api/invitations/${invitationId}/export`} download className={buttonClass("secondary", "md", "shrink-0")}>
+        <a href={`/api/cards/${invitationId}/export`} download className={buttonClass("secondary", "md", "shrink-0")}>
           <Download size={16} strokeWidth={1.5} aria-hidden />
           Export CSV
         </a>

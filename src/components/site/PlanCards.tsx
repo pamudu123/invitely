@@ -37,7 +37,7 @@ export function PlanCards({ show, compact = false }: { show?: PlanId[]; compact?
             {plan.highlight ? <span className="label absolute -top-3 left-6 rounded-full bg-flame px-3 py-1 !text-[0.58rem] text-night">Most loved</span> : null}
             <p className="label text-paper/50">{plan.name}</p>
             <p className="display mt-4 text-[2.6rem]">{formatPrice(plan, currency)}</p>
-            <p className="mt-1 text-[0.78rem] text-paper/40">{plan.lkr === 0 ? "No card needed" : "One payment per event. No subscription."}</p>
+            <p className="mt-1 text-[0.78rem] text-paper/40">{plan.lkr === 0 ? "No payment details needed" : "One payment per card. No subscription."}</p>
             <p className="mt-4 text-[0.92rem] leading-snug text-paper/70">{plan.tagline}</p>
             <ul className={`mt-5 grid gap-2.5 text-[0.88rem] text-paper/75 ${compact ? "" : "flex-1 content-start"}`}>
               {(compact ? plan.features.slice(0, 4) : plan.features).map((f) => (

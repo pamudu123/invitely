@@ -63,7 +63,7 @@ export function TemplateDemo({ templateId, occasionIds, initial, header }: { tem
           <ButtonLink href={`/studio/new?template=${templateId}&occasion=${occasion}`} size="lg" className="mt-7 w-full sm:w-auto">
             Customise this design
           </ButtonLink>
-          <p className="mt-3 text-[0.82rem] text-paper/45">Free to design. No account needed to start.</p>
+          <p className="mt-3 text-[0.82rem] text-paper/45">Free to design. No account or password, ever.</p>
         </div>
       </div>
     </div>

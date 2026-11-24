@@ -192,7 +192,7 @@ export function GuestsPanel({
               Personal links start working once you publish the invitation. You can build your list in the meantime.
             </p>
           ) : null}
-          <Link href={`/dashboard/${invitationId}/checkin`} className={buttonClass("secondary", "md", "mt-6")}>
+          <Link href={`/m/${invitationId}/checkin`} className={buttonClass("secondary", "md", "mt-6")}>
             <ClipboardCheck size={17} strokeWidth={1.5} aria-hidden />
             Open door check-in
           </Link>

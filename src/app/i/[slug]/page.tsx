@@ -8,7 +8,6 @@ import { InvitationView } from "@/components/invitation/InvitationView";
 import { getOccasion } from "@/lib/invitation/occasions";
 import { displayNames } from "@/lib/invitation/templates";
 import { formatLongDate } from "@/lib/invitation/time";
-import { getUser } from "@/lib/server/auth";
 import {
   getGuestByToken,
   getInvitationBySlug,
@@ -40,11 +39,9 @@ async function Invitation({ params, searchParams }: Props) {
   const inv = await getInvitationBySlug(slug);
   if (!inv) notFound();
 
+  // A draft can only be previewed with the card's manage token in the link.
   const isDraft = inv.status !== "published";
-  if (isDraft) {
-    const user = await getUser();
-    if (!user || user.id !== inv.userId) notFound();
-  }
+  if (isDraft && (typeof sp.k !== "string" || sp.k !== inv.manageToken)) notFound();
 
   const token = typeof sp.g === "string" ? sp.g : "";
   const guest = token ? await getGuestByToken(inv.id, token) : null;
@@ -65,7 +62,7 @@ async function Invitation({ params, searchParams }: Props) {
       {isDraft ? (
         <div className="fixed inset-x-0 top-0 z-[60] flex items-center justify-center gap-3 bg-flame px-4 py-2 text-center text-[0.78rem] text-night">
           <span>Preview. Only you can see this until you publish.</span>
-          <Link href={`/dashboard/${inv.id}`} className="font-semibold underline underline-offset-2">Manage</Link>
+          <Link href={`/m/${inv.manageToken}`} className="font-semibold underline underline-offset-2">Manage</Link>
         </div>
       ) : null}
       <InvitationView

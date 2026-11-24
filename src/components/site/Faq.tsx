@@ -11,6 +11,10 @@ export const generalFaq: FaqItem[] = [
     a: "No. Your invitation is a web page. Guests tap the link you send on WhatsApp, SMS or email and it opens in their browser, on any phone.",
   },
   {
+    q: "Do I need to create an account?",
+    a: "No. There is no sign up and no password. You pay once per card, and each card comes with a private manage link. Open that link to edit the card, add guests and see replies. You can also set an edit PIN to open your card on any phone.",
+  },
+  {
     q: "Can I try it before paying?",
     a: "Yes. Pick a design, customise every detail and preview it on your own phone for free. You only pay when you are ready to publish and share.",
   },

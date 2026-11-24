@@ -6,25 +6,23 @@ import { connection } from "next/server";
 import { Suspense } from "react";
 import { CheckinBoard } from "@/components/dashboard/CheckinBoard";
 import { ButtonLink, Card } from "@/components/ui/kit";
-import { requireUser } from "@/lib/server/auth";
-import { getInvitation, listGuests } from "@/lib/server/invitations";
+import { getInvitationByToken, listGuests } from "@/lib/server/invitations";
 
 export const metadata: Metadata = { title: "Door check-in" };
 
-type Props = PageProps<"/dashboard/[id]/checkin">;
+type Props = PageProps<"/m/[token]/checkin">;
 
 async function Checkin({ params }: { params: Props["params"] }) {
   await connection();
-  const { id } = await params;
-  const user = await requireUser(`/dashboard/${id}/checkin`);
-  const inv = await getInvitation(id, user.id);
+  const { token } = await params;
+  const inv = await getInvitationByToken(token);
   if (!inv) notFound();
   const guests = await listGuests(inv.id);
 
   return (
     <>
       <Link
-        href={`/dashboard/${inv.id}?tab=guests`}
+        href={`/m/${inv.manageToken}?tab=guests`}
         className="-ml-2 inline-flex min-h-11 items-center gap-2 rounded-full px-2 text-sm text-paper/60 outline-none transition-colors hover:text-paper focus-visible:ring-2 focus-visible:ring-flame/60"
       >
         <ArrowLeft size={16} strokeWidth={1.5} aria-hidden />
@@ -35,7 +33,7 @@ async function Checkin({ params }: { params: Props["params"] }) {
 
       {guests.length ? (
         <CheckinBoard
-          invitationId={inv.id}
+          invitationId={inv.manageToken}
           guests={guests.map((g) => ({
             id: g.id,
             name: g.name,
@@ -50,7 +48,7 @@ async function Checkin({ params }: { params: Props["params"] }) {
           <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-paper/60">
             Add your guest list first. Everyone on it will show up here, ready to be checked in at the door.
           </p>
-          <ButtonLink href={`/dashboard/${inv.id}?tab=guests`} className="mt-6">
+          <ButtonLink href={`/m/${inv.manageToken}?tab=guests`} className="mt-6">
             Add guests
           </ButtonLink>
         </Card>

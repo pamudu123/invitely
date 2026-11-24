@@ -1,20 +1,19 @@
 "use server";
 
 import { refresh } from "next/cache";
-import { requireUser } from "@/lib/server/auth";
 import {
   addGuests,
   deleteGuest,
   deleteRsvp,
-  getInvitation,
+  getInvitationByToken,
   setGuestCheckedIn,
   setRsvpHidden,
   updateGuest,
 } from "@/lib/server/invitations";
 
-async function owned(invitationId: string) {
-  const user = await requireUser();
-  const inv = await getInvitation(invitationId, user.id);
+/** Every action takes the card's manage token and resolves the real invitation from it. */
+async function owned(token: string) {
+  const inv = await getInvitationByToken(token);
   if (!inv) throw new Error("Invitation not found");
   return inv;
 }
@@ -23,8 +22,8 @@ async function owned(invitationId: string) {
  * Add guests from pasted text. One guest per line.
  * Optional seat count and phone after commas: "Uncle Sunil & family, 4, 0771234567"
  */
-export async function addGuestsAction(invitationId: string, text: string): Promise<{ ok: boolean; added: number }> {
-  await owned(invitationId);
+export async function addGuestsAction(token: string, text: string): Promise<{ ok: boolean; added: number }> {
+  const invitationId = (await owned(token)).id;
   const list = text
     .split(/\r?\n/)
     .map((line) => line.trim())
@@ -45,35 +44,35 @@ export async function addGuestsAction(invitationId: string, text: string): Promi
 }
 
 export async function updateGuestAction(
-  invitationId: string,
+  token: string,
   guestId: string,
   patch: { name: string; seats: number; phone: string; table: string },
 ): Promise<void> {
-  await owned(invitationId);
+  const invitationId = (await owned(token)).id;
   await updateGuest(invitationId, guestId, patch);
   refresh();
 }
 
-export async function deleteGuestAction(invitationId: string, guestId: string): Promise<void> {
-  await owned(invitationId);
+export async function deleteGuestAction(token: string, guestId: string): Promise<void> {
+  const invitationId = (await owned(token)).id;
   await deleteGuest(invitationId, guestId);
   refresh();
 }
 
-export async function checkInAction(invitationId: string, guestId: string, checkedIn: boolean): Promise<void> {
-  await owned(invitationId);
+export async function checkInAction(token: string, guestId: string, checkedIn: boolean): Promise<void> {
+  const invitationId = (await owned(token)).id;
   await setGuestCheckedIn(invitationId, guestId, checkedIn);
   refresh();
 }
 
-export async function hideWishAction(invitationId: string, rsvpId: string, hidden: boolean): Promise<void> {
-  await owned(invitationId);
+export async function hideWishAction(token: string, rsvpId: string, hidden: boolean): Promise<void> {
+  const invitationId = (await owned(token)).id;
   await setRsvpHidden(invitationId, rsvpId, hidden);
   refresh();
 }
 
-export async function deleteRsvpAction(invitationId: string, rsvpId: string): Promise<void> {
-  await owned(invitationId);
+export async function deleteRsvpAction(token: string, rsvpId: string): Promise<void> {
+  const invitationId = (await owned(token)).id;
   await deleteRsvp(invitationId, rsvpId);
   refresh();
 }

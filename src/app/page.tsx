@@ -40,7 +40,7 @@ const features = [
   {
     icon: MessageCircle,
     title: "Made for WhatsApp",
-    text: "Send each personal link from your dashboard in one tap, with a message ready to go. The preview card looks right in every chat.",
+    text: "Send each personal link from your manage page in one tap, with a message ready to go. The preview card looks right in every chat.",
   },
   {
     icon: Table2,
@@ -317,7 +317,7 @@ export default function Home() {
             <p className="label text-flame">Your turn</p>
             <h2 className="display mt-6 text-[clamp(3rem,10vw,7.5rem)]">Light the first lamp.</h2>
             <p className="mx-auto mt-6 max-w-lg text-[1.05rem] text-paper/65">
-              Pick a design and see your names on it in under a minute. No account needed to start.
+              Pick a design and see your names on it in under a minute. No account, no password, no app.
             </p>
             <ButtonLink href="/templates" size="lg" className="mt-10">
               Start designing free <ArrowRight size={17} />

@@ -27,7 +27,8 @@ Open http://localhost:3000. No configuration is needed for development. Data is 
 | Full screen demo invitation | `/demo/pahana` |
 | Design studio, no account needed | `/studio/new?template=pahana` |
 | Pricing | `/pricing` |
-| Host dashboard | `/dashboard` |
+| Cards remembered on this device, and find a card by PIN | `/my` |
+| Manage one card (private link) | `/m/manage-token` |
 | A published invitation | `/i/your-link` |
 | A guest's personal link | `/i/your-link?g=token` |
 
@@ -41,7 +42,6 @@ Copy `.env.example` to `.env.local` and fill in what you need. Everything is opt
 | `DATABASE_AUTH_TOKEN` | Token for the hosted database |
 | `NEXT_PUBLIC_SITE_URL` | Public address of the site, used in share links |
 | `PAYMENTS_MODE` | `off` (default, publishing is free) or `manual` (hold until payment is confirmed) |
-| `ADMIN_EMAILS` | Comma separated emails treated as admins |
 
 ## Scripts
 

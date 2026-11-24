@@ -83,7 +83,7 @@ export function SharePanel({
               Guests cannot open this link yet. Publish the invitation first, then come back here to share it.
             </p>
           </div>
-          <ButtonLink href={`/dashboard/${invitationId}?tab=overview`} className="shrink-0">
+          <ButtonLink href={`/m/${invitationId}?tab=overview`} className="shrink-0">
             Go to publishing
           </ButtonLink>
         </Card>
@@ -117,7 +117,7 @@ export function SharePanel({
               <p className="text-[0.95rem] font-medium text-paper">Looking for personal links?</p>
               <p className="mt-1.5 text-sm leading-relaxed text-paper/60">
                 Links that greet each guest by name and reserve their seats live in the{" "}
-                <Link href={`/dashboard/${invitationId}?tab=guests`} className="text-flame underline-offset-4 hover:underline">
+                <Link href={`/m/${invitationId}?tab=guests`} className="text-flame underline-offset-4 hover:underline">
                   Guests tab
                 </Link>
                 .

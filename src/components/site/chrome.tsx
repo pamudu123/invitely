@@ -1,29 +1,10 @@
 import Link from "next/link";
-import { Suspense } from "react";
 import { ButtonLink, Logo } from "@/components/ui/kit";
 import { occasions } from "@/lib/invitation/occasions";
-import { getUser } from "@/lib/server/auth";
 import { SiteNav } from "./SiteNav";
 
-async function Account() {
-  const user = await getUser();
-  return user ? (
-    <ButtonLink href="/dashboard" variant="ghost" size="sm">Dashboard</ButtonLink>
-  ) : (
-    <ButtonLink href="/login" variant="ghost" size="sm">Sign in</ButtonLink>
-  );
-}
-
 export function SiteHeader() {
-  return (
-    <SiteNav
-      account={
-        <Suspense fallback={<span className="inline-block h-9 w-20" />}>
-          <Account />
-        </Suspense>
-      }
-    />
-  );
+  return <SiteNav account={<ButtonLink href="/my" variant="ghost" size="sm">My cards</ButtonLink>} />;
 }
 
 export function SiteFooter() {
@@ -54,11 +35,11 @@ export function SiteFooter() {
           </ul>
         </div>
         <div>
-          <p className="label text-paper/40">Account</p>
+          <p className="label text-paper/40">Your cards</p>
           <ul className="mt-4 grid gap-2.5 text-sm text-paper/70">
-            <li><Link href="/login" className="hover:text-paper">Sign in</Link></li>
-            <li><Link href="/signup" className="hover:text-paper">Create account</Link></li>
-            <li><Link href="/dashboard" className="hover:text-paper">Dashboard</Link></li>
+            <li><Link href="/my" className="hover:text-paper">My cards</Link></li>
+            <li><Link href="/my" className="hover:text-paper">Find a card with a PIN</Link></li>
+            <li><Link href="/templates" className="hover:text-paper">Create a card</Link></li>
           </ul>
         </div>
       </div>

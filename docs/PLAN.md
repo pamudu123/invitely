@@ -80,19 +80,19 @@ The reference studio (Samana Studios) builds cinematic sites: near-black gradien
 | Designs | 34 templates across 15 occasions: wedding, homecoming, engagement, mehendi, save the date, birthday, anniversary, baby shower, housewarming, coming of age, almsgiving, graduation, festive gatherings (Avurudu, Christmas, Eid, Deepavali), corporate, other |
 | Sections | Cover, message, countdown, auspicious times, schedule, venue with map and calendar link, story, gallery, good to know, gift note, RSVP, wishes wall |
 | Studio | Live preview while typing. Phone frame on desktop, full screen with bottom sheet editor on mobile. Change design, colours, lettering, ornament, cover, opening, sound, sections, order, wording, photos |
-| Try before sign up | Design without an account. The draft is kept on the device and moved into the account at sign up |
+| No accounts | A host never signs up. Each card has a private manage link, plus an optional edit PIN to open it on another phone. Cards opened on a device are remembered under My cards |
 | Guests | Personal link per guest or family with name greeting and reserved seats. Bulk add by pasting a list |
 | RSVP | Accept or decline, party size, meal choice, a custom question, a wish. Replies matched to the guest list |
 | Languages | English, Sinhala and Tamil labels and dates, guest-side switch, host-written translations for the main lines |
 | Living invitation | Automatic before, on the day and after views, with a preview switch in the studio |
-| Dashboard | Invitations list, reply stats, guest list with WhatsApp send, replies with CSV export, QR code, door check-in, link settings |
-| Site | Landing page with a live tappable demo, designs gallery with occasion filter, design pages, pricing, accounts |
+| Manage page | Reply stats, guest list with WhatsApp send, replies with CSV export, QR code, door check-in, link settings |
+| Site | Landing page with a live tappable demo, designs gallery with occasion filter, design pages, pricing |
 
 ### Phase 2: money and trust
 
 1. Payments: PayHere for LKR, Stripe or similar for USD. A manual bank transfer mode already exists as a switch (`PAYMENTS_MODE=manual`), and needs an admin screen to confirm payments.
 2. Plan gating: enforce the Essential and Signature feature split, which is currently open.
-3. Password reset and email verification (needs an email provider).
+3. Lost link recovery by email or WhatsApp, for hosts who did not set a PIN (needs an email or messaging provider).
 4. Object storage for photos (currently stored in the database, fine for launch volume only).
 5. Share image polish: the WhatsApp preview card exists, and should use the invitation's own lettering and support Sinhala and Tamil names.
 6. Terms, privacy policy and refund policy pages.
@@ -104,7 +104,7 @@ The reference studio (Samana Studios) builds cinematic sites: near-black gradien
 1. RSVP reminders to guests who have not replied, by WhatsApp.
 2. Guest photo upload and shared album after the event.
 3. Seating plan with table lookup on the day.
-4. Opened and viewed tracking per guest in the dashboard (the data is already recorded).
+4. Opened and viewed tracking per guest on the manage page (the data is already recorded).
 5. Gift registry and cash gift block with bank details or a payment link.
 6. Custom domains.
 7. Save the date as a lighter product that credits toward the full invitation.
@@ -113,11 +113,10 @@ The reference studio (Samana Studios) builds cinematic sites: near-black gradien
 
 ### Phase 4: scale
 
-1. Planner and studio accounts that manage many events, with their own branding.
+1. Atelier workflow: brief form, proofs and revision rounds inside the product.
 2. A designer marketplace for templates.
-3. Atelier workflow: brief form, proofs and revision rounds inside the product.
-4. Analytics for hosts: opens over time, reply rate, device split.
-5. More languages for diaspora and regional markets.
+3. Analytics for hosts: opens over time, reply rate, device split.
+4. More languages for diaspora and regional markets.
 
 ### The design library
 
@@ -154,7 +153,7 @@ Reasoning: Essential sits inside the LKR 3,500 to 5,500 band where most local bu
 
 - **Next.js 16** (App Router, Cache Components), React 19, TypeScript, Tailwind CSS 4.
 - **Storage**: libSQL. A local SQLite file in development, a hosted libSQL database (for example Turso) in production through `DATABASE_URL`.
-- **Accounts**: email and password, scrypt hashes, server-side sessions in an http-only cookie.
+- **No accounts**: charging is per card, so there is no sign up. Whoever holds a card's private manage link owns it. The link is a long random token, kept out of search engines and referrer headers. An optional 4 to 8 digit edit PIN, stored as a scrypt hash and locked for 15 minutes after five wrong tries, opens the card from another device.
 - **Invitation data**: one JSON document per invitation, validated and clamped on every save.
 - **Rendering**: a single `InvitationView` component driven by CSS variables and container queries, so the same markup is correct full screen on a phone and inside the studio's phone frame.
 - **No media licensing**: ornaments are SVG drawn in code and music is synthesised in the browser with the Web Audio API.
@@ -166,8 +165,8 @@ src/lib/invitation    types, palettes, lettering, occasions, templates, labels, 
 src/components/invitation   the renderer, sections, openings, effects, soundscapes
 src/components/studio       the editor
 src/components/site         marketing pages
-src/components/dashboard    host dashboard
-src/lib/server              database, accounts, invitation queries
+src/components/dashboard    host manage pages
+src/lib/server              database, manage tokens, invitation queries
 src/app/actions             server actions
 ```
 

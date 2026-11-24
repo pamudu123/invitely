@@ -3,12 +3,17 @@ import { allSections, occasions } from "@/lib/invitation/occasions";
 import { displayNames, normalizeInvitation, templates } from "@/lib/invitation/templates";
 import { fontPairs, palettes } from "@/lib/invitation/theme";
 import type { InvitationData, LanguageId, WishItem } from "@/lib/invitation/types";
-import { db } from "./db";
+import { db, SYSTEM_OWNER } from "./db";
 import { randomId, slugify } from "./ids";
+import { hashSecret, isManageToken, newManageToken, verifySecret } from "./secrets";
 
 export interface InvitationRecord {
   id: string;
-  userId: string;
+  /** Secret that grants full control of this card. Never show it to guests. */
+  manageToken: string;
+  ownerName: string;
+  ownerContact: string;
+  hasPin: boolean;
   slug: string;
   occasion: string;
   title: string;
@@ -74,7 +79,7 @@ const DATA_URL = /^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/=]+)$/;
 const MAX_IMAGE_BYTES = 1_400_000;
 
 /** Store an inline image and return its URL. Unknown or oversized values are dropped. */
-async function resolveImage(value: unknown, userId: string): Promise<string | undefined> {
+async function resolveImage(value: unknown): Promise<string | undefined> {
   if (typeof value !== "string" || !value) return undefined;
   if (MEDIA_PATH.test(value)) return value;
   if (/^https:\/\/[^\s"'<>]{4,500}$/.test(value)) return value;
@@ -86,7 +91,7 @@ async function resolveImage(value: unknown, userId: string): Promise<string | un
   const c = await db();
   await c.execute({
     sql: "INSERT INTO media (id, user_id, mime, bytes, created_at) VALUES (?, ?, ?, ?, ?)",
-    args: [id, userId, m[1], bytes, Date.now()],
+    args: [id, SYSTEM_OWNER, m[1], bytes, Date.now()],
   });
   return `/api/media/${id}`;
 }
@@ -99,7 +104,7 @@ const effectIds = ["none", "petals", "sparkles", "confetti", "snow"] as const;
 const langIds = ["en", "si", "ta"] as const;
 
 /** Validate and clamp anything a client sends before it is stored. */
-export async function sanitizeInvitation(raw: unknown, userId: string): Promise<InvitationData> {
+export async function sanitizeInvitation(raw: unknown): Promise<InvitationData> {
   const d = normalizeInvitation(raw);
   const occasion = oneOf(d.occasion, occasions.map((o) => o.id), "wedding");
   const templateId = oneOf(d.templateId, templates.map((t) => t.id), templates[0].id);
@@ -129,7 +134,7 @@ export async function sanitizeInvitation(raw: unknown, userId: string): Promise<
 
   const gallery: string[] = [];
   for (const g of d.gallery.slice(0, 12)) {
-    const url = await resolveImage(g, userId);
+    const url = await resolveImage(g);
     if (url) gallery.push(url);
   }
   const story = [];
@@ -139,7 +144,7 @@ export async function sanitizeInvitation(raw: unknown, userId: string): Promise<
       title: clip(s.title, 100),
       when: clip(s.when, 40),
       text: clip(s.text, 600),
-      photo: await resolveImage(s.photo, userId),
+      photo: await resolveImage(s.photo),
     });
   }
 
@@ -170,7 +175,7 @@ export async function sanitizeInvitation(raw: unknown, userId: string): Promise<
     venueName: clip(d.venueName, 120),
     venueAddress: clip(d.venueAddress, 200),
     mapQuery: clip(d.mapQuery, 400),
-    heroPhoto: await resolveImage(d.heroPhoto, userId),
+    heroPhoto: await resolveImage(d.heroPhoto),
     gallery,
     events: d.events.slice(0, 16).map((e) => ({
       id: clip(e.id, 24) || randomId(6),
@@ -226,7 +231,10 @@ function toRecord(row: Row): InvitationRecord {
   }
   return {
     id: String(row.id),
-    userId: String(row.user_id),
+    manageToken: String(row.manage_token ?? ""),
+    ownerName: String(row.owner_name ?? ""),
+    ownerContact: String(row.owner_contact ?? ""),
+    hasPin: Boolean(row.pin_hash),
     slug: String(row.slug),
     occasion: String(row.occasion),
     title: String(row.title),
@@ -251,24 +259,94 @@ async function uniqueSlug(base: string, excludeId?: string): Promise<string> {
   return `${root}-${randomId(8)}`;
 }
 
-export async function createInvitation(userId: string, data: InvitationData): Promise<InvitationRecord> {
+export interface OwnerDetails {
+  name: string;
+  contact: string;
+  pin: string;
+}
+
+export async function createInvitation(data: InvitationData, owner: OwnerDetails): Promise<InvitationRecord> {
   const c = await db();
   const id = randomId(12);
   const now = Date.now();
   const title = displayNames(data);
   const slug = await uniqueSlug(title);
+  const token = newManageToken();
+  const pin = cleanPin(owner.pin);
   await c.execute({
-    sql: `INSERT INTO invitations (id, user_id, slug, occasion, title, status, plan, data, created_at, updated_at)
-          VALUES (?, ?, ?, ?, ?, 'draft', 'free', ?, ?, ?)`,
-    args: [id, userId, slug, data.occasion, title, JSON.stringify(data), now, now],
+    sql: `INSERT INTO invitations (id, user_id, slug, occasion, title, status, plan, data, created_at, updated_at, manage_token, owner_name, owner_contact, pin_hash)
+          VALUES (?, ?, ?, ?, ?, 'draft', 'free', ?, ?, ?, ?, ?, ?, ?)`,
+    args: [id, SYSTEM_OWNER, slug, data.occasion, title, JSON.stringify(data), now, now, token, clip(owner.name, 80), clip(owner.contact, 120), pin ? await hashSecret(pin) : ""],
   });
-  return (await getInvitation(id, userId))!;
+  return (await getInvitationByToken(token))!;
 }
 
-export async function getInvitation(id: string, userId: string): Promise<InvitationRecord | null> {
+/** Look a card up by its private manage link. This is the only owner check there is. */
+export async function getInvitationByToken(token: string): Promise<InvitationRecord | null> {
+  if (!isManageToken(token)) return null;
   const c = await db();
-  const res = await c.execute({ sql: "SELECT * FROM invitations WHERE id = ? AND user_id = ?", args: [id, userId] });
+  const res = await c.execute({ sql: "SELECT * FROM invitations WHERE manage_token = ?", args: [token] });
   return res.rows[0] ? toRecord(res.rows[0] as Row) : null;
+}
+
+/** PINs are 4 to 8 digits. Anything else counts as no PIN. */
+export function cleanPin(pin: string): string {
+  const digits = String(pin ?? "").replace(/\D/g, "");
+  return digits.length >= 4 && digits.length <= 8 ? digits : "";
+}
+
+export async function setInvitationPin(id: string, pin: string): Promise<boolean> {
+  const clean = cleanPin(pin);
+  if (!clean) return false;
+  const c = await db();
+  await c.execute({
+    sql: "UPDATE invitations SET pin_hash = ?, pin_fails = 0, pin_locked_until = 0 WHERE id = ?",
+    args: [await hashSecret(clean), id],
+  });
+  return true;
+}
+
+export async function setInvitationOwner(id: string, name: string, contact: string): Promise<void> {
+  const c = await db();
+  await c.execute({
+    sql: "UPDATE invitations SET owner_name = ?, owner_contact = ? WHERE id = ?",
+    args: [clip(name, 80), clip(contact, 120), id],
+  });
+}
+
+const PIN_TRIES = 5;
+const PIN_LOCK_MS = 15 * 60_000;
+
+/**
+ * Recover the manage link with the card's public link and its PIN.
+ * Five wrong tries lock the card for fifteen minutes.
+ */
+export async function recoverWithPin(
+  slug: string,
+  pin: string,
+  now: number,
+): Promise<{ ok: true; token: string } | { ok: false; reason: "not-found" | "no-pin" | "locked" | "wrong" }> {
+  const c = await db();
+  const res = await c.execute({
+    sql: "SELECT id, manage_token, pin_hash, pin_fails, pin_locked_until FROM invitations WHERE slug = ?",
+    args: [slug],
+  });
+  const row = res.rows[0];
+  if (!row) return { ok: false, reason: "not-found" };
+  if (!row.pin_hash) return { ok: false, reason: "no-pin" };
+  if (Number(row.pin_locked_until) > now) return { ok: false, reason: "locked" };
+  const good = await verifySecret(cleanPin(pin), String(row.pin_hash)).catch(() => false);
+  if (good) {
+    await c.execute({ sql: "UPDATE invitations SET pin_fails = 0, pin_locked_until = 0 WHERE id = ?", args: [String(row.id)] });
+    return { ok: true, token: String(row.manage_token) };
+  }
+  const fails = Number(row.pin_fails) + 1;
+  const lock = fails >= PIN_TRIES;
+  await c.execute({
+    sql: "UPDATE invitations SET pin_fails = ?, pin_locked_until = ? WHERE id = ?",
+    args: [lock ? 0 : fails, lock ? now + PIN_LOCK_MS : 0, String(row.id)],
+  });
+  return { ok: false, reason: lock ? "locked" : "wrong" };
 }
 
 export async function getInvitationBySlug(slug: string): Promise<InvitationRecord | null> {
@@ -277,7 +355,10 @@ export async function getInvitationBySlug(slug: string): Promise<InvitationRecor
   return res.rows[0] ? toRecord(res.rows[0] as Row) : null;
 }
 
-export async function listInvitations(userId: string): Promise<InvitationSummary[]> {
+/** Summaries for the cards a device remembers. Unknown tokens are skipped. */
+export async function listInvitationsByTokens(tokens: string[]): Promise<InvitationSummary[]> {
+  const valid = Array.from(new Set(tokens.filter(isManageToken))).slice(0, 50);
+  if (!valid.length) return [];
   const c = await db();
   const res = await c.execute({
     sql: `SELECT i.*,
@@ -285,8 +366,8 @@ export async function listInvitations(userId: string): Promise<InvitationSummary
             (SELECT COUNT(*) FROM rsvps r WHERE r.invitation_id = i.id AND r.attending = 0) AS declined,
             (SELECT COALESCE(SUM(r.party_size), 0) FROM rsvps r WHERE r.invitation_id = i.id AND r.attending = 1) AS headcount,
             (SELECT COUNT(*) FROM guests g WHERE g.invitation_id = i.id) AS guest_count
-          FROM invitations i WHERE i.user_id = ? ORDER BY i.updated_at DESC`,
-    args: [userId],
+          FROM invitations i WHERE i.manage_token IN (${valid.map(() => "?").join(", ")}) ORDER BY i.updated_at DESC`,
+    args: valid,
   });
   return res.rows.map((r) => {
     const row = r as Row;
@@ -303,43 +384,43 @@ export async function listInvitations(userId: string): Promise<InvitationSummary
   });
 }
 
-export async function updateInvitationData(id: string, userId: string, data: InvitationData): Promise<boolean> {
+export async function updateInvitationData(id: string, data: InvitationData): Promise<boolean> {
   const c = await db();
   const res = await c.execute({
-    sql: "UPDATE invitations SET data = ?, title = ?, occasion = ?, updated_at = ? WHERE id = ? AND user_id = ?",
-    args: [JSON.stringify(data), displayNames(data), data.occasion, Date.now(), id, userId],
+    sql: "UPDATE invitations SET data = ?, title = ?, occasion = ?, updated_at = ? WHERE id = ?",
+    args: [JSON.stringify(data), displayNames(data), data.occasion, Date.now(), id],
   });
   return res.rowsAffected > 0;
 }
 
-export async function setInvitationStatus(id: string, userId: string, status: "draft" | "published", plan?: string): Promise<boolean> {
+export async function setInvitationStatus(id: string, status: "draft" | "published", plan?: string): Promise<boolean> {
   const c = await db();
   const now = Date.now();
   const res = await c.execute({
     sql: `UPDATE invitations SET status = ?, plan = COALESCE(?, plan), updated_at = ?,
             published_at = CASE WHEN ? = 'published' THEN COALESCE(published_at, ?) ELSE published_at END
-          WHERE id = ? AND user_id = ?`,
-    args: [status, plan ?? null, now, status, now, id, userId],
+          WHERE id = ?`,
+    args: [status, plan ?? null, now, status, now, id],
   });
   return res.rowsAffected > 0;
 }
 
-export async function setInvitationSlug(id: string, userId: string, desired: string): Promise<{ ok: boolean; slug?: string; error?: string }> {
+export async function setInvitationSlug(id: string, desired: string): Promise<{ ok: boolean; slug?: string; error?: string }> {
   const slug = slugify(desired);
   if (slug.length < 3) return { ok: false, error: "Use at least 3 letters or numbers." };
   const c = await db();
   const taken = await c.execute({ sql: "SELECT id FROM invitations WHERE slug = ? AND id != ?", args: [slug, id] });
   if (taken.rows.length) return { ok: false, error: "That link is already taken." };
   const res = await c.execute({
-    sql: "UPDATE invitations SET slug = ?, updated_at = ? WHERE id = ? AND user_id = ?",
-    args: [slug, Date.now(), id, userId],
+    sql: "UPDATE invitations SET slug = ?, updated_at = ? WHERE id = ?",
+    args: [slug, Date.now(), id],
   });
   return res.rowsAffected > 0 ? { ok: true, slug } : { ok: false, error: "Invitation not found." };
 }
 
-export async function deleteInvitation(id: string, userId: string): Promise<boolean> {
+export async function deleteInvitation(id: string): Promise<boolean> {
   const c = await db();
-  const res = await c.execute({ sql: "DELETE FROM invitations WHERE id = ? AND user_id = ?", args: [id, userId] });
+  const res = await c.execute({ sql: "DELETE FROM invitations WHERE id = ?", args: [id] });
   return res.rowsAffected > 0;
 }
 
