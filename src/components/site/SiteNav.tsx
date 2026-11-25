@@ -31,7 +31,7 @@ export function SiteNav({ account }: { account: ReactNode }) {
           <Link href="/" aria-label="Invitely home" className="text-fg" onClick={() => setOpen(false)}>
             <Logo />
           </Link>
-          <nav className="hidden items-center gap-8 lg:flex" aria-label="Main">
+          <nav className="hidden items-center gap-5 whitespace-nowrap lg:flex xl:gap-8" aria-label="Main">
             {links.map((l) => (
               <Link key={l.href} href={l.href} className="text-[0.95rem] font-semibold text-fg transition-colors hover:text-brand">
                 {l.label}

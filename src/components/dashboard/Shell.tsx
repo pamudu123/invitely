@@ -14,7 +14,7 @@ export function ManageShell({ children }: { children: ReactNode }) {
             <Logo />
           </Link>
           <div className="flex items-center gap-1 sm:gap-2">
-            <SeasonMenu />
+            <SeasonMenu compact />
             <ButtonLink href="/my" variant="ghost" size="sm">My cards</ButtonLink>
             <ButtonLink href="/templates" size="sm">
               <Plus size={16} strokeWidth={1.5} aria-hidden /> <span className="max-sm:sr-only">New</span>

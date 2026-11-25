@@ -1,5 +1,5 @@
 /*
- * The site has four looks. The visitor picks one in Preferences and a cookie remembers it.
+ * The site has four looks. The visitor picks one under Theme and a cookie remembers it.
  * Colours come from `data-season` on <html> (see seasons.css), so pages stay static and the
  * right look is there before the first paint. Invitations keep the colours their host chose.
  */

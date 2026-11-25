@@ -1,11 +1,11 @@
 "use client";
 
-import { Palette } from "lucide-react";
+import { ChevronDown, Palette } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import { SeasonPicker } from "./SeasonPicker";
 
-/** Preferences button for the page headers. */
-export function SeasonMenu() {
+/** Theme button for the page headers. Compact leaves only the icon on phones. */
+export function SeasonMenu({ compact = false }: { compact?: boolean }) {
   const [open, setOpen] = useState(false);
   const id = useId();
   const root = useRef<HTMLDivElement>(null);
@@ -35,17 +35,18 @@ export function SeasonMenu() {
       <button
         ref={button}
         type="button"
-        aria-label="Preferences"
         aria-expanded={open}
         aria-controls={open ? id : undefined}
         onClick={() => setOpen((v) => !v)}
-        className="flex h-11 w-11 items-center justify-center rounded-full text-brand outline-none transition-colors hover:bg-fg/8 focus-visible:ring-2 focus-visible:ring-brand"
+        className="flex h-11 items-center gap-1.5 rounded-full px-3 text-[0.95rem] font-semibold text-brand outline-none transition-colors hover:bg-fg/8 focus-visible:ring-2 focus-visible:ring-brand"
       >
-        <Palette size={21} aria-hidden="true" />
+        <Palette size={20} aria-hidden="true" />
+        <span className={compact ? "max-sm:sr-only" : ""}>Theme</span>
+        <ChevronDown size={16} aria-hidden="true" className={`transition-transform max-sm:hidden ${open ? "rotate-180" : ""}`} />
       </button>
       {open ? (
         <div id={id} role="group" aria-labelledby={`${id}-title`} className="absolute right-0 top-[calc(100%+0.9rem)] w-[min(21rem,calc(100vw-1.5rem))] max-h-[calc(100dvh-6rem)] overflow-y-auto rounded-3xl border border-fg/10 bg-page-2 p-5 text-fg shadow-[0_24px_60px_-20px_color-mix(in_srgb,var(--color-fg)_55%,transparent)] max-sm:fixed max-sm:inset-x-3 max-sm:top-20 max-sm:w-auto">
-          <p id={`${id}-title`} className="font-serif text-2xl leading-tight">Preferences</p>
+          <p id={`${id}-title`} className="font-serif text-2xl leading-tight">Theme</p>
           <p className="mb-4 mt-1 text-sm text-fg/85">Pick a season for the site. We remember it on this device.</p>
           <SeasonPicker />
         </div>
