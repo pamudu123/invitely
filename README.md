@@ -77,7 +77,7 @@ Or type `/revise-card your-card-link` in Claude Code. It pulls the card and the 
 
 ## Stack
 
-Next.js 16 (App Router with Cache Components), React 19, TypeScript, Tailwind CSS 4, libSQL. Ornaments are SVG drawn in code and the soundscapes are synthesised in the browser, so the project ships no licensed media.
+Next.js 16 (App Router with Cache Components), React 19, TypeScript, Tailwind CSS 4, libSQL. Ornaments are SVG drawn in code, 3D scenes are modelled in code with three.js and the soundscapes are synthesised in the browser, so the project ships no licensed media.
 
 ## Changing things
 
@@ -89,3 +89,11 @@ Next.js 16 (App Router with Cache Components), React 19, TypeScript, Tailwind CS
 - Ornaments: `src/components/invitation/ornaments.tsx`
 - Openings: `src/components/invitation/rituals/`
 - Likes: `src/components/site/LikeButton.tsx`, `src/lib/client/likes.ts` and `src/app/api/likes/`
+- Sport and profession designs: `src/lib/invitation/templates-scenes.ts`
+- 3D scenes: `src/components/invitation/scene3d/scenes/`, one file each, listed in `src/lib/invitation/scenes.ts`
+
+## 3D scenes
+
+A design with a 3D cover loads three.js only when a guest opens it. The gallery, phones without WebGL, and guests who asked for less motion or less data get a still picture from `public/scenes`.
+
+After changing a scene, run `npm run dev`, open http://localhost:3000/dev/scenes and press **Save stills**. Add `?only=chess,golf` to redraw a few. That page does not exist in production.

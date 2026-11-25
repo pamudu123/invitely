@@ -4,6 +4,7 @@ import { CalendarPlus, MapPin, Phone, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import type { Labels } from "@/lib/invitation/labels";
+import { isSceneHero } from "@/lib/invitation/scenes";
 import { displayNames, initials } from "@/lib/invitation/templates";
 import {
   formatLongDate,
@@ -22,6 +23,7 @@ import type {
 import { splitCountdown, useNow } from "./hooks";
 import { DateLockup, Names, PhotoOrPlaceholder, ScrollHint } from "./hero-parts";
 import { ExtraHero, isExtraHero } from "./heroes-extra";
+import { SceneHeroView } from "./heroes-scene";
 import { CornerFrame, Crest, Divider } from "./ornaments";
 import { Reveal } from "./Reveal";
 
@@ -42,6 +44,8 @@ export function Hero({ data, labels, lang }: SectionProps) {
   const rise = (i: number) => ({ ["--rise-delay" as string]: `${200 + i * 160}ms` });
 
   if (isExtraHero(layout)) return <ExtraHero data={data} labels={labels} lang={lang} kicker={kicker} />;
+
+  if (isSceneHero(layout)) return <SceneHeroView layout={layout} data={data} labels={labels} lang={lang} kicker={kicker} />;
 
   if (layout === "photo") {
     return (
@@ -175,8 +179,8 @@ export function MessageSection({ data, labels, lang, guest, phase }: SectionProp
 
 function CountBox({ value, label }: { value: number | null; label: string }) {
   return (
-    <div className="flex flex-1 flex-col items-center">
-      <span className="inv-serif tabular-nums leading-none" style={{ fontSize: "clamp(2.2rem, 12cqw, 3.6rem)" }}>
+    <div className="inv-count flex flex-1 flex-col items-center">
+      <span key={value} className="inv-count-digit inv-serif tabular-nums leading-none" style={{ fontSize: "clamp(2.2rem, 12cqw, 3.6rem)" }}>
         {value === null ? "--" : String(value).padStart(2, "0")}
       </span>
       <span className="inv-kicker mt-2" style={{ fontSize: "0.6rem", color: "var(--inv-muted)" }}>{label}</span>

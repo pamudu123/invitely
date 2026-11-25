@@ -17,6 +17,9 @@ import {
   Caveat,
   Special_Elite,
   Anton,
+  Barlow_Condensed,
+  Unbounded,
+  JetBrains_Mono,
 } from "next/font/google";
 
 // Brand fonts (site chrome)
@@ -147,6 +150,27 @@ export const anton = Anton({
   preload: false,
 });
 
+export const barlowCondensed = Barlow_Condensed({
+  weight: ["600", "800"],
+  style: ["normal", "italic"],
+  subsets: ["latin"],
+  variable: "--font-barlow-condensed",
+  display: "swap",
+  preload: false,
+});
+export const unbounded = Unbounded({
+  subsets: ["latin"],
+  variable: "--font-unbounded",
+  display: "swap",
+  preload: false,
+});
+export const jetbrains = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains",
+  display: "swap",
+  preload: false,
+});
+
 export const allFontVariables = [
   brandSerif,
   brandSans,
@@ -167,6 +191,9 @@ export const allFontVariables = [
   caveat,
   specialElite,
   anton,
+  barlowCondensed,
+  unbounded,
+  jetbrains,
 ]
   .map((f) => f.variable)
   .join(" ");

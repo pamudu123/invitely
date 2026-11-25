@@ -9,6 +9,7 @@ import { DoorsRitual } from "./Doors";
 import { GiftRitual } from "./Gift";
 import { CurtainRitual } from "./Curtain";
 import { LampRitual } from "./Lamp";
+import { PlayRitual } from "./Play";
 import { LotusRitual } from "./Lotus";
 import { ScratchRitual } from "./Scratch";
 import { SealRitual } from "./Seal";
@@ -25,6 +26,7 @@ const map: Record<Exclude<RitualId, "none">, (p: RitualProps) => React.ReactElem
   doors: DoorsRitual,
   clapper: ClapperRitual,
   gift: GiftRitual,
+  play: PlayRitual,
 };
 
 /** Full-screen cover shown before the invitation. Fades out once the guest completes the gesture. */

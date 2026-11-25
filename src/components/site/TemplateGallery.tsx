@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Suspense, type ReactNode } from "react";
+import { Suspense, useEffect, useRef, type ReactNode } from "react";
 import { LikeButton, UnlikeButton } from "@/components/site/LikeButton";
 import { Button, ButtonLink } from "@/components/ui/kit";
 import { useLikes } from "@/lib/client/likes";
@@ -64,6 +64,15 @@ function GalleryFromAddress({ items }: { items: GalleryItem[] }) {
 
 function GalleryView({ items, filter, sort }: { items: GalleryItem[]; filter: GalleryFilter; sort: GallerySort }) {
   const { totals, mine } = useLikes();
+  const bar = useRef<HTMLDivElement | null>(null);
+
+  // Arriving on a filtered link, bring the chosen filter into view on the sideways strip.
+  useEffect(() => {
+    const el = bar.current;
+    const chip = el?.querySelector<HTMLElement>('[aria-pressed="true"]');
+    if (el && chip) el.scrollLeft = chip.offsetLeft - el.offsetLeft - (el.clientWidth - chip.offsetWidth) / 2;
+  }, []);
+
   const available = occasions.filter((o) => items.some((i) => i.occasion === o.id || i.alsoFor.includes(o.id)));
   const occasion = filter === "all" || filter === "liked" ? null : filter;
   const picked = occasion
@@ -81,7 +90,7 @@ function GalleryView({ items, filter, sort }: { items: GalleryItem[]; filter: Ga
 
   return (
     <>
-      <div className="no-scrollbar sticky top-16 z-30 -mx-5 flex gap-2 overflow-x-auto border-b border-fg/10 bg-page/80 px-5 py-3 backdrop-blur-xl sm:-mx-8 sm:px-8">
+      <div ref={bar} className="no-scrollbar sticky top-16 z-30 -mx-5 flex gap-2 overflow-x-auto border-b border-fg/10 bg-page/80 px-5 py-3 backdrop-blur-xl sm:-mx-8 sm:px-8">
         {[
           { id: "all" as const, label: "All designs" },
           { id: "liked" as const, label: myCount ? `Your likes (${myCount})` : "Your likes" },
