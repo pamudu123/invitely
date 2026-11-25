@@ -1,9 +1,14 @@
 import Link from "next/link";
 import { occasions } from "@/lib/invitation/occasions";
+import { AutumnHorizon, AutumnMini, AutumnView } from "@/components/site/season/AutumnArt";
+import { BySeason } from "@/components/site/season/BySeason";
+import { SpringHorizon, SpringMini, SpringView } from "@/components/site/season/SpringArt";
+import { SummerHorizon, SummerMini, SummerView } from "@/components/site/season/SummerArt";
 import { Couple, IcePalace, Pine } from "./Globe";
 import "./frost.css";
 
-export function Aurora() {
+/** Light in the sky: aurora, soft spring haze, sun rays or a harvest moon. */
+export function Sky() {
   return (
     <>
       <div className="frost-aurora" aria-hidden="true"><i /><i /><i /></div>
@@ -12,7 +17,8 @@ export function Aurora() {
   );
 }
 
-export function Snowfall() {
+/** Snow, petals, motes of light or leaves. The season decides how they look and move. */
+export function Falling() {
   return (
     <div className="frost-fall" aria-hidden="true">
       {Array.from({ length: 22 }, (_, i) => (
@@ -22,9 +28,9 @@ export function Snowfall() {
   );
 }
 
-export function Peaks() {
+function WinterHorizon() {
   return (
-    <div className="frost-peaks" aria-hidden="true">
+    <>
       {/* Mountains stretch with the screen so their tops are never cut off */}
       <svg viewBox="0 0 1600 420" preserveAspectRatio="none">
         <path d="M0 420V250L150 120L260 220L400 60L560 230L700 130L860 260L1010 90L1180 240L1330 110L1460 220L1600 130V420Z" fill="#2D4FD6" />
@@ -40,14 +46,21 @@ export function Peaks() {
         <Pine x={1470} y={376} s={1.1} />
         <Pine x={1550} y={356} s={0.8} c="#2A9AA6" />
       </svg>
+    </>
+  );
+}
+
+export function Horizon() {
+  return (
+    <div className="frost-peaks" aria-hidden="true">
+      <BySeason winter={<WinterHorizon />} spring={<SpringHorizon />} summer={<SummerHorizon />} autumn={<AutumnHorizon />} />
     </div>
   );
 }
 
-/** Palace and couple on a snowy rise, for the closing section. */
-export function PalaceView() {
+function WinterView() {
   return (
-    <svg viewBox="0 0 1600 460" preserveAspectRatio="xMidYMax slice" className="frost-view" aria-hidden="true">
+    <>
       <path d="M0 460V330C240 250 420 330 700 300C980 270 1240 340 1600 280V460Z" fill="#8FC8FF" />
       <g transform="translate(800 350) scale(1.1)"><IcePalace /></g>
       <path d="M0 460V360C300 310 560 370 800 352C1040 334 1300 370 1600 330V460Z" fill="#FFFFFF" />
@@ -56,6 +69,15 @@ export function PalaceView() {
       <Pine x={560} y={386} s={0.7} c="#2A9AA6" />
       <Pine x={1050} y={380} s={0.9} />
       <Pine x={1140} y={372} s={1.1} c="#2A9AA6" />
+    </>
+  );
+}
+
+/** The season's place with the couple in front, for the closing section. */
+export function PlaceView() {
+  return (
+    <svg viewBox="0 0 1600 460" preserveAspectRatio="xMidYMax slice" className="frost-view" aria-hidden="true">
+      <BySeason svg winter={<WinterView />} spring={<SpringView />} summer={<SummerView />} autumn={<AutumnView />} />
       <g transform="translate(800 436) scale(1)"><Couple /></g>
     </svg>
   );
@@ -67,6 +89,26 @@ const lives = [
   { tag: "After", title: "The keepsake", text: "Your thank you note, your photos and every wish your guests left, kept on the same link." },
 ];
 
+function WinterMini({ i }: { i: number }) {
+  return (
+    <>
+      {i === 2 ? (
+        <>
+          <path d="M-200 -90C-120 -150 -60 -40 20 -96C90 -146 140 -70 200 -110V-40C140 -10 90 -80 20 -34C-60 16 -120 -80 -200 -30Z" fill="#5FF0C8" opacity="0.75" />
+          <path d="M-200 -130C-120 -180 -60 -90 20 -136C90 -176 140 -120 200 -150V-112C140 -76 90 -130 20 -90C-60 -46 -120 -126 -200 -86Z" fill="#B79BFF" opacity="0.8" />
+        </>
+      ) : (
+        <circle cx={i ? 60 : -80} cy={i ? -96 : 20} r={i ? 44 : 60} fill={i ? "#FFF6D0" : "#FFE0EE"} />
+      )}
+      <path d="M-200 100C-120 60 -60 96 0 80C80 62 130 96 200 74V200H-200Z" fill={["#C9B8FF", "#9FDCFF", "#274BC4"][i]} />
+      <g transform="translate(0 122) scale(0.86)"><IcePalace /></g>
+      <Pine x={-130} y={128} s={0.7} />
+      <Pine x={132} y={128} s={0.74} />
+      <path d="M-200 126C-100 104 100 104 200 126V200H-200Z" fill={i === 2 ? "#B8D4FF" : "#fff"} />
+    </>
+  );
+}
+
 export function ThreeGlobes() {
   return (
     <div className="frost-three">
@@ -74,19 +116,7 @@ export function ThreeGlobes() {
         <article key={x.tag}>
           <div className={`frost-mini frost-mini-${i}`}>
             <svg viewBox="-200 -200 400 400" aria-hidden="true">
-              {i === 2 ? (
-                <>
-                  <path d="M-200 -90C-120 -150 -60 -40 20 -96C90 -146 140 -70 200 -110V-40C140 -10 90 -80 20 -34C-60 16 -120 -80 -200 -30Z" fill="#5FF0C8" opacity="0.75" />
-                  <path d="M-200 -130C-120 -180 -60 -90 20 -136C90 -176 140 -120 200 -150V-112C140 -76 90 -130 20 -90C-60 -46 -120 -126 -200 -86Z" fill="#B79BFF" opacity="0.8" />
-                </>
-              ) : (
-                <circle cx={i ? 60 : -80} cy={i ? -96 : 20} r={i ? 44 : 60} fill={i ? "#FFF6D0" : "#FFE0EE"} />
-              )}
-              <path d="M-200 100C-120 60 -60 96 0 80C80 62 130 96 200 74V200H-200Z" fill={["#C9B8FF", "#9FDCFF", "#274BC4"][i]} />
-              <g transform="translate(0 122) scale(0.86)"><IcePalace /></g>
-              <Pine x={-130} y={128} s={0.7} />
-              <Pine x={132} y={128} s={0.74} />
-              <path d="M-200 126C-100 104 100 104 200 126V200H-200Z" fill={i === 2 ? "#B8D4FF" : "#fff"} />
+              <BySeason svg winter={<WinterMini i={i} />} spring={<SpringMini i={i} />} summer={<SummerMini i={i} />} autumn={<AutumnMini i={i} />} />
               {i === 1 ? <g transform="translate(0 158)"><Couple /></g> : null}
             </svg>
           </div>
@@ -105,11 +135,7 @@ export function OccasionStrip() {
     <ul aria-hidden={hidden || undefined}>
       {occasions.map((o) => (
         <li key={o.id}>
-          <svg viewBox="-30 -30 60 60" aria-hidden="true">
-            {[0, 60, 120].map((a) => (
-              <path key={a} d="M0 -26V26M-8 -18L0 -11L8 -18M-8 18L0 11L8 18" transform={`rotate(${a})`} fill="none" stroke="#2740c9" strokeWidth="4" strokeLinecap="round" />
-            ))}
-          </svg>
+          <i className="season-mark text-brand" aria-hidden="true" />
           <Link href={`/templates?occasion=${o.id}`} tabIndex={hidden ? -1 : undefined}>{o.plural}</Link>
         </li>
       ))}

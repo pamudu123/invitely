@@ -1,11 +1,53 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
+import { AutumnGlobe } from "@/components/site/season/AutumnArt";
+import { BySeason } from "@/components/site/season/BySeason";
+import { SpringGlobe } from "@/components/site/season/SpringArt";
+import { SummerGlobe } from "@/components/site/season/SummerArt";
+import { useSeason } from "@/lib/client/season";
+import type { SeasonId } from "@/lib/season";
 
 interface Flake { x: number; y: number; vx: number; vy: number; r: number; w: number }
 
-/** Snow that swirls inside a round glass. Call shake() to stir it up. */
-function useSnow(count: number) {
+const flakeColors: Record<SeasonId, string[]> = {
+  winter: ["#ffffff"],
+  spring: ["#ff8fb6", "#ffd0e1", "#ffffff", "#f76a9c"],
+  summer: ["#ffffff", "#fff3b0", "#ffd233"],
+  autumn: ["#d9541e", "#ffb057", "#a82a1c", "#ffdd85"],
+};
+
+/** Snowflakes, petals, glints of sun or leaves. Drawn around 0,0. */
+function drawFlake(ctx: CanvasRenderingContext2D, season: SeasonId, r: number, w: number) {
+  ctx.beginPath();
+  if (season === "winter") ctx.arc(0, 0, r, 0, 6.2832);
+  else if (season === "summer") {
+    const a = r * (1.5 + Math.sin(w * 2) * 0.9);
+    const b = a * 0.22;
+    for (let i = 0; i < 8; i++) {
+      const t = (i * Math.PI) / 4;
+      const d = i % 2 ? b : a;
+      ctx.lineTo(Math.cos(t) * d, Math.sin(t) * d);
+    }
+  } else {
+    // Seen from the side as they tumble
+    const long = r * (season === "spring" ? 1.9 : 2.5);
+    ctx.rotate(Math.sin(w * 0.6) * 2);
+    ctx.scale(1, 0.35 + Math.abs(Math.sin(w * 0.9)) * 0.65);
+    ctx.moveTo(-long, 0);
+    ctx.quadraticCurveTo(-long * 0.2, -long * 1.05, long, 0);
+    ctx.quadraticCurveTo(-long * 0.2, long * 1.05, -long, 0);
+  }
+  ctx.fill();
+}
+
+/** What swirls inside the glass. Call shake() to stir it up. */
+function useFlurry(count: number) {
+  const season = useSeason();
+  const kind = useRef(season);
+  useEffect(() => {
+    kind.current = season;
+  }, [season]);
   const ref = useRef<HTMLCanvasElement | null>(null);
   const flakes = useRef<Flake[]>([]);
   const shake = useCallback((power = 1, dx = 0) => {
@@ -27,8 +69,9 @@ function useSnow(count: number) {
     let raf = 0;
     const tick = () => {
       ctx.clearRect(0, 0, n, n);
-      ctx.fillStyle = "#fff";
-      for (const f of flakes.current) {
+      const now = kind.current;
+      const colors = flakeColors[now];
+      for (const [i, f] of flakes.current.entries()) {
         f.w += 0.03;
         f.vx = f.vx * 0.975 + Math.sin(f.w) * 0.00012;
         f.vy = f.vy * 0.975 + 0.00012 + f.r * 0.00002;
@@ -51,10 +94,11 @@ function useSnow(count: number) {
           }
         }
         ctx.globalAlpha = 0.65 + f.r * 0.08;
-        ctx.beginPath();
-        ctx.arc((f.x * 0.5 + 0.5) * n, (f.y * 0.5 + 0.5) * n, f.r, 0, 6.2832);
-        ctx.fill();
+        ctx.fillStyle = colors[i % colors.length];
+        ctx.setTransform(1, 0, 0, 1, (f.x * 0.5 + 0.5) * n, (f.y * 0.5 + 0.5) * n);
+        drawFlake(ctx, now, f.r, f.w);
       }
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
       raf = requestAnimationFrame(tick);
     };
     tick();
@@ -105,14 +149,14 @@ export function IcePalace() {
 export function Couple() {
   return (
     <g className="frost-couple">
-      <ellipse cx="2" cy="1" rx="58" ry="7" fill="#7FA6E8" opacity="0.5" />
+      <ellipse cx="2" cy="1" rx="58" ry="7" fill="var(--couple-shadow,#7FA6E8)" opacity="0.5" />
       {/* Veil */}
-      <path d="M27 -84C46 -74 56 -38 58 -3C48 2 40 2 34 0C40 -32 36 -62 25 -80Z" fill="#E9E4FF" stroke="#A795F5" strokeWidth="1.4" opacity="0.95" />
+      <path d="M27 -84C46 -74 56 -38 58 -3C48 2 40 2 34 0C40 -32 36 -62 25 -80Z" fill="var(--veil,#E9E4FF)" stroke="var(--veil-line,#A795F5)" strokeWidth="1.4" opacity="0.95" />
       {/* Gown */}
-      <path d="M14 -46C8 -24 -4 -8 -6 0C8 5 34 5 46 0C42 -14 34 -28 31 -46Z" fill="#F8F5FF" stroke="#8F7BEB" strokeWidth="1.6" strokeLinejoin="round" />
-      <path d="M18 -40C14 -22 8 -8 6 1M24 -42C24 -24 24 -10 24 2M29 -40C34 -24 37 -10 39 1" fill="none" stroke="#B5A6F2" strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M14 -46C13 -56 15 -62 18 -64C20 -60 25 -60 27 -64C31 -62 32 -56 31 -46C26 -43 19 -43 14 -46Z" fill="#EDE6FF" stroke="#8F7BEB" strokeWidth="1.5" strokeLinejoin="round" />
-      <path d="M14 -46C19 -43 26 -43 31 -46" fill="none" stroke="#6A4FE0" strokeWidth="3" strokeLinecap="round" />
+      <path d="M14 -46C8 -24 -4 -8 -6 0C8 5 34 5 46 0C42 -14 34 -28 31 -46Z" fill="var(--gown,#F8F5FF)" stroke="var(--gown-line,#8F7BEB)" strokeWidth="1.6" strokeLinejoin="round" />
+      <path d="M18 -40C14 -22 8 -8 6 1M24 -42C24 -24 24 -10 24 2M29 -40C34 -24 37 -10 39 1" fill="none" stroke="var(--gown-fold,#B5A6F2)" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M14 -46C13 -56 15 -62 18 -64C20 -60 25 -60 27 -64C31 -62 32 -56 31 -46C26 -43 19 -43 14 -46Z" fill="var(--bodice,#EDE6FF)" stroke="var(--gown-line,#8F7BEB)" strokeWidth="1.5" strokeLinejoin="round" />
+      <path d="M14 -46C19 -43 26 -43 31 -46" fill="none" stroke="var(--sash,#6A4FE0)" strokeWidth="3" strokeLinecap="round" />
       {/* Bride's arms, neck and head */}
       <path d="M16 -60C10 -54 4 -48 0 -41" fill="none" stroke="#E3AD86" strokeWidth="5" strokeLinecap="round" />
       <path d="M30 -60C36 -53 37 -46 32 -40" fill="none" stroke="#E3AD86" strokeWidth="5" strokeLinecap="round" />
@@ -120,23 +164,23 @@ export function Couple() {
       <circle cx="22" cy="-76" r="9.500" fill="#E9B68F" />
       <path d="M13 -76C12 -90 33 -90 32 -75C30 -82 22 -84 18 -82C16 -81 14 -79 13 -76Z" fill="#4A2C1E" />
       <circle cx="30" cy="-84" r="5" fill="#4A2C1E" />
-      <path d="M14 -84C18 -90 26 -90 30 -85" fill="none" stroke="#A9FBE4" strokeWidth="2.600" strokeLinecap="round" />
+      <path d="M14 -84C18 -90 26 -90 30 -85" fill="none" stroke="var(--tie,#A9FBE4)" strokeWidth="2.600" strokeLinecap="round" />
       <path d="M17 -71.500q2.500 2.200 5 0" fill="none" stroke="#8A3B2A" strokeWidth="1.300" strokeLinecap="round" />
       {/* Bouquet */}
       <path d="M31 -38l3 10 3-10z" fill="#1F8A72" />
-      {[[29, -42, "#FF9CC4"], [35, -44, "#C9A8FF"], [38, -39, "#FF9CC4"], [32, -37, "#FFFFFF"], [34, -40, "#8F6BFF"]].map(([x, y, c]) => (
-        <circle key={`${x}${y}`} cx={x as number} cy={y as number} r="4" fill={c as string} stroke="#6A4FE0" strokeWidth="0.700" />
+      {[[29, -42, "#FF9CC4"], [35, -44, "var(--bloom,#C9A8FF)"], [38, -39, "#FF9CC4"], [32, -37, "#FFFFFF"], [34, -40, "var(--bloom-2,#8F6BFF)"]].map(([x, y, c]) => (
+        <circle key={`${x}${y}`} cx={x as number} cy={y as number} r="4" fill={c as string} stroke="var(--sash,#6A4FE0)" strokeWidth="0.700" />
       ))}
       {/* Groom */}
-      <path d="M-32 0L-30 -40H-12L-10 0H-18L-21 -30L-24 0Z" fill="#101B66" />
-      <path d="M-35 -2h12v4h-14c0-2 1-3 2-4zM-19 -2h11c2 1 3 2 3 4h-14z" fill="#0A1248" />
-      <path d="M-36 -36C-37 -54 -34 -62 -28 -66H-14C-8 -62 -6 -54 -7 -36C-14 -32 -29 -32 -36 -36Z" fill="#17258A" />
+      <path d="M-32 0L-30 -40H-12L-10 0H-18L-21 -30L-24 0Z" fill="var(--trousers,#101B66)" />
+      <path d="M-35 -2h12v4h-14c0-2 1-3 2-4zM-19 -2h11c2 1 3 2 3 4h-14z" fill="var(--shoes,#0A1248)" />
+      <path d="M-36 -36C-37 -54 -34 -62 -28 -66H-14C-8 -62 -6 -54 -7 -36C-14 -32 -29 -32 -36 -36Z" fill="var(--suit,#17258A)" />
       <path d="M-26 -66L-21 -44L-16 -66Z" fill="#FFFFFF" />
-      <path d="M-28 -66L-25 -50L-21 -44L-17 -50L-14 -66L-18 -66L-21 -52L-24 -66Z" fill="#2E45D6" />
-      <path d="M-26 -63l5 2.500 5-2.500v5l-5-2.500-5 2.500z" fill="#A9FBE4" />
+      <path d="M-28 -66L-25 -50L-21 -44L-17 -50L-14 -66L-18 -66L-21 -52L-24 -66Z" fill="var(--lapel,#2E45D6)" />
+      <path d="M-26 -63l5 2.500 5-2.500v5l-5-2.500-5 2.500z" fill="var(--tie,#A9FBE4)" />
       <circle cx="-30" cy="-54" r="2.600" fill="#FF9CC4" />
-      <path d="M-34 -60C-39 -52 -40 -44 -38 -36" fill="none" stroke="#17258A" strokeWidth="7" strokeLinecap="round" />
-      <path d="M-10 -60C-4 -54 -1 -48 0 -42" fill="none" stroke="#17258A" strokeWidth="6.500" strokeLinecap="round" />
+      <path d="M-34 -60C-39 -52 -40 -44 -38 -36" fill="none" stroke="var(--suit,#17258A)" strokeWidth="7" strokeLinecap="round" />
+      <path d="M-10 -60C-4 -54 -1 -48 0 -42" fill="none" stroke="var(--suit,#17258A)" strokeWidth="6.500" strokeLinecap="round" />
       <circle cx="-38" cy="-34" r="3.200" fill="#C98F66" />
       <circle cx="0" cy="-40" r="4" fill="#D89F78" />
       <path d="M-24 -72h6v8h-6z" fill="#BF855C" />
@@ -149,9 +193,9 @@ export function Couple() {
   );
 }
 
-function Scene() {
+function WinterGlobe() {
   return (
-    <svg viewBox="-200 -200 400 400" aria-hidden="true">
+    <>
       <defs>
         <linearGradient id="frost-in" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#2746E0" />
@@ -170,6 +214,14 @@ function Scene() {
       <Pine x={-118} y={142} s={0.5} c="#2A9AA6" />
       <path d="M-200 122C-100 102 100 102 200 122V200H-200Z" fill="#FFFFFF" />
       <path d="M-200 150C-90 132 90 160 200 142V200H-200Z" fill="#E4F2FF" />
+    </>
+  );
+}
+
+function Scene() {
+  return (
+    <svg viewBox="-200 -200 400 400" aria-hidden="true">
+      <BySeason svg winter={<WinterGlobe />} spring={<SpringGlobe />} summer={<SummerGlobe />} autumn={<AutumnGlobe />} />
       <g transform="translate(0 162) scale(1.08)"><Couple /></g>
     </svg>
   );
@@ -177,7 +229,7 @@ function Scene() {
 
 /** Tap or drag across the glass to shake it. Changing `nudge` from outside shakes it too. */
 export function SnowGlobe({ nudge = 0 }: { nudge?: number }) {
-  const { ref, shake } = useSnow(160);
+  const { ref, shake } = useFlurry(160);
   const [taps, setTaps] = useState(0);
   const last = useRef<number | null>(null);
   const jolt = nudge + taps;
@@ -196,7 +248,7 @@ export function SnowGlobe({ nudge = 0 }: { nudge?: number }) {
     <button
       type="button"
       className="frost-globe"
-      aria-label="Shake the snow globe"
+      aria-label="Shake the globe"
       onClick={() => setTaps((n) => n + 1)}
       onPointerMove={onMove}
       onPointerLeave={() => { last.current = null; }}
@@ -210,19 +262,19 @@ export function SnowGlobe({ nudge = 0 }: { nudge?: number }) {
         <svg viewBox="-220 0 440 130" className="frost-base" aria-hidden="true">
           <defs>
             <linearGradient id="frost-silver" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0" stopColor="#8FA3D6" />
-              <stop offset="0.3" stopColor="#FFFFFF" />
-              <stop offset="0.55" stopColor="#C3D0F0" />
-              <stop offset="0.8" stopColor="#F6F9FF" />
-              <stop offset="1" stopColor="#7F92C8" />
+              <stop offset="0" stopColor="var(--metal-1,#8FA3D6)" />
+              <stop offset="0.3" stopColor="var(--metal-2,#FFFFFF)" />
+              <stop offset="0.55" stopColor="var(--metal-3,#C3D0F0)" />
+              <stop offset="0.8" stopColor="var(--metal-4,#F6F9FF)" />
+              <stop offset="1" stopColor="var(--metal-5,#7F92C8)" />
             </linearGradient>
           </defs>
           <path d="M-150 0h300l16 34h-332z" fill="url(#frost-silver)" />
-          <path d="M-166 34h332v16h-332z" fill="#6E83C4" />
+          <path d="M-166 34h332v16h-332z" fill="var(--metal-edge,#6E83C4)" />
           <path d="M-172 50h344l26 54h-396z" fill="url(#frost-silver)" />
-          <path d="M-206 104h412v22h-412z" fill="#7A8ECC" />
+          <path d="M-206 104h412v22h-412z" fill="var(--metal-foot,#7A8ECC)" />
           {Array.from({ length: 9 }, (_, i) => (
-            <path key={i} d="M0 -13L4 -4L13 0L4 4L0 13L-4 4L-13 0L-4 -4Z" transform={`translate(${(i - 4) * 36} 77)`} fill="#4B6BFF" />
+            <path key={i} d="M0 -13L4 -4L13 0L4 4L0 13L-4 4L-13 0L-4 -4Z" transform={`translate(${(i - 4) * 36} 77)`} fill="var(--metal-star,#4B6BFF)" />
           ))}
         </svg>
       </span>

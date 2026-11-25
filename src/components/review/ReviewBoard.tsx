@@ -343,7 +343,7 @@ export function ReviewBoard({
 
       {/* Phone: the comment box rises from the bottom when a pin is dropped */}
       {editor ? (
-        <div className="fixed inset-x-0 bottom-0 z-[70] rounded-t-3xl border-t border-fg/15 bg-page-2 p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-[0_-20px_60px_rgba(15,28,92,0.35)] lg:hidden">
+        <div className="fixed inset-x-0 bottom-0 z-[70] rounded-t-3xl border-t border-fg/15 bg-page-2 p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-[0_-20px_60px_color-mix(in_srgb,var(--color-fg)_35%,transparent)] lg:hidden">
           {editor}
         </div>
       ) : null}

@@ -1,8 +1,10 @@
 @import "tailwindcss";
 @import "./invitation.css" layer(components);
+@import "../components/site/season/seasons.css";
 
-/* Frost: ice-light pages, navy text, royal blue actions. Not inline, so a section
-   can swap these roles (see .on-deep). Text pairs are kept at 4.5:1 or better. */
+/* Winter, the default season: ice-light pages, navy text, royal blue actions. seasons.css has
+   the other three. Not inline, so a season or a section can swap these roles (see .on-deep).
+   Text pairs are kept at 4.5:1 or better. */
 @theme {
   --color-page: #eef7ff;
   --color-page-2: #ffffff;
@@ -82,7 +84,7 @@ body {
 }
 
 ::selection {
-  background: #c9dcff;
+  background: var(--select);
 }
 
 @layer components {
@@ -101,18 +103,18 @@ body {
   line-height: 1.06;
 }
 
-/* Deep blue sections: same roles, light text */
+/* Deep sections, such as the footer: same roles, light text */
 .on-deep {
-  --color-page: #141f86;
-  --color-page-2: #1b2a9e;
-  --color-page-3: #2234b4;
-  --color-page-4: #2b40c8;
+  --color-page: var(--deep-page);
+  --color-page-2: var(--deep-page-2);
+  --color-page-3: var(--deep-page-3);
+  --color-page-4: var(--deep-page-4);
   --color-fg: #ffffff;
-  --color-fg-2: #e6f1ff;
-  --color-brand: #a9fbe4;
-  --color-brand-hot: #d3fff2;
-  --color-on-brand: #0f1c5c;
-  --color-aqua: #a9fbe4;
+  --color-fg-2: var(--deep-fg-2);
+  --color-brand: var(--deep-brand);
+  --color-brand-hot: var(--deep-brand-hot);
+  --color-on-brand: var(--deep-on-brand);
+  --color-aqua: var(--deep-brand);
   background: var(--color-page);
   color: var(--color-fg);
 }

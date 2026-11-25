@@ -55,7 +55,7 @@ export function Textarea({ className = "", ...props }: ComponentProps<"textarea"
 
 export function Select({ className = "", children, ...props }: ComponentProps<"select">) {
   return (
-    <select {...props} className={`${fieldClass} appearance-none bg-[length:1rem] bg-[right_0.8rem_center] bg-no-repeat pr-9 ${className}`} style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230f1c5c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\")", ...props.style }}>
+    <select {...props} className={`${fieldClass} appearance-none bg-[length:1rem] bg-[right_0.8rem_center] bg-no-repeat pr-9 ${className}`} style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333344' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\")", ...props.style }}>
       {children}
     </select>
   );
@@ -99,15 +99,11 @@ export function Badge({ tone = "neutral", children }: { tone?: "neutral" | "flam
   );
 }
 
-/** Ice crystal mark and wordmark. */
+/** The season's mark (ice crystal, blossom, sun or leaf) and wordmark. */
 export function Logo({ className = "", size = 24 }: { className?: string; size?: number }) {
   return (
     <span className={`inline-flex items-center gap-2 ${className}`}>
-      <svg width={size} height={size} viewBox="-12 -12 24 24" aria-hidden="true" className="text-brand">
-        {[0, 60, 120].map((a) => (
-          <path key={a} d="M0 -11V11M-3.200 -8L0 -4.800L3.200 -8M-3.200 8L0 4.800L3.200 8" transform={`rotate(${a})`} fill="none" stroke="currentColor" strokeWidth="1.800" strokeLinecap="round" strokeLinejoin="round" />
-        ))}
-      </svg>
+      <i className="season-mark text-brand" style={{ width: size, height: size }} aria-hidden="true" />
       <span className="font-serif text-[1.6rem] leading-none">Invitely</span>
     </span>
   );
@@ -139,8 +135,8 @@ export function PhoneFrame({
         height: height + bezel * 2,
         padding: bezel,
         borderRadius: (bare ? 30 : 46) * scale + bezel,
-        background: bare ? "transparent" : "linear-gradient(160deg, #dfe9ff, #8ea2e0 40%, #f4f8ff 60%, #7388cc)",
-        boxShadow: bare ? undefined : "0 0 0 1px rgba(15,28,92,0.16), 0 36px 70px -30px rgba(15,28,92,0.55)",
+        background: bare ? "transparent" : "var(--phone-metal)",
+        boxShadow: bare ? undefined : "0 0 0 1px color-mix(in srgb, var(--color-fg) 16%, transparent), 0 36px 70px -30px color-mix(in srgb, var(--color-fg) 55%, transparent)",
       }}
     >
       <div className="relative overflow-hidden bg-black" style={{ width, height, borderRadius: (bare ? 30 : 46) * scale }}>

@@ -23,7 +23,7 @@ export function PrintPreview({
   const scale = width / format.width;
   const clip = `path(evenodd, "${toSvgPath(shapeSegments(d.shape, format.width - format.bleed * 2, format.height - format.bleed * 2, format.bleed))}")`;
   return (
-    <div style={{ width, height: format.height * scale, flexShrink: 0, position: "relative", filter: "drop-shadow(0 16px 22px rgba(15,28,92,0.32))" }}>
+    <div style={{ width, height: format.height * scale, flexShrink: 0, position: "relative", filter: "drop-shadow(0 16px 22px color-mix(in srgb, var(--color-fg) 32%, transparent))" }}>
       <div style={{ position: "absolute", left: 0, top: 0, width: format.width, height: format.height, transform: `scale(${scale})`, transformOrigin: "top left", clipPath: clip }}>
         <CardFace
           data={data}

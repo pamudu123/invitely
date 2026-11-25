@@ -22,7 +22,7 @@ export function LikeButton({ id, name, className = "" }: { id: string; name: str
           like(id);
           setHearts((h) => [...h.slice(-7), (h.at(-1) ?? 0) + 1]);
         }}
-        className="relative inline-flex h-11 min-w-11 touch-manipulation select-none items-center justify-center gap-1.5 rounded-full border border-[#0f1c5c]/15 bg-white px-3 text-[0.86rem] font-bold tabular-nums text-[#0f1c5c] shadow-[0_6px_18px_-8px_rgba(15,28,92,0.55)] outline-none transition-transform duration-200 hover:scale-105 focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 active:scale-90"
+        className="relative inline-flex h-11 min-w-11 touch-manipulation select-none items-center justify-center gap-1.5 rounded-full border border-fg/15 bg-page-2 px-3 text-[0.86rem] font-bold tabular-nums text-fg shadow-[0_6px_18px_-8px_color-mix(in_srgb,var(--color-fg)_55%,transparent)] outline-none transition-transform duration-200 hover:scale-105 focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 active:scale-90"
       >
         <Heart size={19} strokeWidth={2.2} className="text-[#d0165c]" fill={liked ? "currentColor" : "none"} aria-hidden="true" />
         {count ? compact.format(count) : null}

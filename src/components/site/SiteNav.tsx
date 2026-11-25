@@ -3,6 +3,7 @@
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
+import { SeasonMenu } from "@/components/site/season/SeasonMenu";
 import { ButtonLink, Logo } from "@/components/ui/kit";
 
 const links = [
@@ -26,7 +27,7 @@ export function SiteNav({ account }: { account: ReactNode }) {
   return (
     <>
       <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5">
-        <div className="mx-auto flex h-14 max-w-[82rem] items-center justify-between gap-6 rounded-full border border-fg/10 bg-page-2 pl-5 pr-2 shadow-[0_8px_30px_-12px_rgba(15,28,92,0.4)]">
+        <div className="mx-auto flex h-14 max-w-[82rem] items-center justify-between gap-6 rounded-full border border-fg/10 bg-page-2 pl-5 pr-2 shadow-[0_8px_30px_-12px_color-mix(in_srgb,var(--color-fg)_40%,transparent)]">
           <Link href="/" aria-label="Invitely home" className="text-fg" onClick={() => setOpen(false)}>
             <Logo />
           </Link>
@@ -37,7 +38,8 @@ export function SiteNav({ account }: { account: ReactNode }) {
               </Link>
             ))}
           </nav>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
+            <SeasonMenu />
             <div className="hidden sm:block">{account}</div>
             <ButtonLink href="/templates" size="md" className="max-sm:hidden">Create invitation</ButtonLink>
             <button

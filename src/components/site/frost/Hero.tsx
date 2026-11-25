@@ -4,16 +4,16 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { SnowGlobe } from "./Globe";
-import { Aurora, Peaks, Snowfall } from "./Scenery";
+import { Falling, Horizon, Sky } from "./Scenery";
 import "./frost.css";
 
 export function FrostHero({ designs, openings }: { designs: number; openings: number }) {
   const [nudge, setNudge] = useState(0);
   return (
     <section className="frost-hero">
-      <Aurora />
-      <Snowfall />
-      <Peaks />
+      <Sky />
+      <Horizon />
+      <Falling />
       <div className="frost-copy">
         <h1>Invitations that open like a <em>ceremony</em></h1>
         <p>

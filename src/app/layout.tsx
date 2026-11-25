@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
+import { SeasonScript, SeasonSync } from "@/components/site/season/SeasonSync";
 import { allFontVariables } from "@/lib/fonts";
+import { DEFAULT_SEASON } from "@/lib/season";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -22,13 +24,18 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#16249a",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${allFontVariables} h-full`}>
-      <body className="min-h-full">{children}</body>
+    <html lang="en" data-season={DEFAULT_SEASON} className={`${allFontVariables} h-full`} suppressHydrationWarning>
+      <head>
+        <SeasonScript />
+      </head>
+      <body className="min-h-full">
+        <SeasonSync />
+        {children}
+      </body>
     </html>
   );
 }

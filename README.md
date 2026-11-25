@@ -28,6 +28,7 @@ Open http://localhost:3000. No configuration is needed for development. Data is 
 | Design studio, no account needed | `/studio/new?template=pahana` |
 | Printed card designs | `/print-cards` |
 | Pricing | `/pricing` |
+| Preferences: a winter, spring, summer or autumn look for the site | `/my#preferences` |
 | Cards remembered on this device, and find a card by PIN | `/my` |
 | Manage one card (private link) | `/m/manage-token` |
 | Image card for a web card | `/m/manage-token/image` |
