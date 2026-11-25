@@ -1,0 +1,414 @@
+/*
+ * The four seasons. `data-season` on <html> picks one, see src/lib/season.ts.
+ * Winter is also the default when the attribute is missing. Every text and background pair
+ * is 4.5:1 or better.
+ */
+
+/* Words and drawings written for one season only, see BySeason.tsx */
+html:not([data-season="spring"], [data-season="summer"], [data-season="autumn"]) [data-only]:not([data-only="winter"]),
+html[data-season="spring"] [data-only]:not([data-only="spring"]),
+html[data-season="summer"] [data-only]:not([data-only="summer"]),
+html[data-season="autumn"] [data-only]:not([data-only="autumn"]) { display: none; }
+
+/* Shapes of the marks */
+:root {
+  --mark-winter: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-12 -12 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cg id='a'%3E%3Cpath d='M0 -11V11M-3.2 -8L0 -4.8L3.2 -8M-3.2 8L0 4.8L3.2 8'/%3E%3C/g%3E%3Cpath d='M0 -11V11M-3.2 -8L0 -4.8L3.2 -8M-3.2 8L0 4.8L3.2 8' transform='rotate(60)'/%3E%3Cpath d='M0 -11V11M-3.2 -8L0 -4.8L3.2 -8M-3.2 8L0 4.8L3.2 8' transform='rotate(120)'/%3E%3C/svg%3E");
+  --mark-spring: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-12 -12 24 24'%3E%3Cpath d='M0 -2.6C-4.6 -4 -5.2 -9.4 -2.2 -11.2L0 -9.6L2.2 -11.2C5.2 -9.4 4.6 -4 0 -2.6Z' transform='rotate(0)'/%3E%3Cpath d='M0 -2.6C-4.6 -4 -5.2 -9.4 -2.2 -11.2L0 -9.6L2.2 -11.2C5.2 -9.4 4.6 -4 0 -2.6Z' transform='rotate(72)'/%3E%3Cpath d='M0 -2.6C-4.6 -4 -5.2 -9.4 -2.2 -11.2L0 -9.6L2.2 -11.2C5.2 -9.4 4.6 -4 0 -2.6Z' transform='rotate(144)'/%3E%3Cpath d='M0 -2.6C-4.6 -4 -5.2 -9.4 -2.2 -11.2L0 -9.6L2.2 -11.2C5.2 -9.4 4.6 -4 0 -2.6Z' transform='rotate(216)'/%3E%3Cpath d='M0 -2.6C-4.6 -4 -5.2 -9.4 -2.2 -11.2L0 -9.6L2.2 -11.2C5.2 -9.4 4.6 -4 0 -2.6Z' transform='rotate(288)'/%3E%3Ccircle r='1.9'/%3E%3C/svg%3E");
+  --mark-summer: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-12 -12 24 24'%3E%3Ccircle r='5'/%3E%3Cpath d='M-1.9 -6.8L0 -11.6L1.9 -6.8Z' transform='rotate(0)'/%3E%3Cpath d='M-1.9 -6.8L0 -11.6L1.9 -6.8Z' transform='rotate(45)'/%3E%3Cpath d='M-1.9 -6.8L0 -11.6L1.9 -6.8Z' transform='rotate(90)'/%3E%3Cpath d='M-1.9 -6.8L0 -11.6L1.9 -6.8Z' transform='rotate(135)'/%3E%3Cpath d='M-1.9 -6.8L0 -11.6L1.9 -6.8Z' transform='rotate(180)'/%3E%3Cpath d='M-1.9 -6.8L0 -11.6L1.9 -6.8Z' transform='rotate(225)'/%3E%3Cpath d='M-1.9 -6.8L0 -11.6L1.9 -6.8Z' transform='rotate(270)'/%3E%3Cpath d='M-1.9 -6.8L0 -11.6L1.9 -6.8Z' transform='rotate(315)'/%3E%3C/svg%3E");
+  --mark-autumn: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-12 -12 24 24'%3E%3Cpath d='M0 -11.5L2.3 -6.6L5 -8L4.4 -2.4L8 -5.4L8.8 -3.2L11.4 -3.4L10 0.6L11 2L5.6 5.6L6 7.6L0.8 6.8V11.6H-0.8V6.8L-6 7.6L-5.6 5.6L-11 2L-10 0.6L-11.4 -3.4L-8.8 -3.2L-8 -5.4L-4.4 -2.4L-5 -8L-2.3 -6.6Z'/%3E%3C/svg%3E");
+}
+
+/* Winter */
+:root {
+  --deep-page: #141f86;
+  --deep-page-2: #1b2a9e;
+  --deep-page-3: #2234b4;
+  --deep-page-4: #2b40c8;
+  --deep-fg-2: #e6f1ff;
+  --deep-brand: #a9fbe4;
+  --deep-brand-hot: #d3fff2;
+  --deep-on-brand: #0f1c5c;
+  --select: #c9dcff;
+  --season-mark: var(--mark-winter);
+  --hero-bg: linear-gradient(180deg, #0f1a7a 0%, #16249a 34%, #1f37b8 62%, #2d55d8 82%, #5a96f0 100%);
+  --hero-fg: #ffffff;
+  --hero-em: #a9fbe4;
+  --hero-facts: #dff3ff;
+  --close-bg: linear-gradient(180deg, #0f1a7a 0%, #16249a 40%, #1f37b8 60%, #4f86ee 84%, #9fd4ff 100%);
+  --ball-glow: rgba(150, 230, 255, 0.6);
+  --btn-bg: #ffffff;
+  --btn-fg: #16249a;
+  --btn-hover: #dff3ff;
+  --btn2-bg: #16249a;
+  --btn2-fg: #ffffff;
+  --btn2-hover: #0f1a78;
+  --btn2-ring: #ffffff;
+  --openings-bg: #e6f3ff;
+  --lives-bg: linear-gradient(180deg, #d8d0ff, #cdeaff);
+  --paper-bg: linear-gradient(180deg, #e3f1ff, #c4f3ea);
+  --gallery-bg: linear-gradient(180deg, #1f33b4, #4530b4);
+  --gallery-note: #dfe9ff;
+  --frame: linear-gradient(140deg, #fff, #a9d8ff 40%, #e9f6ff 60%, #8fa8ff);
+  --mini-0: linear-gradient(180deg, #b9a4ff, #ffd9ee);
+  --mini-1: linear-gradient(180deg, #2f8bff, #bff0ff);
+  --mini-2: linear-gradient(180deg, #14207e, #3a3fd0);
+  --tag-bg: #16249a;
+  --phone-metal: linear-gradient(160deg, #dfe9ff, #8ea2e0 40%, #f4f8ff 60%, #7388cc);
+  --g1: #E8F2FF;
+  --g2: #8FA3D6;
+}
+.frost-tile:nth-child(6n + 1) { --b: #2740c9; --f: #fff; --k: #c9f3ff; --ki: #12226e; }
+.frost-tile:nth-child(6n + 2) { --b: #ffffff; --f: #0f1c5c; --k: #4f38c8; --ki: #fff; }
+.frost-tile:nth-child(6n + 3) { --b: #085a6c; --f: #fff; --k: #d9fbff; --ki: #043842; }
+.frost-tile:nth-child(6n + 4) { --b: #d6ccff; --f: #1d1168; --k: #2740c9; --ki: #fff; }
+.frost-tile:nth-child(6n + 5) { --b: #b4f2e6; --f: #043842; --k: #085a6c; --ki: #fff; }
+.frost-tile:nth-child(6n + 6) { --b: #4530b4; --f: #fff; --k: #a9fbe4; --ki: #1d1168; }
+.frost-plan-free { --b: #ffffff; --f: #0f1c5c; --p: #2740c9; --pc: #fff; }
+.frost-plan-essential { --b: #c4e6ff; --f: #0f1c5c; --p: #2740c9; --pc: #fff; }
+.frost-plan-signature { --b: #2740c9; --f: #fff; --p: #a9fbe4; --pc: #0f1c5c; }
+.frost-plan-duo { --b: #085a6c; --f: #fff; --p: #fff; --pc: #043842; }
+.frost-plan-atelier { --b: #4530b4; --f: #fff; --p: #fff; --pc: #1d1168; }
+.frost-panes > li:nth-child(1) { --p: #2F49D9; --e1: #8F7BFF; --e2: #4A34C4; }
+.frost-panes > li:nth-child(2) { --p: #5B3FD6; --e1: #37C6E0; --e2: #11799A; }
+.frost-panes > li:nth-child(3) { --p: #0B7A92; --e1: #3E63E8; --e2: #20309C; }
+.frost-panes > li:nth-child(4) { --p: #7ADCEB; --e1: #5B3FD6; --e2: #35209A; }
+.frost-panes > li:nth-child(5) { --p: #A99BFF; --e1: #2F49D9; --e2: #37C6E0; }
+.frost-panes > li:nth-child(6) { --p: #129A88; --e1: #4B6BFF; --e2: #20309C; }
+.frost-panes > li:nth-child(7) { --p: #163A9E; --e1: #8F7BFF; --e2: #4A34C4; }
+
+/* Spring */
+html[data-season="spring"] {
+  --color-page: #f7fbf0;
+  --color-page-2: #ffffff;
+  --color-page-3: #eaf6df;
+  --color-page-4: #d6edc6;
+  --color-fg: #16361f;
+  --color-fg-2: #2c5236;
+  --color-brand: #b0195f;
+  --color-brand-hot: #8a0f49;
+  --color-on-brand: #ffffff;
+  --color-violet: #6b3fa8;
+  --color-aqua: #14663f;
+  --color-mint: #c9f2a8;
+  --deep-page: #174a2c;
+  --deep-page-2: #1d5a36;
+  --deep-page-3: #246b41;
+  --deep-page-4: #2b7c4c;
+  --deep-fg-2: #e8f7dc;
+  --deep-brand: #ffd0e2;
+  --deep-brand-hot: #ffe6f0;
+  --deep-on-brand: #4d0a2b;
+  --select: #ffd0e2;
+  --season-mark: var(--mark-spring);
+  --hero-bg: linear-gradient(180deg, #ffd3e4 0%, #ffe1ec 30%, #fff0ea 58%, #f0f7dd 82%, #d2edb6 100%);
+  --hero-fg: #3a0f2c;
+  --hero-em: #b0195f;
+  --hero-facts: #5a2145;
+  --close-bg: linear-gradient(180deg, #ffc9df 0%, #ffdde8 34%, #ffeee6 58%, #e6f4fb 100%);
+  --ball-glow: rgba(255, 130, 175, 0.5);
+  --btn-bg: #b0195f;
+  --btn-fg: #ffffff;
+  --btn-hover: #8a0f49;
+  --btn2-bg: #174a2c;
+  --btn2-fg: #ffffff;
+  --btn2-hover: #0f371f;
+  --btn2-ring: #ffffff;
+  --openings-bg: #fff0f5;
+  --lives-bg: linear-gradient(180deg, #ece2fb, #ffe6ef);
+  --paper-bg: linear-gradient(180deg, #eaf6df, #fff3c4);
+  --gallery-bg: linear-gradient(180deg, #1c5a35, #0f4b46);
+  --gallery-note: #e8f7dc;
+  --frame: linear-gradient(140deg, #fff, #ffc2d9 40%, #fff3f8 60%, #a9dc8c);
+  --mini-0: linear-gradient(180deg, #ffc6b0, #fff0cf);
+  --mini-1: linear-gradient(180deg, #6cc0f0, #e6f7ff);
+  --mini-2: linear-gradient(180deg, #3a2a78, #8a5aa8);
+  --tag-bg: #174a2c;
+  --phone-metal: linear-gradient(160deg, #fff0f5, #e3a5bf 40%, #fffafc 60%, #cf86a6);
+  --g1: #FFF3F8;
+  --g2: #D9A0BB;
+  --couple-shadow: #3f7d38;
+  --veil: #FFF4F8;
+  --veil-line: #F0A0C0;
+  --gown: #FFFBFC;
+  --gown-line: #E27BA8;
+  --gown-fold: #F3B5CD;
+  --bodice: #FFF0F6;
+  --sash: #D23C7E;
+  --trousers: #2C4F42;
+  --shoes: #173028;
+  --suit: #3C6E5A;
+  --lapel: #57917A;
+  --tie: #FF9CC4;
+  --bloom: #FFD25E;
+  --bloom-2: #A57BE0;
+  --metal-1: #C98AA4;
+  --metal-2: #FFF6FA;
+  --metal-3: #E9BCCE;
+  --metal-4: #FFFAFC;
+  --metal-5: #B87693;
+  --metal-edge: #A8607F;
+  --metal-foot: #B87693;
+  --metal-star: #B0195F;
+}
+html[data-season="spring"] .frost-tile:nth-child(6n + 1) { --b: #b0195f; --f: #fff; --k: #ffe0ec; --ki: #5e0a31; }
+html[data-season="spring"] .frost-tile:nth-child(6n + 2) { --b: #ffffff; --f: #16361f; --k: #14663f; --ki: #fff; }
+html[data-season="spring"] .frost-tile:nth-child(6n + 3) { --b: #14663f; --f: #fff; --k: #e2f7c8; --ki: #0d3a22; }
+html[data-season="spring"] .frost-tile:nth-child(6n + 4) { --b: #e4d6fa; --f: #2e1760; --k: #6b3fa8; --ki: #fff; }
+html[data-season="spring"] .frost-tile:nth-child(6n + 5) { --b: #fff0b3; --f: #3a3206; --k: #7a4b00; --ki: #fff; }
+html[data-season="spring"] .frost-tile:nth-child(6n + 6) { --b: #6b3fa8; --f: #fff; --k: #f3e8ff; --ki: #371a66; }
+html[data-season="spring"] .frost-plan-free { --b: #ffffff; --f: #16361f; --p: #b0195f; --pc: #fff; }
+html[data-season="spring"] .frost-plan-essential { --b: #ffd9e6; --f: #3a0f2c; --p: #b0195f; --pc: #fff; }
+html[data-season="spring"] .frost-plan-signature { --b: #b0195f; --f: #fff; --p: #fff0b3; --pc: #3a0f2c; }
+html[data-season="spring"] .frost-plan-duo { --b: #14663f; --f: #fff; --p: #fff; --pc: #0d3a22; }
+html[data-season="spring"] .frost-plan-atelier { --b: #6b3fa8; --f: #fff; --p: #fff; --pc: #2e1760; }
+html[data-season="spring"] .frost-panes > li:nth-child(1) { --p: #F27FAE; --e1: #B0195F; --e2: #7A1145; }
+html[data-season="spring"] .frost-panes > li:nth-child(2) { --p: #8E5BD6; --e1: #F6A6C6; --e2: #B0195F; }
+html[data-season="spring"] .frost-panes > li:nth-child(3) { --p: #2F8A4C; --e1: #F9C23C; --e2: #B77A00; }
+html[data-season="spring"] .frost-panes > li:nth-child(4) { --p: #F9D65C; --e1: #E5327A; --e2: #9C1550; }
+html[data-season="spring"] .frost-panes > li:nth-child(5) { --p: #A5D98B; --e1: #E5327A; --e2: #8E5BD6; }
+html[data-season="spring"] .frost-panes > li:nth-child(6) { --p: #E5709F; --e1: #2F8A4C; --e2: #14663F; }
+html[data-season="spring"] .frost-panes > li:nth-child(7) { --p: #14663F; --e1: #F48FB8; --e2: #B0195F; }
+
+/* Summer */
+html[data-season="summer"] {
+  --color-page: #fffaeb;
+  --color-page-2: #ffffff;
+  --color-page-3: #fff0c9;
+  --color-page-4: #ffe39b;
+  --color-fg: #06373f;
+  --color-fg-2: #17525c;
+  --color-brand: #00697a;
+  --color-brand-hot: #004e5c;
+  --color-on-brand: #ffffff;
+  --color-violet: #b3300f;
+  --color-aqua: #00697a;
+  --color-mint: #ffe27a;
+  --deep-page: #00525f;
+  --deep-page-2: #006272;
+  --deep-page-3: #007083;
+  --deep-page-4: #007f94;
+  --deep-fg-2: #e0f9fb;
+  --deep-brand: #ffe27a;
+  --deep-brand-hot: #fff0b8;
+  --deep-on-brand: #3a2a00;
+  --select: #ffe08a;
+  --season-mark: var(--mark-summer);
+  --hero-bg: linear-gradient(180deg, #ffc62b 0%, #ffd252 30%, #ffe08a 56%, #ffedbd 76%, #fff6df 100%);
+  --hero-fg: #06373f;
+  --hero-em: #a3230a;
+  --hero-facts: #17454d;
+  --close-bg: linear-gradient(180deg, #ff9f5a 0%, #ffb55c 30%, #ffcd74 56%, #ffe2a0 100%);
+  --ball-glow: rgba(255, 246, 200, 0.95);
+  --btn-bg: #b3300f;
+  --btn-fg: #ffffff;
+  --btn-hover: #8f2409;
+  --btn2-bg: #00525f;
+  --btn2-fg: #ffffff;
+  --btn2-hover: #003f49;
+  --btn2-ring: #ffffff;
+  --openings-bg: #fff4d6;
+  --lives-bg: linear-gradient(180deg, #ffdccb, #fff0c4);
+  --paper-bg: linear-gradient(180deg, #fff0c9, #bff0ee);
+  --gallery-bg: linear-gradient(180deg, #00616f, #0a4f7a);
+  --gallery-note: #e0f9fb;
+  --frame: linear-gradient(140deg, #fff, #ffd98a 40%, #fff7e0 60%, #57c9cf);
+  --mini-0: linear-gradient(180deg, #ff8f6b, #ffe2a3);
+  --mini-1: linear-gradient(180deg, #2aa8e0, #d8f6ff);
+  --mini-2: linear-gradient(180deg, #0a2d5c, #1d6a8f);
+  --tag-bg: #00525f;
+  --phone-metal: linear-gradient(160deg, #fff6dc, #e3bf72 40%, #fffaf0 60%, #c99c48);
+  --g1: #FFF6DC;
+  --g2: #CFA04A;
+  --couple-shadow: #B98A3C;
+  --veil: #FFFDF4;
+  --veil-line: #E8C378;
+  --gown: #FFFFFF;
+  --gown-line: #E0B35A;
+  --gown-fold: #F0D49A;
+  --bodice: #FFFAEC;
+  --sash: #E8663C;
+  --trousers: #0A5A66;
+  --shoes: #5A3A1C;
+  --suit: #0E7F8C;
+  --lapel: #2FA6B0;
+  --tie: #FF9A5C;
+  --bloom: #FFD233;
+  --bloom-2: #E8452C;
+  --metal-1: #B07C3C;
+  --metal-2: #FFEBC0;
+  --metal-3: #DDB060;
+  --metal-4: #FFF3D6;
+  --metal-5: #9C6A2C;
+  --metal-edge: #86561F;
+  --metal-foot: #8F5F28;
+  --metal-star: #0E8C99;
+}
+html[data-season="summer"] .frost-tile:nth-child(6n + 1) { --b: #00697a; --f: #fff; --k: #d4f7f9; --ki: #003f49; }
+html[data-season="summer"] .frost-tile:nth-child(6n + 2) { --b: #ffffff; --f: #06373f; --k: #b3300f; --ki: #fff; }
+html[data-season="summer"] .frost-tile:nth-child(6n + 3) { --b: #b3300f; --f: #fff; --k: #ffe9dc; --ki: #6b1a05; }
+html[data-season="summer"] .frost-tile:nth-child(6n + 4) { --b: #ffd9c7; --f: #551503; --k: #b3300f; --ki: #fff; }
+html[data-season="summer"] .frost-tile:nth-child(6n + 5) { --b: #ffdf7d; --f: #3a2a00; --k: #00525f; --ki: #fff; }
+html[data-season="summer"] .frost-tile:nth-child(6n + 6) { --b: #0a4f7a; --f: #fff; --k: #ffe27a; --ki: #3a2a00; }
+html[data-season="summer"] .frost-plan-free { --b: #ffffff; --f: #06373f; --p: #00697a; --pc: #fff; }
+html[data-season="summer"] .frost-plan-essential { --b: #ffe39b; --f: #3a2a00; --p: #00697a; --pc: #fff; }
+html[data-season="summer"] .frost-plan-signature { --b: #00697a; --f: #fff; --p: #ffe27a; --pc: #3a2a00; }
+html[data-season="summer"] .frost-plan-duo { --b: #b3300f; --f: #fff; --p: #fff; --pc: #6b1a05; }
+html[data-season="summer"] .frost-plan-atelier { --b: #0a4f7a; --f: #fff; --p: #fff; --pc: #063250; }
+html[data-season="summer"] .frost-panes > li:nth-child(1) { --p: #FFB92E; --e1: #E8452C; --e2: #A8230D; }
+html[data-season="summer"] .frost-panes > li:nth-child(2) { --p: #0E8C99; --e1: #FF8A5C; --e2: #C13D16; }
+html[data-season="summer"] .frost-panes > li:nth-child(3) { --p: #FF8A66; --e1: #0E8C99; --e2: #005E6B; }
+html[data-season="summer"] .frost-panes > li:nth-child(4) { --p: #62D3D6; --e1: #E8452C; --e2: #A8230D; }
+html[data-season="summer"] .frost-panes > li:nth-child(5) { --p: #FFD45E; --e1: #E8452C; --e2: #0E8C99; }
+html[data-season="summer"] .frost-panes > li:nth-child(6) { --p: #E8603C; --e1: #0E8C99; --e2: #005E6B; }
+html[data-season="summer"] .frost-panes > li:nth-child(7) { --p: #0B6C94; --e1: #FFC933; --e2: #D98A00; }
+
+/* Autumn */
+html[data-season="autumn"] {
+  --color-page: #fcf4e6;
+  --color-page-2: #fffdf8;
+  --color-page-3: #f6e6cb;
+  --color-page-4: #edd3a9;
+  --color-fg: #35130f;
+  --color-fg-2: #5c2a1f;
+  --color-brand: #9a3412;
+  --color-brand-hot: #74240a;
+  --color-on-brand: #ffffff;
+  --color-violet: #6b2142;
+  --color-aqua: #4a5512;
+  --color-mint: #ffd58a;
+  --deep-page: #3d0f1c;
+  --deep-page-2: #4d1526;
+  --deep-page-3: #5e1c2f;
+  --deep-page-4: #702338;
+  --deep-fg-2: #fbe9d4;
+  --deep-brand: #ffc46b;
+  --deep-brand-hot: #ffdca4;
+  --deep-on-brand: #3d0f1c;
+  --select: #ffd9a0;
+  --season-mark: var(--mark-autumn);
+  --hero-bg: linear-gradient(180deg, #2e0b1a 0%, #4a1220 34%, #6e2020 60%, #a63f1c 82%, #e0802f 100%);
+  --hero-fg: #ffffff;
+  --hero-em: #ffc46b;
+  --hero-facts: #ffe6c7;
+  --close-bg: linear-gradient(180deg, #2e0b1a 0%, #4a1220 36%, #7a2420 58%, #c25a24 82%, #f0a044 100%);
+  --ball-glow: rgba(255, 190, 100, 0.55);
+  --btn-bg: #ffc46b;
+  --btn-fg: #3d0f1c;
+  --btn-hover: #ffdca4;
+  --btn2-bg: #3d0f1c;
+  --btn2-fg: #ffffff;
+  --btn2-hover: #2a0812;
+  --btn2-ring: #ffffff;
+  --openings-bg: #f9ead0;
+  --lives-bg: linear-gradient(180deg, #f3d9c4, #fbe9c6);
+  --paper-bg: linear-gradient(180deg, #f6e6cb, #e6e3b4);
+  --gallery-bg: linear-gradient(180deg, #5c1526, #7a2a10);
+  --gallery-note: #fbe9d4;
+  --frame: linear-gradient(140deg, #fff3dc, #e3a85a 40%, #fff0d2 60%, #a8501e);
+  --mini-0: linear-gradient(180deg, #f0a25c, #ffe6b8);
+  --mini-1: linear-gradient(180deg, #d9703a, #ffd98f);
+  --mini-2: linear-gradient(180deg, #2a0c24, #7a2a30);
+  --tag-bg: #5c1526;
+  --phone-metal: linear-gradient(160deg, #ffe6c0, #b9783c 40%, #fff2dc 60%, #945222);
+  --g1: #FFE9C7;
+  --g2: #C08A4A;
+  --couple-shadow: #7A4412;
+  --veil: #FFF3E0;
+  --veil-line: #D9A066;
+  --gown: #FFF9EE;
+  --gown-line: #C98A4E;
+  --gown-fold: #E3BC8C;
+  --bodice: #FFF0DA;
+  --sash: #A8371C;
+  --trousers: #4A1B14;
+  --shoes: #260D09;
+  --suit: #6B2B1E;
+  --lapel: #8F4330;
+  --tie: #FFC46B;
+  --bloom: #FFB057;
+  --bloom-2: #A82A1C;
+  --metal-1: #7E4A20;
+  --metal-2: #F7D59A;
+  --metal-3: #B87A3C;
+  --metal-4: #FFE6B8;
+  --metal-5: #6B3A16;
+  --metal-edge: #54290F;
+  --metal-foot: #5C3014;
+  --metal-star: #FFD58A;
+}
+html[data-season="autumn"] .frost-tile:nth-child(6n + 1) { --b: #9a3412; --f: #fff; --k: #ffe6c7; --ki: #5c1b05; }
+html[data-season="autumn"] .frost-tile:nth-child(6n + 2) { --b: #fffdf8; --f: #35130f; --k: #6b2142; --ki: #fff; }
+html[data-season="autumn"] .frost-tile:nth-child(6n + 3) { --b: #4a5512; --f: #fff; --k: #f2f0c4; --ki: #2c3308; }
+html[data-season="autumn"] .frost-tile:nth-child(6n + 4) { --b: #f2cfa0; --f: #43180a; --k: #9a3412; --ki: #fff; }
+html[data-season="autumn"] .frost-tile:nth-child(6n + 5) { --b: #ffdf9e; --f: #43250a; --k: #74240a; --ki: #fff; }
+html[data-season="autumn"] .frost-tile:nth-child(6n + 6) { --b: #6b2142; --f: #fff; --k: #ffd58a; --ki: #3d0f1c; }
+html[data-season="autumn"] .frost-plan-free { --b: #fffdf8; --f: #35130f; --p: #9a3412; --pc: #fff; }
+html[data-season="autumn"] .frost-plan-essential { --b: #f8d9a6; --f: #43180a; --p: #74240a; --pc: #fff; }
+html[data-season="autumn"] .frost-plan-signature { --b: #9a3412; --f: #fff; --p: #ffd58a; --pc: #3d0f1c; }
+html[data-season="autumn"] .frost-plan-duo { --b: #4a5512; --f: #fff; --p: #fff; --pc: #2c3308; }
+html[data-season="autumn"] .frost-plan-atelier { --b: #6b2142; --f: #fff; --p: #fff; --pc: #3d0f1c; }
+html[data-season="autumn"] .frost-panes > li:nth-child(1) { --p: #C2491D; --e1: #7A1F2E; --e2: #4A0F1C; }
+html[data-season="autumn"] .frost-panes > li:nth-child(2) { --p: #6B2142; --e1: #E8932F; --e2: #A85A10; }
+html[data-season="autumn"] .frost-panes > li:nth-child(3) { --p: #5E6B1C; --e1: #B5402A; --e2: #74240A; }
+html[data-season="autumn"] .frost-panes > li:nth-child(4) { --p: #F0B04A; --e1: #9A3412; --e2: #5C1B05; }
+html[data-season="autumn"] .frost-panes > li:nth-child(5) { --p: #E8A06A; --e1: #A82A1C; --e2: #E39A1F; }
+html[data-season="autumn"] .frost-panes > li:nth-child(6) { --p: #A8622A; --e1: #4A5512; --e2: #2C3308; }
+html[data-season="autumn"] .frost-panes > li:nth-child(7) { --p: #4A1220; --e1: #E8932F; --e2: #A85A10; }
+
+/* Sky behind the globe */
+html[data-season="spring"] .frost-stars,
+html[data-season="summer"] .frost-stars { display: none; }
+html[data-season="spring"] .frost-aurora i:nth-child(1) { background: radial-gradient(closest-side, #ffa9c9, transparent); }
+html[data-season="spring"] .frost-aurora i:nth-child(2) { background: radial-gradient(closest-side, #fff0a8, transparent); translate: 20% 10%; }
+html[data-season="spring"] .frost-aurora i:nth-child(3) { background: radial-gradient(closest-side, #cdb4f5, transparent); translate: -16% 24%; }
+html[data-season="summer"] .frost-aurora i { display: none; }
+html[data-season="summer"] .frost-aurora i:nth-child(1) { display: block; inset: auto; left: 73%; top: 52%; width: 170vmax; height: 170vmax; margin: -85vmax 0 0 -85vmax; filter: none; opacity: 1; transform: none; background: repeating-conic-gradient(rgba(255, 255, 255, 0.4) 0 7.5deg, transparent 7.5deg 15deg); -webkit-mask: radial-gradient(closest-side, #000 18%, transparent 78%); mask: radial-gradient(closest-side, #000 18%, transparent 78%); animation: season-turn 90s linear infinite; }
+html[data-season="summer"] .frost-close .frost-aurora i:nth-child(1) { left: 50%; top: auto; bottom: 12rem; margin: 0 0 -85vmax -85vmax; }
+html[data-season="autumn"] .frost-stars { opacity: 0.5; }
+html[data-season="autumn"] .frost-aurora { -webkit-mask: none; mask: none; }
+html[data-season="autumn"] .frost-aurora i { display: none; }
+html[data-season="autumn"] .frost-hero .frost-aurora i:nth-child(1) { display: block; inset: 12% auto auto 48%; width: clamp(5rem, 11vw, 10rem); aspect-ratio: 1; filter: none; transform: none; opacity: 1; animation: none; background: radial-gradient(circle at 38% 36%, #fff3cf 0 30%, #ffd58a 78%); box-shadow: 0 0 90px 24px rgba(255, 190, 100, 0.45); }
+@keyframes season-turn { to { rotate: 360deg; } }
+@media (max-width: 900px) {
+  html[data-season="summer"] .frost-hero .frost-aurora i:nth-child(1) { left: 50%; top: 70%; }
+  html[data-season="autumn"] .frost-hero .frost-aurora i:nth-child(1) { display: none; }
+}
+
+/* What falls, or rises, across the page */
+html[data-season="spring"] .frost-fall i { aspect-ratio: 1.2; scale: 1.7; border-radius: 80% 0 80% 20%; background: #ff9cc0; opacity: 0.85; animation-name: season-petal; }
+html[data-season="spring"] .frost-fall i:nth-child(3n) { background: #ffc6da; }
+html[data-season="spring"] .frost-fall i:nth-child(4n) { background: #f2709f; }
+html[data-season="summer"] .frost-fall i { top: 103%; background: #fff; opacity: 0.8; box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.7); animation-name: season-rise; animation-timing-function: ease-in-out; }
+html[data-season="autumn"] .frost-fall i { scale: 2.6; border-radius: 0; background: #f2812f; opacity: 0.95; -webkit-mask: var(--season-mark) center / contain no-repeat; mask: var(--season-mark) center / contain no-repeat; animation-name: season-leaf; }
+html[data-season="autumn"] .frost-fall i:nth-child(3n) { background: #ffc46b; }
+html[data-season="autumn"] .frost-fall i:nth-child(4n) { background: #d9441e; }
+@keyframes season-petal { 25% { rotate: 120deg; translate: 3rem 0; } 50% { rotate: 200deg; translate: -1rem 0; } 75% { rotate: 340deg; translate: 3rem 0; } to { rotate: 460deg; transform: translate(6rem, 112vh); } }
+@keyframes season-leaf { 25% { rotate: 70deg; translate: 4rem 0; } 50% { rotate: -40deg; translate: -1rem 0; } 75% { rotate: 110deg; translate: 4rem 0; } to { rotate: 200deg; transform: translate(5rem, 112vh); } }
+@keyframes season-rise { 50% { translate: 2rem 0; } to { transform: translate(-1rem, -112vh); } }
+
+/* The season's mark: ice crystal, blossom, sun or leaf. Takes the text colour. */
+.season-mark { display: inline-block; flex: none; background: currentColor; -webkit-mask: var(--season-mark) center / contain no-repeat; mask: var(--season-mark) center / contain no-repeat; }
+
+/* Season picker */
+.season-picker { display: grid; gap: 0.5rem; }
+.season-picker-wide { grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr)); gap: 0.75rem; }
+.season-option { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 0.85rem; padding: 0.55rem; border-radius: 1.1rem; border: 2px solid color-mix(in srgb, var(--color-fg) 14%, transparent); cursor: pointer; transition: border-color 0.2s, background 0.2s; }
+.season-option:hover { background: var(--color-page-3); }
+/* From the page itself, so it is right before the radios wake up */
+html:not([data-season="spring"], [data-season="summer"], [data-season="autumn"]) .season-option-winter,
+html[data-season="spring"] .season-option-spring,
+html[data-season="summer"] .season-option-summer,
+html[data-season="autumn"] .season-option-autumn { border-color: var(--color-brand); background: var(--color-page-3); }
+.season-option:has(:focus-visible) { outline: 2px solid var(--color-brand); outline-offset: 2px; }
+.season-option b { display: block; font-size: 1rem; line-height: 1.25; }
+.season-option small { display: block; font-size: 0.84rem; line-height: 1.3; }
+.season-swatch { display: grid; place-items: center; width: 3rem; height: 3rem; border-radius: 0.75rem; }
+.season-swatch i { width: 1.6rem; height: 1.6rem; }
+.season-option-winter { --season-mark: var(--mark-winter); }
+.season-option-spring { --season-mark: var(--mark-spring); }
+.season-option-summer { --season-mark: var(--mark-summer); }
+.season-option-autumn { --season-mark: var(--mark-autumn); }
+.season-option-winter .season-swatch { background: linear-gradient(180deg, #16249a 40%, #5a96f0); color: #a9fbe4; }
+.season-option-spring .season-swatch { background: linear-gradient(180deg, #ffd3e4 45%, #b9e39a); color: #b0195f; }
+.season-option-summer .season-swatch { background: linear-gradient(180deg, #ffc62b 55%, #2bc0c8 56%); color: #a3230a; }
+.season-option-autumn .season-swatch { background: linear-gradient(180deg, #4a1220 35%, #e0802f); color: #ffc46b; }

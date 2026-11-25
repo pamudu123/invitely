@@ -1,6 +1,7 @@
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { SeasonMenu } from "@/components/site/season/SeasonMenu";
 import { ButtonLink, Logo } from "@/components/ui/kit";
 
 /** Frame for the host pages. There is no sign in: a card is opened with its private link. */
@@ -12,10 +13,11 @@ export function ManageShell({ children }: { children: ReactNode }) {
           <Link href="/" aria-label="Invitely home" className="text-fg">
             <Logo />
           </Link>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
+            <SeasonMenu />
             <ButtonLink href="/my" variant="ghost" size="sm">My cards</ButtonLink>
             <ButtonLink href="/templates" size="sm">
-              <Plus size={16} strokeWidth={1.5} aria-hidden /> New
+              <Plus size={16} strokeWidth={1.5} aria-hidden /> <span className="max-sm:sr-only">New</span>
             </ButtonLink>
           </div>
         </div>

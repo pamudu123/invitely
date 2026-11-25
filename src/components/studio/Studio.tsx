@@ -352,7 +352,7 @@ export function Studio({ saved, templateId, occasion, paletteId }: StudioProps) 
         <main className="relative flex min-w-0 flex-1 flex-col">
           <div
             className="pointer-events-none absolute inset-0 hidden lg:block"
-            style={{ background: "radial-gradient(60% 50% at 50% 40%, rgba(39,64,201,0.10), transparent 70%)" }}
+            style={{ background: "radial-gradient(60% 50% at 50% 40%, color-mix(in srgb, var(--color-brand) 10%, transparent), transparent 70%)" }}
           />
           <div ref={stageRef} className="relative min-h-0 flex-1">
             {stage && ready ? (
@@ -380,7 +380,7 @@ export function Studio({ saved, templateId, occasion, paletteId }: StudioProps) 
 
       {/* First save: no account, just a way back in */}
       {asking ? (
-        <div className="fixed inset-0 z-[70] flex items-end justify-center bg-[#0f1c5c]/60 p-0 backdrop-blur-sm sm:items-center sm:p-6" role="dialog" aria-modal="true" aria-labelledby="owner-title">
+        <div className="fixed inset-0 z-[70] flex items-end justify-center bg-fg/60 p-0 backdrop-blur-sm sm:items-center sm:p-6" role="dialog" aria-modal="true" aria-labelledby="owner-title">
           <form onSubmit={createCard} className="w-full max-w-md rounded-t-3xl border border-fg/15 bg-page-2 p-6 sm:rounded-3xl sm:p-8">
             <p className="label text-brand">Save your card</p>
             <h2 id="owner-title" className="display mt-3 text-4xl">No account needed.</h2>
@@ -411,7 +411,7 @@ export function Studio({ saved, templateId, occasion, paletteId }: StudioProps) 
       {/* Mobile editor: bottom tabs with a sheet */}
       <div className="shrink-0 lg:hidden">
         {tab && SheetPanel ? (
-          <div className="fixed inset-x-0 bottom-[4.25rem] z-40 flex max-h-[58dvh] flex-col rounded-t-3xl border-t border-fg/15 bg-page-2 shadow-[0_-20px_60px_rgba(15,28,92,0.25)]">
+          <div className="fixed inset-x-0 bottom-[4.25rem] z-40 flex max-h-[58dvh] flex-col rounded-t-3xl border-t border-fg/15 bg-page-2 shadow-[0_-20px_60px_color-mix(in_srgb,var(--color-fg)_25%,transparent)]">
             <div className="flex shrink-0 items-center justify-between px-5 pb-1 pt-3">
               <p className="font-serif text-xl">{tabs.find((t) => t.id === tab)!.label}</p>
               <button type="button" aria-label="Close editor" onClick={() => setTab(null)} className="flex h-10 w-10 items-center justify-center rounded-full bg-fg/8 text-fg/90">

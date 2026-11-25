@@ -60,11 +60,18 @@ Three ideas carry the brand:
 2. **One link, three lives.** Before the day it is an invitation with countdown and RSVP. On the day it shows what is happening now and next. Afterwards it becomes a thank you page with photos and wishes.
 3. **Made for how we celebrate.** Auspicious time countdowns, a language switch, personal links sent on WhatsApp, and designs named for what they are drawn from: Pahana, Mahanuwara, Nelum, Kolam, Noor.
 
-### Visual direction: Frost (chosen November 2026)
+### Visual direction: four seasons (November 2026)
+
+The site has a winter, spring, summer and autumn look. Visitors choose one in Preferences (palette button in the header, or on My cards) and the `invitely_season` cookie remembers it. Winter, called Frost, came first and is the default. Invitations always keep the colours their host chose.
+
+- `src/lib/season.ts` lists the seasons. `data-season` on `<html>` is set before the first paint, so pages stay static and do not flash.
+- Colours for all four are in `src/components/site/season/seasons.css`. The drawings are next to it. `BySeason` writes words or drawings for each season and CSS shows one.
+
+**Winter (Frost)**
 
 A snow globe with a palace and a couple inside. Ice-light pages, navy text, royal blue actions, with violet, lagoon and mint as supporting colours. Deep blue is used for the hero, the closing section and the footer (the `.on-deep` class swaps the colour roles).
 
-- Colour roles live in `src/app/globals.css`: page `#eef7ff`, text `#0f1c5c`, brand `#2740c9`. Frost artwork and section styles live in `src/components/site/frost/`.
+- Winter colour roles live in `src/app/globals.css`: page `#eef7ff`, text `#0f1c5c`, brand `#2740c9`. Winter artwork and the section styles shared by all seasons live in `src/components/site/frost/`.
 - Every text and background pair on the site is kept at 4.5:1 contrast or better.
 - Type: Marcellus for large headings only, Figtree for everything else. No text below 12px.
 - The site is in English only and prices are in USD only. New cards are English only. The Sinhala and Tamil labels remain in the code for cards saved before this change, and earlier mentions of LKR and languages in this document are research history.

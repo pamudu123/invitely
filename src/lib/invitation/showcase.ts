@@ -1,15 +1,16 @@
+import type { SeasonId } from "@/lib/season";
 import { createFromTemplate, templates } from "./templates";
 import type { InvitationData, WishItem } from "./types";
 
-/** Designs shown on the home page, each in one of the Frost colours, with neutral sample names. */
-export const showcase: { id: string; palette: string; a: string; b: string; venue: string; place: string }[] = [
-  { id: "promise", palette: "frost-royal", a: "Clara", b: "Hugo", venue: "The Orangery", place: "London" },
-  { id: "atelier", palette: "glacier", a: "Elena", b: "Marco", venue: "Villa Aurelia", place: "Lake Como" },
-  { id: "tharu", palette: "amethyst-ice", a: "Amelia", b: "Noah", venue: "The Observatory", place: "Los Angeles" },
-  { id: "cathedral", palette: "lagoon-ice", a: "Sofia", b: "Daniel", venue: "St Mary's", place: "Lisbon" },
-  { id: "golden-year", palette: "lilac-ice", a: "Margot", b: "", venue: "The Savoy", place: "London" },
-  { id: "verala", palette: "aurora", a: "Maya", b: "Theo", venue: "Casa Mar", place: "Tulum" },
-  { id: "piyum", palette: "aqua-ice", a: "Ines", b: "", venue: "The Glasshouse", place: "Copenhagen" },
+/** Designs shown on the home page, in colours of the season, with neutral sample names. */
+export const showcase: { id: string; palette: Record<SeasonId, string>; a: string; b: string; venue: string; place: string }[] = [
+  { id: "promise", palette: { winter: "frost-royal", spring: "cherry", summer: "lagoon", autumn: "harvest" }, a: "Clara", b: "Hugo", venue: "The Orangery", place: "London" },
+  { id: "atelier", palette: { winter: "glacier", spring: "primrose", summer: "sandbar", autumn: "cider" }, a: "Elena", b: "Marco", venue: "Villa Aurelia", place: "Lake Como" },
+  { id: "tharu", palette: { winter: "amethyst-ice", spring: "meadow", summer: "sunflower", autumn: "woodland" }, a: "Amelia", b: "Noah", venue: "The Observatory", place: "Los Angeles" },
+  { id: "cathedral", palette: { winter: "lagoon-ice", spring: "wisteria", summer: "coral-reef", autumn: "maple" }, a: "Sofia", b: "Daniel", venue: "St Mary's", place: "Lisbon" },
+  { id: "golden-year", palette: { winter: "lilac-ice", spring: "nelum", summer: "sunny", autumn: "kumkum" }, a: "Margot", b: "", venue: "The Savoy", place: "London" },
+  { id: "verala", palette: { winter: "aurora", spring: "feather", summer: "cleared", autumn: "ruby" }, a: "Maya", b: "Theo", venue: "Casa Mar", place: "Tulum" },
+  { id: "piyum", palette: { winter: "aqua-ice", spring: "lavender", summer: "sky", autumn: "teak" }, a: "Ines", b: "", venue: "The Glasshouse", place: "Copenhagen" },
 ];
 
 export const showcaseWishes: WishItem[] = [
