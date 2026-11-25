@@ -253,3 +253,38 @@
   0% { opacity: 0.85; }
   100% { opacity: 0; }
 }
+
+/* Designs with a 3D scene: sections swing up into place and the countdown flips.
+   Transforms only, so it stays smooth on a phone. */
+.inv-3d .inv-reveal {
+  transform: perspective(900px) rotateX(-16deg) translateY(34px);
+  transform-origin: 50% 0;
+  backface-visibility: hidden;
+}
+.inv-3d .inv-reveal.is-in {
+  transform: none;
+}
+.inv-3d .inv-count {
+  margin: 0 0.1rem;
+  padding: 0.9rem 0.25rem 0.7rem;
+  border-radius: 12px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--inv-surface) 92%, #fff), var(--inv-surface));
+  box-shadow:
+    0 1px 0 color-mix(in srgb, #fff 34%, transparent) inset,
+    0 12px 22px -10px color-mix(in srgb, var(--inv-deep) 65%, transparent);
+  perspective: 320px;
+}
+.inv-3d .inv-count-digit {
+  /* Smaller than the plain countdown, so a three digit day fits its tile. */
+  font-size: clamp(1.7rem, 9cqw, 3.2rem) !important;
+  white-space: nowrap;
+  animation: inv-flip 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes inv-flip {
+  from { transform: rotateX(80deg); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .inv-3d .inv-reveal { transform: none; }
+  .inv-3d .inv-count-digit { animation: none; }
+}

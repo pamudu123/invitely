@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ButtonLink } from "@/components/ui/kit";
 import { occasions } from "@/lib/invitation/occasions";
 import type { OccasionId } from "@/lib/invitation/types";
@@ -21,6 +21,15 @@ export interface GalleryItem {
 export function TemplateGallery({ items, initial }: { items: GalleryItem[]; initial?: OccasionId }) {
   const router = useRouter();
   const [filter, setFilter] = useState<OccasionId | "all">(initial ?? "all");
+  const bar = useRef<HTMLDivElement | null>(null);
+
+  // Arriving on a filtered link, bring the chosen filter into view on the sideways strip.
+  useEffect(() => {
+    const el = bar.current;
+    const chip = el?.querySelector<HTMLElement>('[aria-pressed="true"]');
+    if (el && chip) el.scrollLeft = chip.offsetLeft - el.offsetLeft - (el.clientWidth - chip.offsetWidth) / 2;
+  }, []);
+
   const available = occasions.filter((o) => items.some((i) => i.occasion === o.id || i.alsoFor.includes(o.id)));
   const primary = items.filter((i) => filter === "all" || i.occasion === filter);
   const secondary = filter === "all" ? [] : items.filter((i) => i.occasion !== filter && i.alsoFor.includes(filter));
@@ -33,7 +42,7 @@ export function TemplateGallery({ items, initial }: { items: GalleryItem[]; init
 
   return (
     <>
-      <div className="no-scrollbar sticky top-16 z-30 -mx-5 flex gap-2 overflow-x-auto border-b border-fg/10 bg-page/80 px-5 py-3 backdrop-blur-xl sm:-mx-8 sm:px-8">
+      <div ref={bar} className="no-scrollbar sticky top-16 z-30 -mx-5 flex gap-2 overflow-x-auto border-b border-fg/10 bg-page/80 px-5 py-3 backdrop-blur-xl sm:-mx-8 sm:px-8">
         {[{ id: "all" as const, label: "All designs" }, ...available.map((o) => ({ id: o.id, label: o.plural }))].map((o) => (
           <button
             key={o.id}

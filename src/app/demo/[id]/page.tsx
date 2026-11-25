@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { InvitationView } from "@/components/invitation/InvitationView";
-import { demoWishes } from "@/lib/invitation/demo";
+import { demoWishesFor } from "@/lib/invitation/demo";
 import { createFromTemplate, getTemplate, templates } from "@/lib/invitation/templates";
 
 export function generateStaticParams() {
@@ -20,7 +20,7 @@ async function Demo({ params }: { params: PageProps<"/demo/[id]">["params"] }) {
   const tpl = getTemplate(id);
   if (!tpl) notFound();
   const data = createFromTemplate(tpl.id);
-  return <InvitationView data={data} wishes={demoWishes} />;
+  return <InvitationView data={data} wishes={demoWishesFor(data.occasion)} />;
 }
 
 export default function DemoPage({ params }: PageProps<"/demo/[id]">) {

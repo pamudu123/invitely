@@ -30,7 +30,7 @@ export function CoverTitle({
   return (
     <div className={`text-center ${className}`}>
       <p className="inv-kicker opacity-80">
-        {guestName ? `For ${guestName}` : data.occasion === "festive" && data.kicker ? data.kicker : `${occ.label} invitation`}
+        {guestName ? `For ${guestName}` : ["festive", "sports", "career"].includes(data.occasion) && data.kicker ? data.kicker : `${occ.label} invitation`}
       </p>
       <h1 className={`inv-names mt-4 ${long ? "inv-names-long" : ""}`} style={{ fontSize: undefined }}>
         <span className="block" style={{ fontSize: "0.72em" }}>{data.name1}</span>

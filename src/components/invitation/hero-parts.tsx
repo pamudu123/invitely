@@ -39,11 +39,11 @@ export function DateLockup({ data, lang, tone = "ink" }: { data: InvitationData;
   );
 }
 
-export function ScrollHint({ label }: { label: string }) {
+export function ScrollHint({ label, compact = false }: { label: string; compact?: boolean }) {
   return (
-    <div className="flex flex-col items-center gap-2 opacity-60">
+    <div className={`flex flex-col items-center opacity-60 ${compact ? "gap-1" : "gap-2"}`}>
       <span className="inv-kicker" style={{ fontSize: "0.6rem" }}>{label}</span>
-      <span className="relative block h-9 w-px overflow-hidden" style={{ background: "var(--inv-line)" }}>
+      <span className={`relative block w-px overflow-hidden ${compact ? "h-5" : "h-9"}`} style={{ background: "var(--inv-line)" }}>
         <span className="absolute inset-x-0 top-0 h-1/2 bg-current" style={{ animation: "inv-scroll-hint 2s ease-in-out infinite" }} />
       </span>
     </div>

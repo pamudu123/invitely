@@ -1,4 +1,5 @@
 import type { OrnamentId } from "@/lib/invitation/types";
+import { sceneCorners, sceneCrests, sceneDividers, sceneOrnamentLabels } from "./ornaments-scene";
 import type { ReactElement, SVGProps } from "react";
 import { extraCorners, extraCrests, extraDividers, extraOrnamentLabels } from "./ornaments-extra";
 
@@ -160,7 +161,7 @@ const dividersBase: Partial<Record<OrnamentId, () => ReactElement>> = {
   ),
 };
 
-const dividers = { ...dividersBase, ...extraDividers } as Record<OrnamentId, () => ReactElement>;
+const dividers = { ...dividersBase, ...extraDividers, ...sceneDividers } as Record<OrnamentId, () => ReactElement>;
 
 export function Divider({ kind, ...props }: { kind: OrnamentId } & P) {
   const Body = dividers[kind] ?? dividers.minimal;
@@ -310,7 +311,7 @@ const crestsBase: Partial<Record<OrnamentId, () => ReactElement>> = {
   ),
 };
 
-const crests = { ...crestsBase, ...extraCrests } as Record<OrnamentId, () => ReactElement>;
+const crests = { ...crestsBase, ...extraCrests, ...sceneCrests } as Record<OrnamentId, () => ReactElement>;
 
 export function Crest({ kind, ...props }: { kind: OrnamentId } & P) {
   const Body = crests[kind] ?? crests.minimal;
@@ -436,7 +437,7 @@ const cornersBase: Partial<Record<OrnamentId, () => ReactElement>> = {
   minimal: () => <path d="M4 44V4h40" {...stroke} />,
 };
 
-const corners = { ...cornersBase, ...extraCorners } as Record<OrnamentId, () => ReactElement>;
+const corners = { ...cornersBase, ...extraCorners, ...sceneCorners } as Record<OrnamentId, () => ReactElement>;
 
 export function Corner({ kind, ...props }: { kind: OrnamentId } & P) {
   const Body = corners[kind] ?? corners.minimal;
@@ -473,4 +474,4 @@ const baseLabels: Partial<Record<OrnamentId, string>> = {
   minimal: "Minimal",
 };
 
-export const ornamentLabels = { ...baseLabels, ...extraOrnamentLabels } as Record<OrnamentId, string>;
+export const ornamentLabels = { ...baseLabels, ...extraOrnamentLabels, ...sceneOrnamentLabels } as Record<OrnamentId, string>;

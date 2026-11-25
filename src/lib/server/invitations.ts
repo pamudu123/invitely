@@ -1,5 +1,6 @@
 import "server-only";
 import { allSections, occasions } from "@/lib/invitation/occasions";
+import { sceneHeroes, sceneIds, themeScene, usesScene } from "@/lib/invitation/scenes";
 import { displayNames, normalizeInvitation, templates } from "@/lib/invitation/templates";
 import { fontPairs, palettes } from "@/lib/invitation/theme";
 import type { InvitationData, LanguageId, WishItem } from "@/lib/invitation/types";
@@ -101,9 +102,9 @@ async function resolveImage(value: unknown): Promise<string | undefined> {
   return `/api/media/${id}`;
 }
 
-const ritualIds = ["lamp", "seal", "curtain", "lotus", "scratch", "balloon", "betel", "doors", "clapper", "gift", "none"] as const;
-const ornamentIds = ["liyawel", "lotus", "botanical", "deco", "stars", "kolam", "geometric", "confetti", "waves", "mandala", "peacock", "paisley", "tracery", "film", "snow", "sun", "betel", "minimal"] as const;
-const heroIds = ["classic", "arch", "photo", "monogram", "frame", "poster", "ticket", "gazette", "polaroid"] as const;
+const ritualIds = ["lamp", "seal", "curtain", "lotus", "scratch", "balloon", "betel", "doors", "clapper", "gift", "play", "none"] as const;
+const ornamentIds = ["liyawel", "lotus", "botanical", "deco", "stars", "kolam", "geometric", "confetti", "waves", "mandala", "peacock", "paisley", "tracery", "film", "snow", "sun", "betel", "minimal", ...sceneIds] as const;
+const heroIds = ["classic", "arch", "photo", "monogram", "frame", "poster", "ticket", "gazette", "polaroid", ...sceneHeroes] as const;
 const musicIds = ["none", "serene", "warm", "joyful", "custom"] as const;
 const effectIds = ["none", "petals", "sparkles", "confetti", "snow"] as const;
 const langIds = ["en", "si", "ta"] as const;
@@ -167,6 +168,7 @@ export async function sanitizeInvitation(raw: unknown): Promise<InvitationData> 
       music: oneOf(d.theme.music, musicIds, "none"),
       musicUrl,
       effect: oneOf(d.theme.effect, effectIds, "none"),
+      scene: usesScene(d.theme) ? themeScene(d.theme) : undefined,
     },
     name1: clip(d.name1, 60) || "Your name",
     name2: clip(d.name2, 60),

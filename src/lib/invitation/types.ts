@@ -13,6 +13,8 @@ export type OccasionId =
   | "graduation"
   | "festive"
   | "corporate"
+  | "sports"
+  | "career"
   | "celebration";
 
 export type RitualId =
@@ -26,9 +28,34 @@ export type RitualId =
   | "doors"
   | "clapper"
   | "gift"
+  | "play"
   | "none";
 
+/** Live 3D scenes, one for each sport and profession */
+export type SceneId =
+  | "chess"
+  | "cricket"
+  | "tennis"
+  | "football"
+  | "basketball"
+  | "badminton"
+  | "rugby"
+  | "golf"
+  | "tabletennis"
+  | "trophy"
+  | "doctor"
+  | "lawyer"
+  | "architect"
+  | "chef"
+  | "developer"
+  | "pilot"
+  | "photographer"
+  | "teacher"
+  | "musician"
+  | "engineer";
+
 export type OrnamentId =
+  | SceneId
   | "liyawel"
   | "lotus"
   | "botanical"
@@ -57,7 +84,10 @@ export type HeroLayout =
   | "poster"
   | "ticket"
   | "gazette"
-  | "polaroid";
+  | "polaroid"
+  | "stage"
+  | "spec"
+  | "diorama";
 
 export type FontPairId =
   | "heirloom"
@@ -70,7 +100,10 @@ export type FontPairId =
   | "romance"
   | "handwritten"
   | "press"
-  | "poster";
+  | "poster"
+  | "athletic"
+  | "wide"
+  | "terminal";
 
 export type MusicId = "none" | "serene" | "warm" | "joyful" | "custom";
 
@@ -117,6 +150,8 @@ export interface ThemeConfig {
   music: MusicId;
   musicUrl?: string;
   effect: EffectId;
+  /** 3D scene used by the 3D covers and the play opening */
+  scene?: SceneId;
 }
 
 export interface EventItem {

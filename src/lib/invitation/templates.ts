@@ -1,4 +1,5 @@
 import { getOccasion } from "./occasions";
+import { sceneTemplates } from "./templates-scenes";
 import type { InvitationData, OccasionId, ThemeConfig } from "./types";
 
 export interface TemplateDef {
@@ -658,14 +659,17 @@ export const templates: TemplateDef[] = [
       dressCode: "Business formal",
     },
   },
+  ...sceneTemplates,
 ];
 
 /** Order used in the gallery, so signature and new designs are mixed through the page. */
 const galleryOrder = [
-  "pahana", "bulath", "mahanuwara", "dorakada", "nelum", "gazette", "atelier", "first-class",
+  "pahana", "bulath", "gambit", "mahanuwara", "dorakada", "yorker", "nelum", "gazette", "heartbeat", "atelier", "first-class", "baseline",
   "kolam", "udarata", "noor", "cathedral", "tharu", "pihatu", "monara", "ran",
   "maruthani", "verala", "promise", "mathaka", "premiere", "pop", "golden-year", "manel",
   "little-star", "suriya", "deepam", "hilal", "nattal", "new-nest", "piyum", "pin", "laurel", "keynote",
+  "mise", "top-corner", "blueprint", "cleared", "buzzer", "verdict", "aperture", "podium", "commit", "fairway", "b-side", "drop-shot",
+  "torque", "conversion", "chalk", "rally",
 ];
 
 export function galleryTemplates(): TemplateDef[] {
@@ -760,6 +764,18 @@ function defaultEvents(occasion: OccasionId, uid: Uid): InvitationData["events"]
         { id: uid("e"), title: "Keynote", time: "18:15" },
         { id: uid("e"), title: "Dinner and networking", time: "19:30" },
       ];
+    case "sports":
+      return [
+        { id: uid("e"), title: "Gates open", time: "15:00" },
+        { id: uid("e"), title: "First match", time: "15:30" },
+        { id: uid("e"), title: "Prizes and dinner", time: "18:30" },
+      ];
+    case "career":
+      return [
+        { id: uid("e"), title: "Welcome drinks", time: "18:00" },
+        { id: uid("e"), title: "A few words", time: "18:45" },
+        { id: uid("e"), title: "Dinner", time: "19:30" },
+      ];
     case "almsgiving":
       return [
         { id: uid("e"), title: "Pirith chanting", time: "19:00", note: "The evening before" },
@@ -850,11 +866,13 @@ export function createFromTemplate(
     contacts: [
       { id: uid("c"), name: "Nadeesha", role: "Family", phone: "+94 77 123 4567" },
     ],
-    dressCode: occasionId === "birthday" || occasionId === "baby-shower" ? "Come comfy and colourful" : "Formal or traditional attire",
+    dressCode: occasionId === "sports" ? "Team colours or sportswear" : occasionId === "birthday" || occasionId === "baby-shower" ? "Come comfy and colourful" : "Formal or traditional attire",
     notes: "Parking is available at the venue. Children are most welcome.",
     giftNote: "Your presence is the only gift we need. If you wish to give something, a contribution towards our new home would be gratefully received.",
     hashtag: "",
-    thankYou: "Thank you for being part of our day. Your love and blessings mean more than we can say.",
+    thankYou: occasionId === "sports"
+      ? "Thank you for playing, cheering and making it a great day. See you next season."
+      : "Thank you for being part of our day. Your love and blessings mean more than we can say.",
     rsvp: {
       enabled: true,
       deadline: addDays(today, 75),

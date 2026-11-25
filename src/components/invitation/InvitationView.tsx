@@ -4,12 +4,14 @@ import { Music, VolumeX } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState, type CSSProperties } from "react";
 import { getLabels, languageNames } from "@/lib/invitation/labels";
 import { getPalette, themeVars } from "@/lib/invitation/theme";
+import { usesScene } from "@/lib/invitation/scenes";
 import { zonedToUtc } from "@/lib/invitation/time";
 import type { GuestContext, InvitationData, LanguageId, SectionId, WishItem } from "@/lib/invitation/types";
 import { useAmbient } from "./ambient";
 import { AmbientEffect } from "./Effects";
 import { useNow } from "./hooks";
 import { RitualOverlay } from "./rituals";
+import { SceneLiveContext } from "./scene3d/useScene";
 import { RsvpSection, type PriorRsvp, type RsvpHandler } from "./RsvpForm";
 import {
   CountdownSection,
@@ -157,7 +159,9 @@ export function InvitationView({
   const content = (
     <div className={`inv-root ${opened ? "" : "inv-waiting"}`} lang={activeLang}>
       <div data-section="cover" style={{ position: "relative" }}>
-        <Hero {...common} />
+        <SceneLiveContext value={coverGone}>
+          <Hero {...common} />
+        </SceneLiveContext>
       </div>
       {sections.map(renderSection)}
       <div data-section="footer" style={{ position: "relative" }}>
@@ -169,7 +173,7 @@ export function InvitationView({
   const pos = embedded ? "absolute" : "fixed";
 
   return (
-    <div className={`inv-shell ${embedded ? "absolute inset-0 overflow-hidden" : "relative"}`} style={{ ...shellStyle, background: palette.bg }}>
+    <div className={`inv-shell ${usesScene(data.theme) ? "inv-3d" : ""} ${embedded ? "absolute inset-0 overflow-hidden" : "relative"}`} style={{ ...shellStyle, background: palette.bg }}>
       {embedded ? (
         <div
           className="no-scrollbar absolute inset-0 overflow-x-hidden"

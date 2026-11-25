@@ -1,5 +1,6 @@
 import { allSections, occasions } from "@/lib/invitation/occasions";
 import { ritualInfo } from "@/lib/invitation/rituals";
+import { sceneHeroes, sceneIds } from "@/lib/invitation/scenes";
 import { templates } from "@/lib/invitation/templates";
 import { fontPairs, palettes } from "@/lib/invitation/theme";
 import { isAdminRequest } from "@/lib/server/admin";
@@ -36,8 +37,9 @@ export async function GET(req: Request, ctx: Ctx) {
       occasion: occasions.map((o) => o.id),
       "theme.paletteId": palettes.map((p) => p.id),
       "theme.fontPair": fontPairs.map((f) => f.id),
-      "theme.ornament": ["liyawel", "lotus", "botanical", "deco", "stars", "kolam", "geometric", "confetti", "waves", "mandala", "peacock", "paisley", "tracery", "film", "snow", "sun", "betel", "minimal"],
-      "theme.hero": ["classic", "arch", "photo", "monogram", "frame", "poster", "ticket", "gazette", "polaroid"],
+      "theme.ornament": ["liyawel", "lotus", "botanical", "deco", "stars", "kolam", "geometric", "confetti", "waves", "mandala", "peacock", "paisley", "tracery", "film", "snow", "sun", "betel", "minimal", ...sceneIds],
+      "theme.hero": ["classic", "arch", "photo", "monogram", "frame", "poster", "ticket", "gazette", "polaroid", ...sceneHeroes],
+      "theme.scene": sceneIds,
       "theme.ritual": Object.keys(ritualInfo),
       "theme.music": ["none", "serene", "warm", "joyful", "custom"],
       "theme.effect": ["none", "petals", "sparkles", "confetti", "snow"],
