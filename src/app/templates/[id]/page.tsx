@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import { ornamentLabels } from "@/components/invitation/ornaments";
 import { ritualInfo } from "@/lib/invitation/rituals";
 import { SiteFooter, SiteHeader } from "@/components/site/chrome";
+import { LikeButton, UnlikeButton } from "@/components/site/LikeButton";
 import { TemplateDemo } from "@/components/site/TemplateDemo";
 import { getTemplate, templates } from "@/lib/invitation/templates";
 import { fontPairs, palettes } from "@/lib/invitation/theme";
@@ -49,6 +50,10 @@ async function Detail({ params }: { params: PageProps<"/templates/[id]">["params
               <p className="label text-brand">{tpl.meaning}</p>
               <h1 className="display mt-4 text-[clamp(3.4rem,11vw,7rem)]">{tpl.name}</h1>
               <p className="mt-5 text-[1.08rem] leading-relaxed text-fg/90">{tpl.description}</p>
+              <div className="mt-5 flex flex-wrap items-center gap-4">
+                <LikeButton id={tpl.id} name={tpl.name} />
+                <UnlikeButton id={tpl.id} name={tpl.name} />
+              </div>
               <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-fg/10 pt-6 sm:grid-cols-4">
                 {facts.map(([k, v]) => (
                   <div key={k}>

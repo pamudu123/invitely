@@ -4,6 +4,7 @@ import { PrintPreview } from "@/components/cards/PrintPreview";
 import { Faq } from "@/components/site/Faq";
 import { PlanCards } from "@/components/site/PlanCards";
 import { SiteFooter, SiteHeader } from "@/components/site/chrome";
+import { LikeButton } from "@/components/site/LikeButton";
 import { TemplateCover } from "@/components/site/TemplateCover";
 import { FrostHero } from "@/components/site/frost/Hero";
 import { FrostOpenings } from "@/components/site/frost/Openings";
@@ -107,11 +108,14 @@ export default function Home() {
               const data = showcaseData(s.id, s.palette, s.a, s.b, s.venue, s.place);
               const colour = palettes.find((p) => p.id === s.palette)?.label ?? "";
               return (
-                <Link key={s.id} href={`/studio/new?template=${s.id}&palette=${s.palette}`} className="frost-card" aria-label={`Start with ${showcaseName(s.id)} in ${colour}`}>
-                  <span><TemplateCover data={data} width={230} /></span>
-                  <b>{showcaseName(s.id)}</b>
-                  <small>{colour}</small>
-                </Link>
+                <div key={s.id} className="frost-card">
+                  <Link href={`/studio/new?template=${s.id}&palette=${s.palette}`} aria-label={`Start with ${showcaseName(s.id)} in ${colour}`}>
+                    <span><TemplateCover data={data} width={230} /></span>
+                    <b>{showcaseName(s.id)}</b>
+                    <small>{colour}</small>
+                  </Link>
+                  <LikeButton id={s.id} name={showcaseName(s.id)} className="absolute right-5 top-5" />
+                </div>
               );
             })}
           </div>

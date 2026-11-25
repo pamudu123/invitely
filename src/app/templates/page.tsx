@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { ritualInfo } from "@/lib/invitation/rituals";
 import { SiteFooter, SiteHeader } from "@/components/site/chrome";
 import { FluidCover } from "@/components/site/TemplateCover";
 import { TemplateGallery, type GalleryItem } from "@/components/site/TemplateGallery";
-import { occasions } from "@/lib/invitation/occasions";
 import { galleryTemplates } from "@/lib/invitation/templates";
-import type { OccasionId } from "@/lib/invitation/types";
 
 export const metadata: Metadata = {
   title: "Invitation designs",
@@ -27,13 +24,7 @@ function items(): GalleryItem[] {
   }));
 }
 
-async function Gallery({ searchParams }: { searchParams: PageProps<"/templates">["searchParams"] }) {
-  const sp = await searchParams;
-  const initial = occasions.find((o) => o.id === sp.occasion)?.id as OccasionId | undefined;
-  return <TemplateGallery items={items()} initial={initial} />;
-}
-
-export default function TemplatesPage({ searchParams }: PageProps<"/templates">) {
+export default function TemplatesPage() {
   return (
     <>
       <SiteHeader />
@@ -41,13 +32,15 @@ export default function TemplatesPage({ searchParams }: PageProps<"/templates">)
         <div className="mx-auto max-w-7xl">
           <p className="label text-brand">The collection</p>
           <h1 className="display mt-5 max-w-4xl text-[clamp(3rem,9vw,6.5rem)]">Find the design that feels like you.</h1>
-          <p className="mb-10 mt-6 max-w-xl text-[1.05rem] leading-relaxed text-fg/85">
+          <p className="mt-6 max-w-xl text-[1.05rem] leading-relaxed text-fg/85">
             Every design is shown exactly as it looks on a phone. Open the live demo, try the opening, then make it yours.
             Colours, lettering, ornaments and wording can all change.
           </p>
-          <Suspense fallback={<TemplateGallery items={items()} />}>
-            <Gallery searchParams={searchParams} />
-          </Suspense>
+          <p className="mb-10 mt-4 max-w-xl text-[1.05rem] leading-relaxed text-fg/85">
+            Tap the heart on the ones you love, as many times as you wish. No sign in. A cookie remembers your likes on
+            this device.
+          </p>
+          <TemplateGallery items={items()} />
         </div>
       </main>
       <SiteFooter />

@@ -22,7 +22,7 @@ Open http://localhost:3000. No configuration is needed for development. Data is 
 | Page | Path |
 | --- | --- |
 | Landing page with a live demo | `/` |
-| Designs gallery | `/templates` |
+| Designs gallery. Anyone can like a design, a cookie remembers which | `/templates` |
 | One design, live | `/templates/pahana` |
 | Full screen demo invitation | `/demo/pahana` |
 | Design studio, no account needed | `/studio/new?template=pahana` |
@@ -88,3 +88,4 @@ Next.js 16 (App Router with Cache Components), React 19, TypeScript, Tailwind CS
 - Sinhala and Tamil labels: `src/lib/invitation/labels.ts`
 - Ornaments: `src/components/invitation/ornaments.tsx`
 - Openings: `src/components/invitation/rituals/`
+- Likes: `src/components/site/LikeButton.tsx`, `src/lib/client/likes.ts` and `src/app/api/likes/`
