@@ -108,6 +108,10 @@ const schema = [
     bytes BLOB NOT NULL,
     created_at INTEGER NOT NULL
   )`,
+  `CREATE TABLE IF NOT EXISTS likes (
+    design TEXT PRIMARY KEY,
+    count INTEGER NOT NULL DEFAULT 0
+  )`,
 ];
 
 /** There are no host accounts. Every card belongs to this one internal owner row. */

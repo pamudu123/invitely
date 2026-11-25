@@ -117,10 +117,10 @@
 .frost-gallery { background: linear-gradient(180deg, #1f33b4, #4530b4); color: #fff; padding: clamp(4.5rem, 8vw, 7.5rem) 0 4rem; overflow: hidden; }
 .frost-gallery-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 1.4rem; padding: 0 1.25rem; }
 .frost-rail { display: flex; gap: 2rem; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x proximity; padding: 3.4rem max(1.25rem, calc((100vw - 78rem) / 2)) 2.6rem; }
-.frost-card { flex: none; scroll-snap-align: center; text-align: center; transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+.frost-card { position: relative; flex: none; scroll-snap-align: center; text-align: center; transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
 .frost-card:nth-child(even) { margin-top: 2.2rem; }
 .frost-card:hover { transform: translateY(-10px); }
-.frost-card > span { display: block; padding: 9px; background: linear-gradient(140deg, #fff, #a9d8ff 40%, #e9f6ff 60%, #8fa8ff); clip-path: polygon(22px 0, calc(100% - 22px) 0, 100% 22px, 100% calc(100% - 22px), calc(100% - 22px) 100%, 22px 100%, 0 calc(100% - 22px), 0 22px); }
+.frost-card > a > span { display: block; padding: 9px; background: linear-gradient(140deg, #fff, #a9d8ff 40%, #e9f6ff 60%, #8fa8ff); clip-path: polygon(22px 0, calc(100% - 22px) 0, 100% 22px, 100% calc(100% - 22px), calc(100% - 22px) 100%, 22px 100%, 0 calc(100% - 22px), 0 22px); }
 .frost-card b { display: block; margin-top: 0.9rem; font-size: 1.2rem; font-weight: 700; }
 .frost-card small { font-size: 1rem; font-weight: 500; color: #dfe9ff; }
 

@@ -38,6 +38,7 @@
   --animate-fade-up: fade-up 0.9s var(--ease-out-soft) both;
   --animate-pulse-ring: pulse-ring 2.4s ease-out infinite;
   --animate-sheen: sheen 5s ease-in-out infinite;
+  --animate-like-rise: like-rise 0.8s ease-out both;
 }
 
 @keyframes flicker {
@@ -57,6 +58,10 @@
 @keyframes pulse-ring {
   0% { transform: scale(0.85); opacity: 0.7; }
   100% { transform: scale(1.9); opacity: 0; }
+}
+@keyframes like-rise {
+  from { opacity: 1; transform: translate(-50%, 0) scale(0.7); }
+  to { opacity: 0; transform: translate(calc(-50% + var(--drift, 0px)), -64px) scale(1.25); }
 }
 @keyframes sheen {
   0%, 60% { background-position: 200% 0; }

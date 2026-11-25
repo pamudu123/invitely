@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { PrintPreview } from "@/components/cards/PrintPreview";
 import { SiteFooter, SiteHeader } from "@/components/site/chrome";
+import { LikeButton, UnlikeButton } from "@/components/site/LikeButton";
 import { ButtonLink } from "@/components/ui/kit";
 import { printDesigns } from "@/lib/invitation/cards";
+import { printLikeId } from "@/lib/invitation/likes";
 import { getShape } from "@/lib/invitation/shapes";
 import { createFromTemplate } from "@/lib/invitation/templates";
 
@@ -63,10 +65,16 @@ export default function PrintCardsPage() {
                       <PrintPreview design={design} data={data} side="back" width={wide ? 300 : 168} />
                     </div>
                   </div>
-                  <p className="label mt-5 text-brand">{getShape(design.shape).label}</p>
-                  <h2 className="mt-1.5 font-serif text-[1.9rem] leading-none">{design.name}</h2>
+                  <div className="mt-5 flex items-start justify-between gap-3">
+                    <div>
+                      <p className="label text-brand">{getShape(design.shape).label}</p>
+                      <h2 className="mt-1.5 font-serif text-[1.9rem] leading-none">{design.name}</h2>
+                    </div>
+                    <LikeButton id={printLikeId(design.id)} name={`the ${design.name} printed card`} className="shrink-0" />
+                  </div>
                   <p className="mt-1 text-[0.84rem] text-fg/85">{design.meaning} · {design.sizes.map((s) => s.label).join(", ")}</p>
                   <p className="mt-3 text-[0.92rem] leading-relaxed text-fg/85">{design.description}</p>
+                  <div><UnlikeButton id={printLikeId(design.id)} name={`the ${design.name} printed card`} /></div>
                 </li>
               );
             })}
