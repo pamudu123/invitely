@@ -45,6 +45,26 @@ export const palettes: PaletteDef[] = [
   { id: "ruby", label: "Ruby Night", bg: "#2A0C10", surface: "#3A1318", ink: "#F6E3C0", accent: "#D9A441", deep: "#1A0608", onDeep: "#F6E3C0", dark: true },
   { id: "noel", label: "Noel", bg: "#0F2A1F", surface: "#163627", ink: "#F3EAD3", accent: "#D9B45C", deep: "#091A13", onDeep: "#F3EAD3", dark: true },
   { id: "hilal", label: "Crescent Night", bg: "#0C2B2A", surface: "#123937", ink: "#EEE6CF", accent: "#D8B25E", deep: "#071C1B", onDeep: "#EEE6CF", dark: true },
+  { id: "gambit", label: "Walnut & Brass", bg: "#1C1410", surface: "#2A1F18", ink: "#F3E7D0", accent: "#D9A85A", deep: "#100B08", onDeep: "#F3E7D0", dark: true },
+  { id: "yorker", label: "Outfield", bg: "#0E4A2C", surface: "#15593A", ink: "#FFFFFF", accent: "#FFD27A", deep: "#072D1A", onDeep: "#FFFFFF", dark: true },
+  { id: "baseline", label: "Hard Court", bg: "#1A57A6", surface: "#2463B5", ink: "#FFFFFF", accent: "#E3F56B", deep: "#0C2F61", onDeep: "#FFFFFF", dark: true },
+  { id: "top-corner", label: "Terrace Red", bg: "#B92A1A", surface: "#A52214", ink: "#FFFFFF", accent: "#FFE3A3", deep: "#4A0D07", onDeep: "#FFF3DC", dark: true },
+  { id: "buzzer", label: "Night Court", bg: "#2C1759", surface: "#3A2270", ink: "#FFFFFF", accent: "#FF9F57", deep: "#190A38", onDeep: "#FFFFFF", dark: true },
+  { id: "drop-shot", label: "Court Mint", bg: "#D9F2E8", surface: "#F0FBF6", ink: "#0B3530", accent: "#08705A", deep: "#0B3F38", onDeep: "#E2F7EF" },
+  { id: "conversion", label: "Navy & Amber", bg: "#101F45", surface: "#1A2C5A", ink: "#FFFFFF", accent: "#F5BE48", deep: "#081128", onDeep: "#FFF6E0", dark: true },
+  { id: "fairway", label: "Morning Fairway", bg: "#E4F0D3", surface: "#F5FAEC", ink: "#19361D", accent: "#2C6B34", deep: "#143A1E", onDeep: "#EEF7DF" },
+  { id: "rally", label: "Blush & Rubber", bg: "#FFE1D6", surface: "#FFF4EF", ink: "#3A0F12", accent: "#B4212D", deep: "#5A1018", onDeep: "#FFE9E1" },
+  { id: "podium", label: "Podium", bg: "#16121F", surface: "#231D30", ink: "#F7EEDC", accent: "#E6B450", deep: "#0A0810", onDeep: "#F7EEDC", dark: true },
+  { id: "heartbeat", label: "Clinic Teal", bg: "#DDF0F2", surface: "#F3FBFC", ink: "#0A3440", accent: "#0B6A78", deep: "#08404D", onDeep: "#E4F6F8" },
+  { id: "verdict", label: "Oxblood", bg: "#331012", surface: "#43191B", ink: "#F8E9D4", accent: "#DDB06A", deep: "#1E0708", onDeep: "#F8E9D4", dark: true },
+  { id: "blueprint", label: "Site Plan", bg: "#ECEBE6", surface: "#FAF9F6", ink: "#1C1E22", accent: "#B4400F", deep: "#22262D", onDeep: "#F1EFE9" },
+  { id: "mise", label: "Saffron", bg: "#F5B73B", surface: "#FFD27C", ink: "#2B1204", accent: "#7E150B", deep: "#5E0F08", onDeep: "#FFE7B8" },
+  { id: "commit", label: "Graphite & Amber", bg: "#14171C", surface: "#1F242C", ink: "#F1EEE7", accent: "#FFA94D", deep: "#090B0E", onDeep: "#F1EEE7", dark: true },
+  { id: "cleared", label: "Open Sky", bg: "#BFE2FB", surface: "#E6F4FE", ink: "#08294A", accent: "#0A479A", deep: "#0A3566", onDeep: "#E3F2FF" },
+  { id: "aperture", label: "Gallery Grey", bg: "#DCDAD5", surface: "#F2F1EE", ink: "#151515", accent: "#A8160F", deep: "#1B1B1C", onDeep: "#F0EEEA" },
+  { id: "chalk", label: "Blackboard", bg: "#1F3F36", surface: "#295045", ink: "#F6F3E6", accent: "#F4D35E", deep: "#12271F", onDeep: "#F6F3E6", dark: true },
+  { id: "b-side", label: "Plum & Pink", bg: "#4B0C33", surface: "#611644", ink: "#FFF0F5", accent: "#FF9EBB", deep: "#2B051C", onDeep: "#FFF0F5", dark: true },
+  { id: "torque", label: "Safety Orange", bg: "#FF7F1F", surface: "#FFA45C", ink: "#1F0D02", accent: "#4F1A00", deep: "#2A1104", onDeep: "#FFE3C8" },
 ];
 
 export function getPalette(theme: ThemeConfig): Palette & { dark: boolean } {
@@ -75,6 +95,8 @@ export interface FontPairDef {
   namesWeight: number;
   namesItalic?: boolean;
   namesScale: number;
+  /** Typical letter width in em, used to fit long words on the 3D covers */
+  glyph: number;
   namesTracking: string;
   namesUpper?: boolean;
   headingUpper: boolean;
@@ -92,7 +114,7 @@ export const fontPairs: FontPairDef[] = [
     names: `var(--font-pinyon), ${scriptFallback}`,
     heading: `var(--font-cormorant), ${scriptFallback}`,
     body: `var(--font-cormorant), ${scriptFallback}`,
-    namesWeight: 400, namesScale: 1.25, namesTracking: "0",
+    namesWeight: 400, glyph: 0.46, namesScale: 1.25, namesTracking: "0",
     headingUpper: true, headingTracking: "0.22em", headingWeight: 500, bodySize: "1.14rem",
   },
   {
@@ -100,7 +122,7 @@ export const fontPairs: FontPairDef[] = [
     names: `var(--font-cormorant), ${scriptFallback}`,
     heading: `var(--font-cormorant), ${scriptFallback}`,
     body: `var(--font-jost), ${sansFallback}`,
-    namesWeight: 500, namesItalic: true, namesScale: 1.08, namesTracking: "-0.01em",
+    namesWeight: 500, glyph: 0.5, namesItalic: true, namesScale: 1.08, namesTracking: "-0.01em",
     headingUpper: true, headingTracking: "0.24em", headingWeight: 500, bodySize: "1rem",
   },
   {
@@ -108,7 +130,7 @@ export const fontPairs: FontPairDef[] = [
     names: `var(--font-playfair), ${scriptFallback}`,
     heading: `var(--font-dm-sans), ${sansFallback}`,
     body: `var(--font-dm-sans), ${sansFallback}`,
-    namesWeight: 500, namesScale: 0.94, namesTracking: "-0.02em",
+    namesWeight: 500, glyph: 0.58, namesScale: 0.94, namesTracking: "-0.02em",
     headingUpper: true, headingTracking: "0.26em", headingWeight: 500, bodySize: "0.98rem",
   },
   {
@@ -116,7 +138,7 @@ export const fontPairs: FontPairDef[] = [
     names: `var(--font-cinzel), ${scriptFallback}`,
     heading: `var(--font-cinzel), ${scriptFallback}`,
     body: `var(--font-cormorant), ${scriptFallback}`,
-    namesWeight: 500, namesScale: 0.8, namesTracking: "0.06em", namesUpper: true,
+    namesWeight: 500, glyph: 0.86, namesScale: 0.8, namesTracking: "0.06em", namesUpper: true,
     headingUpper: true, headingTracking: "0.2em", headingWeight: 500, bodySize: "1.14rem",
   },
   {
@@ -124,7 +146,7 @@ export const fontPairs: FontPairDef[] = [
     names: `var(--font-fraunces), ${scriptFallback}`,
     heading: `var(--font-dm-sans), ${sansFallback}`,
     body: `var(--font-dm-sans), ${sansFallback}`,
-    namesWeight: 400, namesScale: 0.95, namesTracking: "-0.03em",
+    namesWeight: 400, glyph: 0.58, namesScale: 0.95, namesTracking: "-0.03em",
     headingUpper: true, headingTracking: "0.24em", headingWeight: 600, bodySize: "0.98rem",
   },
   {
@@ -132,7 +154,7 @@ export const fontPairs: FontPairDef[] = [
     names: `var(--font-fredoka), ${sansFallback}`,
     heading: `var(--font-fredoka), ${sansFallback}`,
     body: `var(--font-dm-sans), ${sansFallback}`,
-    namesWeight: 600, namesScale: 0.92, namesTracking: "-0.01em",
+    namesWeight: 600, glyph: 0.58, namesScale: 0.92, namesTracking: "-0.01em",
     headingUpper: false, headingTracking: "0.01em", headingWeight: 600, bodySize: "1rem",
   },
   {
@@ -140,7 +162,7 @@ export const fontPairs: FontPairDef[] = [
     names: `var(--font-bodoni), ${scriptFallback}`,
     heading: `var(--font-jost), ${sansFallback}`,
     body: `var(--font-jost), ${sansFallback}`,
-    namesWeight: 500, namesItalic: true, namesScale: 0.98, namesTracking: "-0.02em",
+    namesWeight: 500, glyph: 0.6, namesItalic: true, namesScale: 0.98, namesTracking: "-0.02em",
     headingUpper: true, headingTracking: "0.3em", headingWeight: 400, bodySize: "1rem",
   },
   {
@@ -148,7 +170,7 @@ export const fontPairs: FontPairDef[] = [
     names: `var(--font-great-vibes), ${scriptFallback}`,
     heading: `var(--font-marcellus), ${scriptFallback}`,
     body: `var(--font-marcellus), ${scriptFallback}`,
-    namesWeight: 400, namesScale: 1.2, namesTracking: "0",
+    namesWeight: 400, glyph: 0.46, namesScale: 1.2, namesTracking: "0",
     headingUpper: true, headingTracking: "0.2em", headingWeight: 400, bodySize: "1rem",
   },
   {
@@ -156,7 +178,7 @@ export const fontPairs: FontPairDef[] = [
     names: `var(--font-caveat), ${sansFallback}`,
     heading: `var(--font-dm-sans), ${sansFallback}`,
     body: `var(--font-dm-sans), ${sansFallback}`,
-    namesWeight: 700, namesScale: 1.12, namesTracking: "-0.01em",
+    namesWeight: 700, glyph: 0.46, namesScale: 1.12, namesTracking: "-0.01em",
     headingUpper: true, headingTracking: "0.2em", headingWeight: 600, bodySize: "0.98rem",
   },
   {
@@ -164,7 +186,7 @@ export const fontPairs: FontPairDef[] = [
     names: `var(--font-playfair), ${scriptFallback}`,
     heading: `var(--font-special-elite), ${sansFallback}`,
     body: `var(--font-cormorant), ${scriptFallback}`,
-    namesWeight: 800, namesScale: 0.9, namesTracking: "-0.025em",
+    namesWeight: 800, glyph: 0.6, namesScale: 0.9, namesTracking: "-0.025em",
     headingUpper: true, headingTracking: "0.14em", headingWeight: 400, bodySize: "1.14rem",
   },
   {
@@ -172,8 +194,32 @@ export const fontPairs: FontPairDef[] = [
     names: `var(--font-anton), ${sansFallback}`,
     heading: `var(--font-dm-sans), ${sansFallback}`,
     body: `var(--font-dm-sans), ${sansFallback}`,
-    namesWeight: 400, namesScale: 1.12, namesTracking: "0.01em", namesUpper: true,
+    namesWeight: 400, glyph: 0.5, namesScale: 1.12, namesTracking: "0.01em", namesUpper: true,
     headingUpper: true, headingTracking: "0.22em", headingWeight: 600, bodySize: "0.98rem",
+  },
+  {
+    id: "athletic", label: "Athletic", sample: "Condensed italic",
+    names: `var(--font-barlow-condensed), ${sansFallback}`,
+    heading: `var(--font-dm-sans), ${sansFallback}`,
+    body: `var(--font-dm-sans), ${sansFallback}`,
+    namesWeight: 800, glyph: 0.5, namesItalic: true, namesScale: 1.16, namesTracking: "-0.01em", namesUpper: true,
+    headingUpper: true, headingTracking: "0.14em", headingWeight: 700, bodySize: "1rem",
+  },
+  {
+    id: "wide", label: "Wide", sample: "Broad and rounded",
+    names: `var(--font-unbounded), ${sansFallback}`,
+    heading: `var(--font-dm-sans), ${sansFallback}`,
+    body: `var(--font-dm-sans), ${sansFallback}`,
+    namesWeight: 700, glyph: 0.86, namesScale: 0.68, namesTracking: "-0.045em",
+    headingUpper: true, headingTracking: "0.16em", headingWeight: 600, bodySize: "0.98rem",
+  },
+  {
+    id: "terminal", label: "Terminal", sample: "Monospace",
+    names: `var(--font-jetbrains), ${sansFallback}`,
+    heading: `var(--font-jetbrains), ${sansFallback}`,
+    body: `var(--font-dm-sans), ${sansFallback}`,
+    namesWeight: 700, glyph: 0.56, namesScale: 0.76, namesTracking: "-0.05em",
+    headingUpper: false, headingTracking: "0", headingWeight: 500, bodySize: "0.98rem",
   },
 ];
 

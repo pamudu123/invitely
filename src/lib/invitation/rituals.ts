@@ -11,5 +11,6 @@ export const ritualInfo: Record<RitualId, { label: string; verb: string; descrip
   doors: { label: "Open the doors", verb: "Open the doors", description: "Carved wooden doors swing open onto your invitation." },
   clapper: { label: "Call action", verb: "Tap for action", description: "A film clapperboard snaps shut and the show begins." },
   gift: { label: "Open the gift", verb: "Open the gift", description: "The lid lifts off a wrapped box in a burst of sparkle." },
+  play: { label: "Play the 3D scene", verb: "Tap to play", description: "The sport or profession comes alive in 3D: the ball hits the stumps, the gavel falls." },
   none: { label: "No opening", verb: "", description: "Go straight to the invitation." },
 };

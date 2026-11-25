@@ -4,7 +4,7 @@ import { RotateCcw } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { InvitationView } from "@/components/invitation/InvitationView";
 import { ButtonLink, PhoneFrame } from "@/components/ui/kit";
-import { demoWishes } from "@/lib/invitation/demo";
+import { demoWishesFor } from "@/lib/invitation/demo";
 import { getOccasion } from "@/lib/invitation/occasions";
 import { createFromTemplate } from "@/lib/invitation/templates";
 import type { OccasionId } from "@/lib/invitation/types";
@@ -28,7 +28,7 @@ export function TemplateDemo({ templateId, occasionIds, initial, header }: { tem
       <div className="lg:col-start-2 lg:row-start-1">{header}</div>
       <div className="flex flex-col items-center lg:sticky lg:top-24 lg:col-start-1 lg:row-span-2 lg:row-start-1">
         <PhoneFrame width={width}>
-          <InvitationView key={`${occasion}-${key}`} data={data} embedded wishes={demoWishes} />
+          <InvitationView key={`${occasion}-${key}`} data={data} embedded wishes={demoWishesFor(occasion)} />
         </PhoneFrame>
         <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
           <button

@@ -44,6 +44,9 @@ export function defaultCardLayout(data: Pick<InvitationData, "theme" | "heroPhot
     ticket: "margin",
     gazette: "margin",
     polaroid: data.heroPhoto ? "photo" : "band",
+    stage: "poster",
+    spec: "margin",
+    diorama: "band",
   };
   return byHero[data.theme.hero] ?? "frame";
 }

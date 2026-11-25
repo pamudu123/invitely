@@ -7,6 +7,7 @@ import { ritualInfo } from "@/lib/invitation/rituals";
 import { Field, Input, Select, Textarea } from "@/components/ui/kit";
 import { compressImage } from "@/lib/client/image";
 import { allSections, getOccasion, occasions, sectionLabels } from "@/lib/invitation/occasions";
+import { sceneIds, sceneInfo, themeScene, usesScene } from "@/lib/invitation/scenes";
 import { applyTemplateDesign, templates } from "@/lib/invitation/templates";
 import { fontPairs, getPalette, palettes } from "@/lib/invitation/theme";
 import type {
@@ -46,6 +47,9 @@ const heroOptions: { id: HeroLayout; label: string; hint: string }[] = [
   { id: "ticket", label: "Ticket", hint: "Boarding pass with a stub" },
   { id: "gazette", label: "Front page", hint: "Newspaper headline" },
   { id: "polaroid", label: "Polaroid", hint: "Instant photos" },
+  { id: "stage", label: "3D stage", hint: "Object in front of huge type" },
+  { id: "spec", label: "3D spec sheet", hint: "Object above the facts" },
+  { id: "diorama", label: "3D diorama", hint: "A small world on the ground" },
 ];
 
 const musicOptions: { id: MusicId; label: string; hint: string }[] = [
@@ -205,6 +209,35 @@ export function DesignPanel({ data, setTheme, replace, set, replay }: PanelProps
         ) : null}
       </Group>
 
+      {usesScene(theme) ? (
+        <Group title="3D scene" hint="Guests can turn it with a finger and tap it to play.">
+          {(["Sports", "Professions"] as const).map((g) => (
+            <div key={g}>
+              <p className="mb-2 text-[0.75rem] text-fg/85">{g}</p>
+              <div className="grid grid-cols-4 gap-2">
+                {sceneIds.filter((s) => sceneInfo[s].group === g).map((s) => (
+                  <Tile
+                    key={s}
+                    active={themeScene(theme) === s}
+                    onClick={() => {
+                      // Words the host wrote are kept. Words that came with a scene follow the scene.
+                      const stock = sceneIds.some((x) => sceneInfo[x].verb === data.ritualHint);
+                      setTheme({ scene: s, ...(theme.ornament === themeScene(theme) ? { ornament: s } : {}) });
+                      if (stock) set({ ritualHint: sceneInfo[s].verb });
+                    }}
+                    className="px-1 pb-2 pt-1 text-center"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={`/scenes/${s}.webp`} alt="" loading="lazy" width={72} height={72} className="mx-auto aspect-square w-full max-w-[4.5rem]" />
+                    <span className="block truncate text-[0.75rem] text-fg/90">{sceneInfo[s].label}</span>
+                  </Tile>
+                ))}
+              </div>
+            </div>
+          ))}
+        </Group>
+      ) : null}
+
       <Group title="Opening" hint="The first thing guests do. It also lets music start on phones.">
         <div className="grid grid-cols-2 gap-2">
           {(Object.keys(ritualInfo) as RitualId[]).map((r) => (
@@ -213,7 +246,7 @@ export function DesignPanel({ data, setTheme, replace, set, replay }: PanelProps
               active={theme.ritual === r}
               onClick={() => {
                 setTheme({ ritual: r });
-                set({ ritualHint: ritualInfo[r].verb });
+                set({ ritualHint: r === "play" ? sceneInfo[themeScene(theme)].verb : ritualInfo[r].verb });
                 replay();
               }}
               className="px-3 py-2.5"
