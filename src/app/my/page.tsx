@@ -12,7 +12,7 @@ export default function MyCardsPage() {
       </p>
       <MyCards />
       <Card id="preferences" className="mt-6 scroll-mt-24 p-5 sm:p-6">
-        <h2 className="font-serif text-2xl leading-tight">Preferences</h2>
+        <h2 className="font-serif text-2xl leading-tight">Theme</h2>
         <p className="mb-5 mt-1 text-sm leading-relaxed text-fg/85">
           Pick a season for the site. We remember it on this device. Your invitations keep the colours you gave them.
         </p>

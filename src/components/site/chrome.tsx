@@ -41,6 +41,7 @@ export function SiteFooter() {
             <li><Link href="/my" className="hover:text-fg">My cards</Link></li>
             <li><Link href="/my" className="hover:text-fg">Find a card with a PIN</Link></li>
             <li><Link href="/templates" className="hover:text-fg">Create a card</Link></li>
+            <li><Link href="/my#preferences" className="hover:text-fg">Change the theme</Link></li>
           </ul>
         </div>
       </div>
