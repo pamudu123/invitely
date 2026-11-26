@@ -1,3 +1,5 @@
+import type { CardDesigns } from "./cardDesign";
+
 export type OccasionId =
   | "wedding"
   | "homecoming"
@@ -238,6 +240,8 @@ export interface InvitationData {
   mapQuery: string;
 
   heroPhoto?: string;
+  /** Puts the cover photo behind a paper cover. How much paper colour covers it, in percent. Unset means no photo there. */
+  coverWash?: number;
   gallery: string[];
 
   events: EventItem[];
@@ -265,6 +269,9 @@ export interface InvitationData {
 
   /** Text on the opening cover */
   ritualHint: string;
+
+  /** Changes the host made to the image card and the printed card */
+  cards?: CardDesigns;
 }
 
 export interface GuestContext {

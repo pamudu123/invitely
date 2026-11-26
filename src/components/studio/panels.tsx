@@ -6,6 +6,7 @@ import { Crest, Divider, ornamentLabels } from "@/components/invitation/ornament
 import { ritualInfo } from "@/lib/invitation/rituals";
 import { Field, Input, Select, Textarea } from "@/components/ui/kit";
 import { compressImage } from "@/lib/client/image";
+import { COVER_WASH, hasOwnPhotoSpace, takesPhotoBehind } from "@/lib/invitation/cover";
 import { allSections, getOccasion, occasions, sectionLabels } from "@/lib/invitation/occasions";
 import { sceneIds, sceneInfo, themeScene, usesScene } from "@/lib/invitation/scenes";
 import { applyTemplateDesign, templates } from "@/lib/invitation/templates";
@@ -22,7 +23,7 @@ import type {
   SectionId,
   ThemeConfig,
 } from "@/lib/invitation/types";
-import { Group, IconButton, PhotoPicker, RowActions, Tile, Toggle, moveItem } from "./controls";
+import { Group, IconButton, PhotoPicker, RowActions, Slider, Tile, Toggle, moveItem } from "./controls";
 
 export interface PanelProps {
   data: InvitationData;
@@ -204,9 +205,25 @@ export function DesignPanel({ data, setTheme, replace, set, replay }: PanelProps
             </Tile>
           ))}
         </div>
-        {["arch", "photo", "gazette", "polaroid"].includes(theme.hero) ? (
+        {hasOwnPhotoSpace(theme.hero) ? (
           <PhotoPicker label="Cover photo" value={data.heroPhoto} onChange={(v) => set({ heroPhoto: v })} />
-        ) : null}
+        ) : takesPhotoBehind(theme.hero) ? (
+          <>
+            <PhotoPicker
+              label="Your photo behind the cover"
+              value={data.heroPhoto}
+              onChange={(v) => set({ heroPhoto: v, coverWash: v ? (data.coverWash ?? COVER_WASH) : undefined })}
+            />
+            {data.heroPhoto ? (
+              <Toggle checked={data.coverWash !== undefined} onChange={(on) => set({ coverWash: on ? COVER_WASH : undefined })} label="Show it behind the words" />
+            ) : null}
+            {data.heroPhoto && data.coverWash !== undefined ? (
+              <Slider label="Fade, so the words stay easy to read" value={data.coverWash} min={0} max={95} onChange={(v) => set({ coverWash: v })} />
+            ) : null}
+          </>
+        ) : (
+          <p className="text-[0.8rem] text-fg/85">This cover has a live 3D scene. To show your own photo, choose another layout.</p>
+        )}
       </Group>
 
       {usesScene(theme) ? (

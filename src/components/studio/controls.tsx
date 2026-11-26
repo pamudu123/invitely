@@ -102,6 +102,18 @@ export function IconButton({
   );
 }
 
+export function Slider({ label, value, min, max, unit = "%", onChange }: { label: string; value: number; min: number; max: number; unit?: string; onChange: (v: number) => void }) {
+  return (
+    <label className="grid gap-1">
+      <span className="flex justify-between text-[0.78rem] font-medium text-fg/90">
+        <span>{label}</span>
+        <span className="tabular-nums text-fg/85">{Math.round(value)}{unit}</span>
+      </span>
+      <input type="range" min={min} max={max} value={value} onChange={(e) => onChange(Number(e.target.value))} className="h-8 w-full accent-[var(--color-brand)]" />
+    </label>
+  );
+}
+
 export function RowActions({
   index,
   count,

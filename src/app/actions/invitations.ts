@@ -3,6 +3,7 @@
 import { refresh } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import type { CardKind } from "@/lib/invitation/cardDesign";
 import type { InvitationData } from "@/lib/invitation/types";
 import { paymentsMode } from "@/lib/plans";
 import { slugify } from "@/lib/server/ids";
@@ -14,10 +15,12 @@ import {
   listInvitationsByTokens,
   recoverWithPin,
   sanitizeInvitation,
+  saveCardDesign,
   setInvitationOwner,
   setInvitationPin,
   setInvitationSlug,
   setInvitationStatus,
+  storeInlineImage,
   updateInvitationData,
   type InvitationSummary,
 } from "@/lib/server/invitations";
@@ -76,8 +79,26 @@ export async function saveInvitationAction(token: string | null, raw: unknown, o
   }
   const existing = await getInvitationByToken(token);
   if (!existing) return { ok: false, error: "not-found" };
+  // The studio does not edit the image and printed cards, so its copy of them may be old. Keep the stored one.
+  data.cards = existing.data.cards;
   await updateInvitationData(existing.id, data);
   return { ok: true, id: token, slug: existing.slug, data };
+}
+
+/** Save the host's changes to the image card or the printed card. */
+export async function saveCardDesignAction(token: string, kind: CardKind, design: unknown): Promise<{ ok: boolean }> {
+  if (kind !== "image" && kind !== "print") return { ok: false };
+  const inv = await getInvitationByToken(token);
+  if (!inv) return { ok: false };
+  return { ok: await saveCardDesign(inv.id, kind, design) };
+}
+
+/** Store a picture for a card and answer with its address. */
+export async function uploadCardImageAction(token: string, dataUrl: unknown): Promise<{ ok: true; url: string } | { ok: false }> {
+  const inv = await getInvitationByToken(token);
+  if (!inv) return { ok: false };
+  const url = await storeInlineImage(dataUrl);
+  return url ? { ok: true, url } : { ok: false };
 }
 
 export async function publishAction(token: string): Promise<{ ok: boolean; error?: string }> {

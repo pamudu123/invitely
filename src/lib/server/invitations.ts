@@ -1,6 +1,8 @@
 import "server-only";
+import { cleanCardDesign, cleanCardDesigns, type CardKind } from "@/lib/invitation/cardDesign";
 import { allSections, occasions } from "@/lib/invitation/occasions";
-import { sceneHeroes, sceneIds, themeScene, usesScene } from "@/lib/invitation/scenes";
+import { ornamentIds } from "@/lib/invitation/ornamentIds";
+import { sceneHeroes, themeScene, usesScene } from "@/lib/invitation/scenes";
 import { displayNames, normalizeInvitation, templates } from "@/lib/invitation/templates";
 import { fontPairs, palettes } from "@/lib/invitation/theme";
 import type { InvitationData, LanguageId, WishItem } from "@/lib/invitation/types";
@@ -89,6 +91,12 @@ async function resolveImage(value: unknown): Promise<string | undefined> {
   if (typeof value !== "string" || !value) return undefined;
   if (MEDIA_PATH.test(value)) return value;
   if (/^https:\/\/[^\s"'<>]{4,500}$/.test(value)) return value;
+  return storeInlineImage(value);
+}
+
+/** Store an image sent as a data URL. Answers undefined when it is not a picture we accept, or is too large. */
+export async function storeInlineImage(value: unknown): Promise<string | undefined> {
+  if (typeof value !== "string") return undefined;
   const m = DATA_URL.exec(value);
   if (!m) return undefined;
   const bytes = Buffer.from(m[2], "base64");
@@ -103,7 +111,6 @@ async function resolveImage(value: unknown): Promise<string | undefined> {
 }
 
 const ritualIds = ["lamp", "seal", "curtain", "lotus", "scratch", "balloon", "betel", "doors", "clapper", "gift", "play", "none"] as const;
-const ornamentIds = ["liyawel", "lotus", "botanical", "deco", "stars", "kolam", "geometric", "confetti", "waves", "mandala", "peacock", "paisley", "tracery", "film", "snow", "sun", "betel", "minimal", ...sceneIds] as const;
 const heroIds = ["classic", "arch", "photo", "monogram", "frame", "poster", "ticket", "gazette", "polaroid", ...sceneHeroes] as const;
 const musicIds = ["none", "serene", "warm", "joyful", "custom"] as const;
 const effectIds = ["none", "petals", "sparkles", "confetti", "snow"] as const;
@@ -183,6 +190,7 @@ export async function sanitizeInvitation(raw: unknown): Promise<InvitationData> 
     venueAddress: clip(d.venueAddress, 200),
     mapQuery: clip(d.mapQuery, 400),
     heroPhoto: await resolveImage(d.heroPhoto),
+    coverWash: typeof d.coverWash === "number" && Number.isFinite(d.coverWash) ? Math.min(95, Math.max(0, Math.round(d.coverWash))) : undefined,
     gallery,
     events: d.events.slice(0, 16).map((e) => ({
       id: clip(e.id, 24) || randomId(6),
@@ -226,6 +234,7 @@ export async function sanitizeInvitation(raw: unknown): Promise<InvitationData> 
     languages,
     translations,
     ritualHint: clip(d.ritualHint, 60),
+    cards: cleanCardDesigns(d.cards),
   };
 }
 
@@ -398,6 +407,18 @@ export async function updateInvitationData(id: string, data: InvitationData): Pr
   const res = await c.execute({
     sql: "UPDATE invitations SET data = ?, title = ?, occasion = ?, updated_at = ? WHERE id = ?",
     args: [JSON.stringify(data), displayNames(data), data.occasion, Date.now(), id],
+  });
+  return res.rowsAffected > 0;
+}
+
+/** Save one card design on its own, so it never competes with a studio save of the web card. */
+export async function saveCardDesign(id: string, kind: CardKind, raw: unknown): Promise<boolean> {
+  const c = await db();
+  const res = await c.execute({
+    sql: `UPDATE invitations SET updated_at = ?, data = json_set(
+            json_set(data, '$.cards', json(COALESCE(json_extract(data, '$.cards'), '{}'))), ?, json(?))
+          WHERE id = ?`,
+    args: [Date.now(), kind === "print" ? "$.cards.print" : "$.cards.image", JSON.stringify(cleanCardDesign(raw, kind)), id],
   });
   return res.rowsAffected > 0;
 }

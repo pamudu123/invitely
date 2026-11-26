@@ -1,4 +1,5 @@
 import { allSections, occasions } from "@/lib/invitation/occasions";
+import { ornamentIds } from "@/lib/invitation/ornamentIds";
 import { ritualInfo } from "@/lib/invitation/rituals";
 import { sceneHeroes, sceneIds } from "@/lib/invitation/scenes";
 import { templates } from "@/lib/invitation/templates";
@@ -37,7 +38,7 @@ export async function GET(req: Request, ctx: Ctx) {
       occasion: occasions.map((o) => o.id),
       "theme.paletteId": palettes.map((p) => p.id),
       "theme.fontPair": fontPairs.map((f) => f.id),
-      "theme.ornament": ["liyawel", "lotus", "botanical", "deco", "stars", "kolam", "geometric", "confetti", "waves", "mandala", "peacock", "paisley", "tracery", "film", "snow", "sun", "betel", "minimal", ...sceneIds],
+      "theme.ornament": ornamentIds,
       "theme.hero": ["classic", "arch", "photo", "monogram", "frame", "poster", "ticket", "gazette", "polaroid", ...sceneHeroes],
       "theme.scene": sceneIds,
       "theme.ritual": Object.keys(ritualInfo),

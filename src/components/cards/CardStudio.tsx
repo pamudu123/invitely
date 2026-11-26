@@ -1,10 +1,12 @@
 "use client";
 
-import { Download, FileDown, Scissors, Share2 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Download, FileDown, RotateCcw, Scissors, Share2 } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { saveCardDesignAction, uploadCardImageAction } from "@/app/actions/invitations";
 import { bareHost, useOrigin } from "@/components/dashboard/links";
 import { Button, Card, Field, Select } from "@/components/ui/kit";
 import { buildPdf, dataUrlToBlob, dataUrlToBytes, downloadBlob, renderFace, shareImage } from "@/lib/client/cardExport";
+import { emptyCardDesign, type CardDesign, type CardKind, type CardPatch, type CardSide, type CardSticker } from "@/lib/invitation/cardDesign";
 import {
   cardLayouts,
   defaultCardLayout,
@@ -19,6 +21,7 @@ import {
 import { getShape, shapeSegments, toPdfPath, toSvgPath, type ShapeId } from "@/lib/invitation/shapes";
 import { displayNames } from "@/lib/invitation/templates";
 import type { InvitationData } from "@/lib/invitation/types";
+import { CardDesigner, type DesignTab } from "./CardDesigner";
 import { CardFace } from "./CardFace";
 
 export interface CardGuest {
@@ -35,12 +38,15 @@ function Scaled({
   shape,
   children,
   refTo,
+  overlay,
 }: {
   format: CardFormat;
   max: number;
   shape?: ShapeId;
   children: React.ReactNode;
   refTo?: React.Ref<HTMLDivElement>;
+  /** Drawn over the preview and left out of the export */
+  overlay?: React.ReactNode;
 }) {
   const box = useRef<HTMLDivElement | null>(null);
   const [width, setWidth] = useState(max);
@@ -66,9 +72,118 @@ function Scaled({
         >
           {children}
         </div>
+        {overlay}
       </div>
     </div>
   );
+}
+
+const clamp = (v: number) => Math.min(100, Math.max(0, v));
+
+/** Handles for moving the host's small pictures on the preview. */
+function StickerHandles({
+  stickers,
+  selected,
+  onSelect,
+  onMove,
+}: {
+  stickers: CardSticker[];
+  selected: string;
+  onSelect: (id: string) => void;
+  onMove: (id: string, x: number, y: number) => void;
+}) {
+  const drag = useRef<{ id: string; px: number; py: number; x: number; y: number; w: number; h: number } | null>(null);
+  return stickers.map((s, i) => (
+    <button
+      key={s.id}
+      type="button"
+      aria-label={`Move picture ${i + 1}. Drag it or use the arrow keys.`}
+      aria-pressed={s.id === selected}
+      className={`absolute min-h-6 min-w-6 cursor-move touch-none rounded-sm outline-2 outline-offset-2 ${s.id === selected ? "outline-dashed outline-brand" : "outline-dashed outline-transparent hover:outline-brand/60"} focus-visible:outline-brand`}
+      style={{
+        left: `${s.x}%`,
+        top: `${s.y}%`,
+        width: `${s.w}%`,
+        aspectRatio: s.shape === "circle" ? "1" : String(s.ratio),
+        transform: `translate(-50%, -50%) rotate(${s.rotate}deg)`,
+      }}
+      onClick={() => onSelect(s.id)}
+      onPointerDown={(e) => {
+        const box = e.currentTarget.parentElement?.getBoundingClientRect();
+        if (!box || e.button !== 0) return;
+        e.currentTarget.setPointerCapture(e.pointerId);
+        drag.current = { id: s.id, px: e.clientX, py: e.clientY, x: s.x, y: s.y, w: box.width, h: box.height };
+        onSelect(s.id);
+      }}
+      onPointerMove={(e) => {
+        const d = drag.current;
+        if (!d || d.id !== s.id) return;
+        onMove(s.id, clamp(d.x + ((e.clientX - d.px) / d.w) * 100), clamp(d.y + ((e.clientY - d.py) / d.h) * 100));
+      }}
+      onPointerUp={() => { drag.current = null; }}
+      onPointerCancel={() => { drag.current = null; }}
+      onKeyDown={(e) => {
+        const step = e.shiftKey ? 5 : 1;
+        const by = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] }[e.key];
+        if (!by) return;
+        e.preventDefault();
+        onSelect(s.id);
+        onMove(s.id, clamp(s.x + by[0]), clamp(s.y + by[1]));
+      }}
+    />
+  ));
+}
+
+type SaveState = "idle" | "saving" | "saved" | "error";
+
+/** Keeps the design on screen and saves it shortly after each change, one request at a time. */
+function useSavedDesign(token: string, kind: CardKind, initial: CardDesign) {
+  const [design, setDesign] = useState(initial);
+  const [state, setState] = useState<SaveState>("idle");
+  const latest = useRef(initial);
+  const dirty = useRef(false);
+  const sending = useRef(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  const flush = useCallback(async () => {
+    clearTimeout(timer.current);
+    if (sending.current) return;
+    sending.current = true;
+    let ok = true;
+    while (ok && dirty.current) {
+      dirty.current = false;
+      ok = await saveCardDesignAction(token, kind, latest.current).then((r) => r.ok, () => false);
+      if (!ok) dirty.current = true;
+    }
+    sending.current = false;
+    setState(ok ? "saved" : "error");
+  }, [token, kind]);
+
+  const change = useCallback(
+    (patch: CardPatch) => {
+      latest.current = { ...latest.current, ...(typeof patch === "function" ? patch(latest.current) : patch) };
+      dirty.current = true;
+      setDesign(latest.current);
+      setState("saving");
+      clearTimeout(timer.current);
+      timer.current = setTimeout(() => void flush(), 700);
+    },
+    [flush],
+  );
+
+  useEffect(() => {
+    const warn = (e: BeforeUnloadEvent) => {
+      if (dirty.current || sending.current) e.preventDefault();
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => {
+      window.removeEventListener("beforeunload", warn);
+      // Leaving for another page in the app: send what is waiting.
+      if (dirty.current) void flush();
+    };
+  }, [flush]);
+
+  return { design, change, state, retry: flush };
 }
 
 const chip = (active: boolean) =>
@@ -78,12 +193,18 @@ const chip = (active: boolean) =>
 
 export function CardStudio({
   kind,
+  token,
+  saved,
   data,
   slug,
   published,
   guests,
 }: {
-  kind: "image" | "print";
+  kind: CardKind;
+  /** The card's manage token */
+  token: string;
+  /** Changes saved earlier */
+  saved?: CardDesign;
   data: InvitationData;
   slug: string;
   published: boolean;
@@ -92,24 +213,28 @@ export function CardStudio({
   const origin = useOrigin();
   const isPrint = kind === "print";
 
+  const { design: mine, change, state, retry } = useSavedDesign(token, kind, useState(() => saved ?? emptyCardDesign())[0]);
+  const [tab, setTab] = useState<DesignTab>(isPrint ? "colours" : "pictures");
+  const [selected, setSelected] = useState("");
+  const [resetting, setResetting] = useState(false);
+
   // Image card: a layout that follows the web design. Print card: a design from its own collection.
-  const [layout, setLayout] = useState<CardLayoutId>(() => {
-    const d = defaultCardLayout(data);
-    return d;
-  });
-  const [designId, setDesignId] = useState(printDesigns[0].id);
-  const design = getPrintDesign(designId);
-  const orientation = getCardLayout(layout).orientation;
+  const design = getPrintDesign((isPrint && mine.base) || printDesigns[0].id);
+  const imageLayout = !isPrint && mine.base ? (mine.base as CardLayoutId) : defaultCardLayout(data);
+  // A straight edged printed card can take another front, which brings its own tone.
+  const ownFront = isPrint && design.shape === "rect" && mine.layout ? getCardLayout(mine.layout) : undefined;
+  const layout = isPrint ? (ownFront?.id ?? design.face) : imageLayout;
+  const tone = ownFront ? (ownFront.darkBack ? "deep" : "paper") : design.tone;
+  const orientation = getCardLayout(imageLayout).orientation;
 
   const formats = useMemo(
     () => (isPrint ? design.sizes.map(printFormat) : formatsFor(orientation)),
     [isPrint, design, orientation],
   );
-  const [formatId, setFormatId] = useState("");
-  const format = formats.find((f) => f.id === formatId) ?? formats[0];
+  const format = formats.find((f) => f.id === mine.format) ?? formats[0];
+  const footer = mine.footer ?? "link";
 
   const [guestId, setGuestId] = useState("");
-  const [footer, setFooter] = useState<"link" | "qr" | "none">("link");
   const [busy, setBusy] = useState("");
   const [note, setNote] = useState("");
   const frontRef = useRef<HTMLDivElement | null>(null);
@@ -122,15 +247,32 @@ export function CardStudio({
   const shape = isPrint ? design.shape : undefined;
   const face = {
     data,
-    layout: isPrint ? design.face : layout,
+    design: mine,
+    layout,
     width: format.width,
     height: format.height,
     bleed: format.bleed,
     link,
     linkLabel,
     guest: guest ? { name: guest.name, seats: guest.seats } : undefined,
-    ...(isPrint ? { shape: design.shape, tone: design.tone, density: design.density, scale: design.scale } : {}),
+    ...(isPrint ? { shape: design.shape, tone, density: design.density, scale: design.scale } : {}),
   };
+
+  const upload = async (dataUrl: string) => {
+    const res = await uploadCardImageAction(token, dataUrl);
+    if (!res.ok) throw new Error("Could not upload that picture. Please try again.");
+    return res.url;
+  };
+
+  const handles = (side: CardSide) =>
+    tab === "pictures" ? (
+      <StickerHandles
+        stickers={mine.stickers.filter((x) => x.side === side)}
+        selected={selected}
+        onSelect={setSelected}
+        onMove={(id, x, y) => change((d) => ({ stickers: d.stickers.map((q) => (q.id === id ? { ...q, x, y } : q)) }))}
+      />
+    ) : null;
 
   const run = async (label: string, job: () => Promise<void>) => {
     setBusy(label);
@@ -206,7 +348,7 @@ export function CardStudio({
   const wide = format.orientation === "landscape";
 
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[23rem_1fr] lg:grid-rows-[auto_1fr] lg:gap-x-8 [&>*]:min-w-0">
+    <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[23rem_1fr] lg:grid-rows-[auto_1fr] lg:gap-x-8 [&>*]:min-w-0">
       {/* Choose a design. On a phone this sits above the preview as a swipeable row. */}
       <div className="grid grid-cols-1 content-start gap-5 lg:col-start-1 lg:row-start-1 [&>*]:min-w-0">
         {!published ? (
@@ -220,7 +362,7 @@ export function CardStudio({
           {isPrint ? (
             <div className="no-scrollbar -mx-4 mt-3 flex gap-2 overflow-x-auto px-4 lg:mx-0 lg:grid lg:grid-cols-2 lg:px-0">
               {printDesigns.map((d) => (
-                <button key={d.id} type="button" onClick={() => { setDesignId(d.id); setFormatId(""); }} aria-pressed={designId === d.id} className={`${chip(designId === d.id)} w-36 shrink-0 !px-3 !text-left lg:w-auto`}>
+                <button key={d.id} type="button" onClick={() => change({ base: d.id, layout: undefined, format: undefined })} aria-pressed={design.id === d.id} className={`${chip(design.id === d.id)} w-36 shrink-0 !px-3 !text-left lg:w-auto`}>
                   <span className="block text-fg">{d.name}</span>
                   <span className="block text-[0.75rem] text-fg/85">{getShape(d.shape).label}</span>
                 </button>
@@ -229,24 +371,72 @@ export function CardStudio({
           ) : (
             <div className="no-scrollbar -mx-4 mt-3 flex gap-2 overflow-x-auto px-4 lg:mx-0 lg:grid lg:grid-cols-3 lg:px-0">
               {cardLayouts.map((l) => (
-                <button key={l.id} type="button" onClick={() => { setLayout(l.id); setFormatId(""); }} aria-pressed={layout === l.id} title={l.description} className={`${chip(layout === l.id)} w-28 shrink-0 lg:w-auto`}>
+                <button key={l.id} type="button" onClick={() => change({ base: l.id, format: undefined })} aria-pressed={imageLayout === l.id} title={l.description} className={`${chip(imageLayout === l.id)} w-28 shrink-0 lg:w-auto`}>
                   {l.name}
                 </button>
               ))}
             </div>
           )}
           <p className="mt-2.5 text-[0.82rem] leading-snug text-fg/85">
-            {isPrint ? `${design.meaning}. ${design.description}` : getCardLayout(layout).description}
+            {isPrint ? `${design.meaning}. ${design.description}` : getCardLayout(imageLayout).description}
           </p>
         </div>
       </div>
 
-      {/* Options and downloads */}
+      {/* Changes, options and downloads */}
       <div className="order-last grid grid-cols-1 content-start gap-5 lg:order-none lg:col-start-1 lg:row-start-2 [&>*]:min-w-0">
+        <section className="rounded-2xl border border-fg/15 bg-page-2 p-4" aria-label="Make it yours">
+          <div className="mb-3.5 flex min-h-6 items-center justify-between gap-3">
+            <p className="label text-brand">Make it yours</p>
+            <p role="status" className="text-[0.78rem] text-fg/85">
+              {state === "saving" ? "Saving…" : state === "saved" ? "Saved" : null}
+              {state === "error" ? (
+                <button type="button" onClick={() => void retry()} className="text-red-700 underline underline-offset-2">Not saved. Try again</button>
+              ) : null}
+            </p>
+          </div>
+          <CardDesigner
+            kind={kind}
+            data={data}
+            design={mine}
+            change={change}
+            layout={layout}
+            shape={shape}
+            format={format}
+            tab={tab}
+            setTab={(next) => { setTab(next); setSelected(""); }}
+            selected={selected}
+            select={setSelected}
+            upload={upload}
+          />
+          <div className="mt-4 border-t border-fg/15 pt-3">
+            {resetting ? (
+              <div className="flex flex-wrap items-center gap-2 text-[0.82rem]">
+                <span>Remove all your changes to this card?</span>
+                <Button
+                  size="sm"
+                  variant="danger"
+                  onClick={() => {
+                    change({ ...emptyCardDesign(), layout: undefined, footer: undefined, front: undefined, back: undefined });
+                    setSelected("");
+                    setResetting(false);
+                  }}
+                >
+                  Remove
+                </Button>
+                <Button size="sm" variant="ghost" onClick={() => setResetting(false)}>Keep</Button>
+              </div>
+            ) : (
+              <button type="button" onClick={() => setResetting(true)} className="inline-flex min-h-8 items-center gap-1.5 text-[0.8rem] text-fg/85 hover:text-fg">
+                <RotateCcw size={14} strokeWidth={1.6} aria-hidden /> Match the web card again
+              </button>
+            )}
+          </div>
+        </section>
 
         {formats.length > 1 ? (
           <Field label={isPrint ? "Finished size" : "Shape"}>
-            <Select value={format.id} onChange={(e) => setFormatId(e.target.value)}>
+            <Select value={format.id} onChange={(e) => change({ format: e.target.value })}>
               {formats.map((f) => (
                 <option key={f.id} value={f.id}>{f.label}{f.hint ? `: ${f.hint}` : ""}</option>
               ))}
@@ -258,7 +448,7 @@ export function CardStudio({
 
         {!isPrint ? (
           <Field label="At the bottom">
-            <Select value={footer} onChange={(e) => setFooter(e.target.value as typeof footer)}>
+            <Select value={footer} onChange={(e) => change({ footer: e.target.value as typeof footer })}>
               <option value="link">Show the invitation link</option>
               <option value="qr">Show a QR code</option>
               <option value="none">Nothing</option>
@@ -318,18 +508,18 @@ export function CardStudio({
         </Card>
       </div>
 
-      {/* Preview */}
-      <div className={`grid content-start justify-items-center gap-6 lg:col-start-2 lg:row-span-2 lg:row-start-1 [&>*]:min-w-0 ${isPrint && !wide ? "grid-cols-2" : "grid-cols-1"}`}>
+      {/* Preview. Stays in view while the changes scroll past, where it leaves enough room. */}
+      <div className={`grid content-start justify-items-center gap-6 lg:sticky lg:top-24 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-start [&>*]:min-w-0 ${isPrint && !wide ? "grid-cols-2 max-lg:sticky max-lg:top-16 max-lg:z-20 max-lg:-mx-4 max-lg:bg-page max-lg:px-4 max-lg:py-3 sm:max-lg:static" : "grid-cols-1"}`}>
         <div className="grid w-full grid-cols-1 justify-items-center gap-3 [&>*]:min-w-0">
           {isPrint ? <p className="label text-fg/85">Front</p> : null}
-          <Scaled format={format} max={wide ? 640 : 360} shape={shape} refTo={frontRef}>
+          <Scaled format={format} max={wide ? 640 : 360} shape={shape} refTo={frontRef} overlay={handles("front")}>
             <CardFace {...face} side="front" footer={isPrint ? "none" : footer} />
           </Scaled>
         </div>
         {isPrint ? (
           <div className="grid w-full grid-cols-1 justify-items-center gap-3 [&>*]:min-w-0">
             <p className="label text-fg/85">Back</p>
-            <Scaled format={format} max={wide ? 640 : 360} shape={shape} refTo={backRef}>
+            <Scaled format={format} max={wide ? 640 : 360} shape={shape} refTo={backRef} overlay={handles("back")}>
               <CardFace {...face} side="back" />
             </Scaled>
           </div>
