@@ -48,8 +48,8 @@ export default function PrintCardsPage() {
             the map, the live schedule and the RSVP.
           </p>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-fg/85">
-            A printed card is an optional add-on to any web card. You download a print-ready PDF with bleed and a cut line,
-            and take it to the print shop of your choice.
+            A printed card is an optional add-on to any web card. Change its colours, lettering and wording, or add
+            your own pictures. Then download a print-ready PDF with bleed and a cut line, and take it to the print shop of your choice.
           </p>
 
           <ul className="mt-16 grid grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 xl:grid-cols-3">

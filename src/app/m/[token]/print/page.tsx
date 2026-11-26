@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { CardStudio } from "@/components/cards/CardStudio";
+import { cleanCardDesign } from "@/lib/invitation/cardDesign";
 import { getInvitationByToken, listGuests } from "@/lib/server/invitations";
 
 export const metadata: Metadata = { title: "Print card" };
@@ -23,10 +24,12 @@ async function Content({ params }: { params: Props["params"] }) {
       <p className="label mt-7 text-brand">Optional add-on</p>
       <h1 className="display mt-3 text-5xl sm:text-6xl">A card to hold in the hand.</h1>
       <p className="mb-9 mt-4 max-w-2xl text-sm leading-relaxed text-fg/85">
-        For the guests who should receive something on paper. Choose a design for a physical card. The back carries a QR code that opens your web card, so the map, live schedule and RSVP are one scan away.
+        For the guests who should receive something on paper. Choose a design for a physical card, then make it yours: change the colours, lettering and wording, or add your own pictures. The back carries a QR code that opens your web card, so the map, live schedule and RSVP are one scan away.
       </p>
       <CardStudio
         kind="print"
+        token={inv.manageToken}
+        saved={inv.data.cards?.print ? cleanCardDesign(inv.data.cards.print, "print") : undefined}
         data={inv.data}
         slug={inv.slug}
         published={inv.status === "published"}

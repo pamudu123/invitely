@@ -97,6 +97,7 @@ Next.js 16 (App Router with Cache Components), React 19, TypeScript, Tailwind CS
 - Occasions and default wording: `src/lib/invitation/occasions.ts`
 - Sinhala and Tamil labels: `src/lib/invitation/labels.ts`
 - Ornaments: `src/components/invitation/ornaments.tsx`
+- What hosts can change on image and printed cards: `src/lib/invitation/cardDesign.ts` and `src/components/cards/CardDesigner.tsx`
 - Openings: `src/components/invitation/rituals/`
 - Likes: `src/components/site/LikeButton.tsx`, `src/lib/client/likes.ts` and `src/app/api/likes/`
 - Sport and profession designs: `src/lib/invitation/templates-scenes.ts`

@@ -3,6 +3,7 @@
 import { Music, VolumeX } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState, type CSSProperties, type Ref } from "react";
 import { getLabels, languageNames } from "@/lib/invitation/labels";
+import { photoBehindCover } from "@/lib/invitation/cover";
 import { getPalette, themeVars } from "@/lib/invitation/theme";
 import { usesScene } from "@/lib/invitation/scenes";
 import { zonedToUtc } from "@/lib/invitation/time";
@@ -166,9 +167,22 @@ export function InvitationView({
   const sections: SectionId[] =
     phase === "after" && !data.sections.includes("message") ? ["message", ...data.sections] : data.sections;
 
+  // The host's photo behind a paper cover, with enough paper colour over it to keep the words readable.
+  const behind = photoBehindCover(data);
+  const coverVars = (
+    behind ? { "--cover-mount": "transparent", "--cover-paper": `color-mix(in srgb, var(--inv-bg) ${data.coverWash}%, transparent)` } : {}
+  ) as CSSProperties;
+
   const content = (
     <div className={`inv-root ${opened ? "" : "inv-waiting"}`} lang={activeLang}>
-      <div data-section="cover" style={{ position: "relative" }}>
+      <div data-section="cover" style={{ position: "relative", isolation: "isolate", ...coverVars }}>
+        {behind ? (
+          <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={data.heroPhoto} alt="" className="h-full w-full object-cover" />
+            {data.theme.hero === "frame" ? null : <div className="absolute inset-0" style={{ background: "var(--cover-paper)" }} />}
+          </div>
+        ) : null}
         <SceneLiveContext value={coverGone}>
           <Hero {...common} />
         </SceneLiveContext>

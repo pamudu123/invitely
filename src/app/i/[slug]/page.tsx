@@ -66,7 +66,7 @@ async function Invitation({ params, searchParams }: Props) {
         </div>
       ) : null}
       <InvitationView
-        data={inv.data}
+        data={{ ...inv.data, cards: undefined }}
         guest={guest ? { name: guest.name, seats: guest.seats, token: guest.token, table: guest.table || undefined } : undefined}
         wishes={wishes}
         priorRsvp={prior ? { attending: prior.attending, partySize: prior.partySize } : null}

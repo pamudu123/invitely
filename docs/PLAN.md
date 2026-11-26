@@ -179,6 +179,8 @@ Two separate features sit on top of every web card.
 
 Every printed card has a back with a QR code that opens the web card, so paper and screen work together. A guest can be picked to print their name and their personal QR code. The download is a PDF with the front and back at 300 dpi and a 3 mm bleed, plus a page with the cut line as a vector outline, which is what print shops ask for when a card is die cut or laser cut.
 
+**Make it yours.** Both cards start out matching the web card, and a host can change each one on its own: colours, lettering, type sizes, light or dark, wording, ornament, and which parts show. Straight edged printed cards can also take another front layout. Hosts upload their own pictures: a main picture behind the words, in a round frame above the names, or as the whole side for artwork made elsewhere, plus up to six logos or small pictures they drag into place. Printed cards warn when a picture is too small to print well. Changes save by themselves and are stored with the card under `cards.image` and `cards.print`, apart from what the studio edits. On the web card, paper covers can show a photo behind the words.
+
 Ideas held for later: gatefold and pocket folds, a sesath fan, a pun kalasa pot, a standing lamp silhouette, vellum overlays and belly bands.
 
 ## 4. Pricing proposal

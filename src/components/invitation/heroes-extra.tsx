@@ -27,10 +27,10 @@ const screen = { minHeight: "var(--inv-screen)" };
 function FrameHero({ data, lang, kicker }: Props) {
   const year = data.date.slice(0, 4);
   return (
-    <header className="flex p-3" style={{ ...screen, background: "var(--inv-deep)" }}>
+    <header className="flex p-3" style={{ ...screen, background: "var(--cover-mount, var(--inv-deep))" }}>
       <div
         className="inv-paper relative flex flex-1 flex-col items-center justify-center overflow-hidden px-8 py-16 text-center"
-        style={{ background: "var(--inv-bg)", border: "1px solid var(--inv-accent)" }}
+        style={{ background: "var(--cover-paper, var(--inv-bg))", border: "1px solid var(--inv-accent)" }}
       >
         <div className="pointer-events-none absolute inset-2 border" style={{ borderColor: "var(--inv-accent)", opacity: 0.45 }} />
         <CornerFrame kind={data.theme.ornament} size={68} inset={14} color="var(--inv-accent)" />

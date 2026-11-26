@@ -21,6 +21,19 @@ export async function uploadPhotos(data: InvitationData): Promise<Map<string, st
   if (!inline.length) return stored;
 
   const blobs = await Promise.all(inline.map(async (src) => (await fetch(src)).blob()));
+  const urls = await storeBlobs(blobs);
+  urls.forEach((url, i) => stored.set(inline[i], url));
+  return stored;
+}
+
+/** Upload one picture and answer with its stored address. */
+export async function uploadImage(dataUrl: string): Promise<string> {
+  const [url] = await storeBlobs([await (await fetch(dataUrl)).blob()]);
+  return url;
+}
+
+/** Send pictures to storage and answer with their addresses, in the same order. Throws if any fails. */
+async function storeBlobs(blobs: Blob[]): Promise<string[]> {
   const res = await fetch("/api/uploads", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -29,6 +42,7 @@ export async function uploadPhotos(data: InvitationData): Promise<Map<string, st
   if (!res.ok) throw new Error("Could not start the upload.");
   const { tickets } = (await res.json()) as { tickets: { put: string; url: string }[] };
 
+  const urls: string[] = [];
   // Three at a time keeps a slow phone connection responsive.
   let next = 0;
   const worker = async () => {
@@ -40,9 +54,9 @@ export async function uploadPhotos(data: InvitationData): Promise<Map<string, st
         body: blobs[i],
       });
       if (!put.ok) throw new Error("Could not upload a photo.");
-      stored.set(inline[i], tickets[i].url);
+      urls[i] = tickets[i].url;
     }
   };
   await Promise.all([worker(), worker(), worker()]);
-  return stored;
+  return urls;
 }
