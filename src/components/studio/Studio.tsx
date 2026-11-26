@@ -190,7 +190,6 @@ export function Studio({ saved, templateId, occasion, paletteId }: StudioProps) 
     data,
     set: (patch) => change((d) => ({ ...d, ...patch })),
     setTheme: (patch: Partial<ThemeConfig>) => change((d) => ({ ...d, theme: { ...d.theme, ...patch } })),
-    replace: (next) => change(() => next),
     replay: () => {
       setSkipRitual(false);
       setPreviewKey((k) => k + 1);

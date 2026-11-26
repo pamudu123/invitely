@@ -1,7 +1,7 @@
 "use client";
 
 import { Music, VolumeX } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useMemo, useState, type CSSProperties, type Ref } from "react";
 import { getLabels, languageNames } from "@/lib/invitation/labels";
 import { getPalette, themeVars } from "@/lib/invitation/theme";
 import { usesScene } from "@/lib/invitation/scenes";
@@ -47,6 +47,10 @@ export interface InvitationViewProps {
   branding?: boolean;
   /** Start with this language */
   initialLanguage?: LanguageId;
+  /** The scrolling element, in embedded mode */
+  scrollerRef?: Ref<HTMLDivElement>;
+  /** Called once the opening is over and the card can be scrolled */
+  onEntered?: () => void;
 }
 
 const demoRsvp: RsvpHandler = async () => {
@@ -66,6 +70,8 @@ export function InvitationView({
   lite = false,
   branding = true,
   initialLanguage,
+  scrollerRef,
+  onEntered,
 }: InvitationViewProps) {
   const hasRitual = data.theme.ritual !== "none" && !skipRitual;
   const [opened, setOpened] = useState(!hasRitual);
@@ -86,6 +92,10 @@ export function InvitationView({
     if (now < dayStart + 30 * 3600_000) return "today";
     return "after";
   }, [phaseOverride, now, data.date, data.timezone]);
+
+  useEffect(() => {
+    if (coverGone) onEntered?.();
+  }, [coverGone, onEntered]);
 
   // Lock page scroll while the cover is up (full page mode only).
   useEffect(() => {
@@ -176,6 +186,7 @@ export function InvitationView({
     <div className={`inv-shell ${usesScene(data.theme) ? "inv-3d" : ""} ${embedded ? "absolute inset-0 overflow-hidden" : "relative"}`} style={{ ...shellStyle, background: palette.bg }}>
       {embedded ? (
         <div
+          ref={scrollerRef}
           className="no-scrollbar absolute inset-0 overflow-x-hidden"
           style={{ containerType: "size", overflowY: coverGone ? "auto" : "hidden" }}
         >

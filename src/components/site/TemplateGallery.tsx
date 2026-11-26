@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useRef, type ReactNode } from "react";
+import { Suspense, useEffect, useRef, type MouseEvent, type ReactNode } from "react";
+import { DesignPreview } from "@/components/site/DesignPreview";
 import { LikeButton, UnlikeButton } from "@/components/site/LikeButton";
 import { Button, ButtonLink } from "@/components/ui/kit";
 import { useLikes } from "@/lib/client/likes";
@@ -17,6 +18,7 @@ export interface GalleryItem {
   alsoFor: OccasionId[];
   tags: string[];
   opening: string;
+  hasOpening: boolean;
   cover: ReactNode;
 }
 
@@ -42,9 +44,17 @@ function setParam(key: "show" | "sort", value: string | null) {
   window.history.replaceState(null, "", query ? `?${query}` : window.location.pathname);
 }
 
+function previewAddress(id: string | null): string {
+  const params = new URLSearchParams(window.location.search);
+  if (id) params.set("preview", id);
+  else params.delete("preview");
+  const query = params.toString();
+  return query ? `?${query}` : window.location.pathname;
+}
+
 export function TemplateGallery({ items }: { items: GalleryItem[] }) {
   return (
-    <Suspense fallback={<GalleryView items={items} filter="all" sort="picks" />}>
+    <Suspense fallback={<GalleryView items={items} filter="all" sort="picks" preview={null} />}>
       <GalleryFromAddress items={items} />
     </Suspense>
   );
@@ -58,11 +68,12 @@ function GalleryFromAddress({ items }: { items: GalleryItem[] }) {
       items={items}
       filter={params.get("show") === "liked" ? "liked" : occasion ?? "all"}
       sort={params.get("sort") === "liked" ? "liked" : "picks"}
+      preview={params.get("preview")}
     />
   );
 }
 
-function GalleryView({ items, filter, sort }: { items: GalleryItem[]; filter: GalleryFilter; sort: GallerySort }) {
+function GalleryView({ items, filter, sort, preview }: { items: GalleryItem[]; filter: GalleryFilter; sort: GallerySort; preview: string | null }) {
   const { totals, mine } = useLikes();
   const bar = useRef<HTMLDivElement | null>(null);
 
@@ -87,6 +98,36 @@ function GalleryView({ items, filter, sort }: { items: GalleryItem[]; filter: Ga
   const myPrinted = mine.filter((id) => id.startsWith("print-")).length;
 
   const choose = (f: GalleryFilter) => setParam("show", f);
+
+  // The open preview lives in the address too, so a phone's back button closes it.
+  const pushed = useRef(false);
+  useEffect(() => {
+    if (!preview) pushed.current = false;
+  }, [preview]);
+  const openPreview = (id: string) => (e: MouseEvent) => {
+    // Opening in a new tab still works, and goes to the design's own page.
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    pushed.current = true;
+    window.history.pushState(null, "", previewAddress(id));
+  };
+  const closePreview = () => {
+    if (pushed.current) window.history.back();
+    else window.history.replaceState(null, "", previewAddress(null));
+    pushed.current = false;
+  };
+  const current = preview ? items.find((i) => i.id === preview) : undefined;
+  const at = current ? shown.indexOf(current) : -1;
+  const step = (by: number) => {
+    if (!shown.length) return;
+    const next = shown[(Math.max(at, 0) + by + shown.length) % shown.length];
+    window.history.replaceState(null, "", previewAddress(next.id));
+  };
+  const occasionFor = (item: GalleryItem) => (occasion && item.occasion !== occasion && item.alsoFor.includes(occasion) ? occasion : item.occasion);
+  const studioHref = (item: GalleryItem) => {
+    const o = occasionFor(item);
+    return `/studio/new?template=${item.id}${o !== item.occasion ? `&occasion=${o}` : ""}`;
+  };
 
   return (
     <>
@@ -145,11 +186,10 @@ function GalleryView({ items, filter, sort }: { items: GalleryItem[]; filter: Ga
 
       <ul className="mt-6 grid grid-cols-2 gap-x-4 gap-y-12 sm:gap-x-6 md:grid-cols-3 xl:grid-cols-4">
         {shown.map((item) => {
-          const occasionParam = occasion && item.occasion !== occasion ? `&occasion=${occasion}` : "";
           return (
             <li key={item.id} className="group flex flex-col">
               <div className="relative transition-transform duration-500 ease-out-soft group-hover:-translate-y-1.5">
-                <Link href={`/templates/${item.id}`} className="block overflow-hidden rounded-[1.4rem] border border-fg/10" aria-label={`${item.name} live demo`}>
+                <Link href={`/templates/${item.id}`} prefetch={false} onClick={openPreview(item.id)} className="block overflow-hidden rounded-[1.4rem] border border-fg/10" aria-haspopup="dialog" aria-label={`Preview ${item.name}`}>
                   {item.cover}
                 </Link>
                 <LikeButton id={item.id} name={item.name} className="absolute bottom-3 right-3" />
@@ -165,14 +205,29 @@ function GalleryView({ items, filter, sort }: { items: GalleryItem[]; filter: Ga
                 ))}
               </p>
               <div className="mt-4 grid gap-2 sm:grid-cols-2">
-                <ButtonLink href={`/studio/new?template=${item.id}${occasionParam}`} size="sm">Use this</ButtonLink>
-                <ButtonLink href={`/templates/${item.id}`} size="sm" variant="secondary">Live demo</ButtonLink>
+                <ButtonLink href={studioHref(item)} size="sm">Use this</ButtonLink>
+                <ButtonLink href={`/templates/${item.id}`} prefetch={false} onClick={openPreview(item.id)} aria-haspopup="dialog" size="sm" variant="secondary">Preview</ButtonLink>
               </div>
               {filter === "liked" ? <UnlikeButton id={item.id} name={item.name} /> : null}
             </li>
           );
         })}
       </ul>
+
+      {current ? (
+        <DesignPreview
+          id={current.id}
+          name={current.name}
+          meaning={current.meaning}
+          occasion={occasionFor(current)}
+          hasOpening={current.hasOpening}
+          place={at >= 0 ? `${at + 1} of ${shown.length}` : ""}
+          useHref={studioHref(current)}
+          onClose={closePreview}
+          onPrevious={() => step(-1)}
+          onNext={() => step(1)}
+        />
+      ) : null}
     </>
   );
 }

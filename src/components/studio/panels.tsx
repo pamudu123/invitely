@@ -2,13 +2,12 @@
 
 import { Check, ImagePlus, Plus, X } from "lucide-react";
 import { useRef, useState } from "react";
-import { Crest, Divider, ornamentLabels } from "@/components/invitation/ornaments";
+import { Divider, ornamentLabels } from "@/components/invitation/ornaments";
 import { ritualInfo } from "@/lib/invitation/rituals";
 import { Field, Input, Select, Textarea } from "@/components/ui/kit";
 import { compressImage } from "@/lib/client/image";
 import { allSections, getOccasion, occasions, sectionLabels } from "@/lib/invitation/occasions";
 import { sceneIds, sceneInfo, themeScene, usesScene } from "@/lib/invitation/scenes";
-import { applyTemplateDesign, templates } from "@/lib/invitation/templates";
 import { fontPairs, getPalette, palettes } from "@/lib/invitation/theme";
 import type {
   EffectId,
@@ -22,13 +21,12 @@ import type {
   SectionId,
   ThemeConfig,
 } from "@/lib/invitation/types";
-import { Group, IconButton, PhotoPicker, RowActions, Tile, Toggle, moveItem } from "./controls";
+import { Fold, Group, IconButton, PhotoPicker, RowActions, Tile, Toggle, moveItem } from "./controls";
 
 export interface PanelProps {
   data: InvitationData;
   set: (patch: Partial<InvitationData>) => void;
   setTheme: (patch: Partial<ThemeConfig>) => void;
-  replace: (next: InvitationData) => void;
   /** Replay the opening in the preview */
   replay: () => void;
 }
@@ -75,51 +73,39 @@ const customKeys: { key: keyof Palette; label: string }[] = [
   { key: "deep", label: "Deep tone" },
 ];
 
-export function DesignPanel({ data, setTheme, replace, set, replay }: PanelProps) {
+/** A few choices first, always with the current one, and the rest on request. */
+function useShortList<T>(all: T[], isActive: (item: T) => boolean, count: number) {
+  const [full, setFull] = useState(false);
+  const first = all.slice(0, count);
+  const current = all.find(isActive);
+  const short = current && !first.includes(current) ? [current, ...first.slice(0, count - 1)] : first;
+  const more =
+    all.length > count ? (
+      <button type="button" aria-expanded={full} className="min-h-11 justify-self-start text-[0.82rem] text-brand underline-offset-4 hover:underline" onClick={() => setFull((v) => !v)}>
+        {full ? "Show fewer" : `Show all ${all.length}`}
+      </button>
+    ) : null;
+  return { list: full ? all : short, more };
+}
+
+const allOrnaments = Object.keys(ornamentLabels) as OrnamentId[];
+
+type DesignGroup = "colours" | "lettering" | "ornament" | "cover" | "scene" | "opening" | "sound" | "effect";
+
+export function DesignPanel({ data, setTheme, set, replay }: PanelProps) {
   const theme = data.theme;
   const palette = getPalette(theme);
-  const [showAllTemplates, setShowAllTemplates] = useState(false);
-  const matching = templates.filter((t) => t.occasion === data.occasion || t.alsoFor.includes(data.occasion));
-  const shown = showAllTemplates ? templates : matching.length ? matching : templates;
+  const colours = useShortList(palettes, (p) => p.id === theme.paletteId && !theme.custom, 12);
+  const ornaments = useShortList(allOrnaments, (o) => o === theme.ornament, 8);
+  // One group open at a time, so there is little to scroll past.
+  const [open, setOpen] = useState<DesignGroup | null>(null);
+  const fold = (id: DesignGroup) => ({ open: open === id, onToggle: () => setOpen((o) => (o === id ? null : id)) });
 
   return (
     <>
-      <Group title="Template" hint="Switching keeps everything you have written.">
-        <div className="no-scrollbar -mx-5 flex snap-x gap-2.5 overflow-x-auto px-5 pb-1">
-          {shown.map((tpl) => {
-            const p = palettes.find((x) => x.id === tpl.theme.paletteId) ?? palettes[0];
-            return (
-              <Tile
-                key={tpl.id}
-                active={data.templateId === tpl.id}
-                onClick={() => {
-                  replace(applyTemplateDesign(data, tpl.id));
-                  replay();
-                }}
-                className="w-[6.6rem] shrink-0 snap-start"
-              >
-                <span className="flex h-24 flex-col items-center justify-center gap-1" style={{ background: p.bg, color: p.ink }}>
-                  <Crest kind={tpl.theme.ornament} className="w-12" style={{ color: p.accent }} />
-                  <span className="h-1 w-8 rounded-full" style={{ background: p.deep }} />
-                </span>
-                <span className="block px-2.5 py-2">
-                  <span className="block truncate text-[0.82rem] text-fg">{tpl.name}</span>
-                  <span className="block truncate text-[0.75rem] text-fg/85">{tpl.meaning}</span>
-                </span>
-              </Tile>
-            );
-          })}
-        </div>
-        {matching.length && matching.length < templates.length ? (
-          <button type="button" className="justify-self-start text-[0.8rem] text-brand underline-offset-4 hover:underline" onClick={() => setShowAllTemplates((v) => !v)}>
-            {showAllTemplates ? "Show designs for this occasion" : `Show all ${templates.length} designs`}
-          </button>
-        ) : null}
-      </Group>
-
-      <Group title="Colours">
+      <Fold title="Colours" value={theme.custom ? "Your colours" : palettes.find((p) => p.id === theme.paletteId)?.label} {...fold("colours")}>
         <div className="grid grid-cols-4 gap-2">
-          {palettes.map((p) => (
+          {colours.list.map((p) => (
             <Tile
               key={p.id}
               label={p.label}
@@ -138,6 +124,7 @@ export function DesignPanel({ data, setTheme, replace, set, replay }: PanelProps
             </Tile>
           ))}
         </div>
+        {colours.more}
         <div className="grid grid-cols-4 gap-2">
           {customKeys.map(({ key, label }) => (
             <label key={key} className="grid gap-1 text-center">
@@ -159,9 +146,9 @@ export function DesignPanel({ data, setTheme, replace, set, replay }: PanelProps
             Reset to the palette colours
           </button>
         ) : null}
-      </Group>
+      </Fold>
 
-      <Group title="Lettering">
+      <Fold title="Lettering" value={fontPairs.find((f) => f.id === theme.fontPair)?.label} {...fold("lettering")}>
         <div className="grid grid-cols-3 gap-2">
           {fontPairs.map((f) => (
             <Tile key={f.id} active={theme.fontPair === f.id} onClick={() => setTheme({ fontPair: f.id })} className="px-2 py-3 text-center">
@@ -182,20 +169,21 @@ export function DesignPanel({ data, setTheme, replace, set, replay }: PanelProps
             </Tile>
           ))}
         </div>
-      </Group>
+      </Fold>
 
-      <Group title="Ornament">
+      <Fold title="Ornament" value={ornamentLabels[theme.ornament]} {...fold("ornament")}>
         <div className="grid grid-cols-2 gap-2">
-          {(Object.keys(ornamentLabels) as OrnamentId[]).map((o) => (
+          {ornaments.list.map((o) => (
             <Tile key={o} active={theme.ornament === o} onClick={() => setTheme({ ornament: o })} className="px-2.5 py-2.5 text-center">
               <Divider kind={o} className="mx-auto h-6 w-full text-brand" />
               <span className="mt-1 block text-[0.75rem] text-fg/90">{ornamentLabels[o]}</span>
             </Tile>
           ))}
         </div>
-      </Group>
+        {ornaments.more}
+      </Fold>
 
-      <Group title="Cover layout">
+      <Fold title="Cover layout" value={heroOptions.find((h) => h.id === theme.hero)?.label} {...fold("cover")}>
         <div className="grid grid-cols-2 gap-2">
           {heroOptions.map((h) => (
             <Tile key={h.id} active={theme.hero === h.id} onClick={() => setTheme({ hero: h.id })} className="px-3 py-2.5">
@@ -207,10 +195,10 @@ export function DesignPanel({ data, setTheme, replace, set, replay }: PanelProps
         {["arch", "photo", "gazette", "polaroid"].includes(theme.hero) ? (
           <PhotoPicker label="Cover photo" value={data.heroPhoto} onChange={(v) => set({ heroPhoto: v })} />
         ) : null}
-      </Group>
+      </Fold>
 
       {usesScene(theme) ? (
-        <Group title="3D scene" hint="Guests can turn it with a finger and tap it to play.">
+        <Fold title="3D scene" value={sceneInfo[themeScene(theme)].label} hint="Guests can turn it with a finger and tap it to play." {...fold("scene")}>
           {(["Sports", "Professions"] as const).map((g) => (
             <div key={g}>
               <p className="mb-2 text-[0.75rem] text-fg/85">{g}</p>
@@ -235,10 +223,10 @@ export function DesignPanel({ data, setTheme, replace, set, replay }: PanelProps
               </div>
             </div>
           ))}
-        </Group>
+        </Fold>
       ) : null}
 
-      <Group title="Opening" hint="The first thing guests do. It also lets music start on phones.">
+      <Fold title="Opening" value={ritualInfo[theme.ritual].label} hint="The first thing guests do. It also lets music start on phones." {...fold("opening")}>
         <div className="grid grid-cols-2 gap-2">
           {(Object.keys(ritualInfo) as RitualId[]).map((r) => (
             <Tile
@@ -261,9 +249,9 @@ export function DesignPanel({ data, setTheme, replace, set, replay }: PanelProps
             <Input value={data.ritualHint} maxLength={60} onChange={(e) => set({ ritualHint: e.target.value })} />
           </Field>
         ) : null}
-      </Group>
+      </Fold>
 
-      <Group title="Sound" hint="Soundscapes are generated live in the browser, so there is nothing to license.">
+      <Fold title="Sound" value={musicOptions.find((m) => m.id === theme.music)?.label} hint="Soundscapes are generated live in the browser, so there is nothing to license." {...fold("sound")}>
         <div className="grid grid-cols-3 gap-2">
           {musicOptions.map((m) => (
             <Tile key={m.id} active={theme.music === m.id} onClick={() => setTheme({ music: m.id })} className="px-2.5 py-2.5">
@@ -277,9 +265,9 @@ export function DesignPanel({ data, setTheme, replace, set, replay }: PanelProps
             <Input type="url" inputMode="url" placeholder="https://…/song.mp3" value={theme.musicUrl ?? ""} onChange={(e) => setTheme({ musicUrl: e.target.value })} />
           </Field>
         ) : null}
-      </Group>
+      </Fold>
 
-      <Group title="Floating effect">
+      <Fold title="Floating effect" value={effectOptions.find((e) => e.id === theme.effect)?.label} {...fold("effect")}>
         <div className="grid grid-cols-5 gap-2">
           {effectOptions.map((e) => (
             <Tile key={e.id} active={theme.effect === e.id} onClick={() => setTheme({ effect: e.id })} className="px-1 py-2.5 text-center">
@@ -287,7 +275,7 @@ export function DesignPanel({ data, setTheme, replace, set, replay }: PanelProps
             </Tile>
           ))}
         </div>
-      </Group>
+      </Fold>
     </>
   );
 }
