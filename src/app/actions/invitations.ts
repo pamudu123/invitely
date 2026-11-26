@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import type { InvitationData } from "@/lib/invitation/types";
 import { paymentsMode } from "@/lib/plans";
 import { slugify } from "@/lib/server/ids";
+import { allow, callerKey } from "@/lib/server/ratelimit";
 import {
   cleanPin,
   createInvitation,
@@ -37,21 +38,12 @@ export type SaveResult =
   | { ok: true; id: string; slug: string; data: InvitationData }
   | { ok: false; error: "owner" | "not-found" | "invalid" | "busy" };
 
-// Light guard against scripted card creation. Per server instance, so it is a speed bump and not a wall.
-const created = new Map<string, number[]>();
 const CREATE_LIMIT = 20;
 const HOUR = 3600_000;
 
+/** Slows down scripted card creation. */
 async function allowCreate(): Promise<boolean> {
-  const h = await headers();
-  const ip = (h.get("x-forwarded-for") ?? "").split(",")[0].trim() || "local";
-  const now = Date.now();
-  const recent = (created.get(ip) ?? []).filter((t) => now - t < HOUR);
-  if (recent.length >= CREATE_LIMIT) return false;
-  recent.push(now);
-  created.set(ip, recent);
-  if (created.size > 5000) created.clear();
-  return true;
+  return allow(`create:${callerKey(await headers())}`, CREATE_LIMIT, HOUR);
 }
 
 /**

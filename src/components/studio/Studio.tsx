@@ -16,6 +16,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { saveInvitationAction, type OwnerInput } from "@/app/actions/invitations";
+import { replacePhotos, uploadPhotos } from "@/lib/client/uploads";
 import { InvitationView } from "@/components/invitation/InvitationView";
 import type { Phase } from "@/components/invitation/sections";
 import { Button, Field, Input, PhoneFrame } from "@/components/ui/kit";
@@ -60,26 +61,6 @@ export interface StudioProps {
   occasion?: OccasionId;
   /** Start in this colour, for example from a design card on the home page */
   paletteId?: string;
-}
-
-/** Swap inline images for the stored URLs returned by the server, without touching anything typed since. */
-function adoptStoredImages(current: InvitationData, stored: InvitationData): InvitationData {
-  const isInline = (v?: string) => Boolean(v && v.startsWith("data:"));
-  let changed = false;
-  const next = { ...current };
-  if (isInline(current.heroPhoto) && stored.heroPhoto) {
-    next.heroPhoto = stored.heroPhoto;
-    changed = true;
-  }
-  if (current.gallery.some(isInline) && stored.gallery.length === current.gallery.length) {
-    next.gallery = current.gallery.map((g, i) => (isInline(g) ? stored.gallery[i] : g));
-    changed = true;
-  }
-  if (current.story.some((s) => isInline(s.photo)) && stored.story.length === current.story.length) {
-    next.story = current.story.map((s, i) => (isInline(s.photo) ? { ...s, photo: stored.story[i].photo } : s));
-    changed = true;
-  }
-  return changed ? next : current;
 }
 
 export function Studio({ saved, templateId, occasion, paletteId }: StudioProps) {
@@ -156,11 +137,12 @@ export function Studio({ saved, templateId, occasion, paletteId }: StudioProps) 
     saving.current = true;
     setSaveState("saving");
     const snapshot = dataRef.current;
+    let stored = new Map<string, string>();
     try {
-      const res = await saveInvitationAction(idRef.current, snapshot, newOwner);
+      stored = await uploadPhotos(snapshot);
+      const res = await saveInvitationAction(idRef.current, replacePhotos(snapshot, stored), newOwner);
       if (res.ok) {
         if (dataRef.current === snapshot) dirty.current = false;
-        setData((cur) => adoptStoredImages(cur, res.data));
         setId(res.id);
         idRef.current = res.id;
         setSaveState("saved");
@@ -172,6 +154,8 @@ export function Studio({ saved, templateId, occasion, paletteId }: StudioProps) 
       setSaveState("error");
       return "error";
     } finally {
+      // Keep uploaded photos even when the save failed, without touching anything typed since.
+      if (stored.size) setData((cur) => replacePhotos(cur, stored));
       saving.current = false;
     }
   }, []);
