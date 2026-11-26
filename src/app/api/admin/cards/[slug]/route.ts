@@ -16,7 +16,7 @@ type Ctx = RouteContext<"/api/admin/cards/[slug]">;
 const denied = () => Response.json({ error: "Not allowed." }, { status: 401 });
 
 export async function GET(req: Request, ctx: Ctx) {
-  if (!isAdminRequest(req)) return denied();
+  if (!(await isAdminRequest(req))) return denied();
   const { slug } = await ctx.params;
   const inv = await getInvitationBySlug(slug);
   if (!inv) return Response.json({ error: "No card with that link." }, { status: 404 });
@@ -50,7 +50,7 @@ export async function GET(req: Request, ctx: Ctx) {
 }
 
 export async function PUT(req: Request, ctx: Ctx) {
-  if (!isAdminRequest(req)) return denied();
+  if (!(await isAdminRequest(req))) return denied();
   const { slug } = await ctx.params;
   const inv = await getInvitationBySlug(slug);
   if (!inv) return Response.json({ error: "No card with that link." }, { status: 404 });

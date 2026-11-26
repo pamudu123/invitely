@@ -1,8 +1,9 @@
 "use server";
 
 import { refresh } from "next/cache";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { checkAdminPassword, endAdminSession, isAdmin, startAdminSession } from "@/lib/server/admin";
+import { endAdminSession, isAdmin, startAdminSession, tryAdminPassword } from "@/lib/server/admin";
 import { getInvitationByToken } from "@/lib/server/invitations";
 import { cleanPins, confirmCard, markReviewReady, requestReview, setPinDone } from "@/lib/server/reviews";
 
@@ -29,7 +30,9 @@ export async function confirmCardAction(token: string): Promise<{ ok: boolean }>
 /* ------------------------------ team ------------------------------ */
 
 export async function adminLoginAction(_prev: { error?: string }, formData: FormData): Promise<{ error?: string }> {
-  if (!checkAdminPassword(String(formData.get("password") ?? ""))) return { error: "That password is not right." };
+  const result = await tryAdminPassword(String(formData.get("password") ?? ""), await headers());
+  if (result === "blocked") return { error: "Too many wrong tries. Please wait 15 minutes." };
+  if (result === "wrong") return { error: "That password is not right." };
   await startAdminSession();
   redirect("/admin");
 }
