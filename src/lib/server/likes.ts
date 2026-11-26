@@ -21,9 +21,8 @@ export async function addLikes(likes: [id: string, count: number][]): Promise<vo
   const c = await db();
   await c.batch(
     likes.map(([id, count]) => ({
-      sql: "INSERT INTO likes (design, count) VALUES (?, ?) ON CONFLICT(design) DO UPDATE SET count = count + excluded.count",
+      sql: "INSERT INTO likes (design, count) VALUES (?, ?) ON CONFLICT(design) DO UPDATE SET count = likes.count + excluded.count",
       args: [id, count],
     })),
-    "write",
   );
 }

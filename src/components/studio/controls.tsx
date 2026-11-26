@@ -1,7 +1,7 @@
 "use client";
 
-import { ArrowDown, ArrowUp, ImagePlus, Trash2 } from "lucide-react";
-import { useRef, useState, type ReactNode } from "react";
+import { ArrowDown, ArrowUp, ChevronDown, ImagePlus, Trash2 } from "lucide-react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { compressImage } from "@/lib/client/image";
 
 export function Group({ title, hint, children }: { title: string; hint?: string; children: ReactNode }) {
@@ -10,6 +10,59 @@ export function Group({ title, hint, children }: { title: string; hint?: string;
       <h3 className="label text-brand">{title}</h3>
       {hint ? <p className="mt-1.5 text-[0.8rem] leading-snug text-fg/85">{hint}</p> : null}
       <div className="mt-3.5 grid grid-cols-1 gap-3.5 [&>*]:min-w-0">{children}</div>
+    </section>
+  );
+}
+
+/** A group that folds away, showing its current choice while closed. */
+export function Fold({
+  title,
+  value,
+  hint,
+  open,
+  onToggle,
+  children,
+}: {
+  title: string;
+  value?: string;
+  hint?: string;
+  open: boolean;
+  onToggle: () => void;
+  children: ReactNode;
+}) {
+  const ref = useRef<HTMLElement | null>(null);
+  const wasOpen = useRef(open);
+  const id = useId();
+
+  // Opening one group closes another, which can move this one out of sight.
+  useEffect(() => {
+    if (open && !wasOpen.current) ref.current?.scrollIntoView({ block: "start" });
+    wasOpen.current = open;
+  }, [open]);
+
+  return (
+    <section ref={ref} className="border-b border-fg/8 last:border-b-0">
+      <h3>
+        <button
+          type="button"
+          aria-expanded={open}
+          aria-controls={id}
+          onClick={onToggle}
+          className="flex min-h-13 w-full items-center gap-3 px-5 py-3.5 text-left transition-colors hover:bg-fg/4"
+        >
+          <span className="label shrink-0 text-brand">{title}</span>
+          <span className="min-w-0 flex-1 truncate text-right text-[0.82rem] text-fg/85">{open ? "" : value}</span>
+          <ChevronDown size={17} aria-hidden="true" className={`shrink-0 text-fg/85 transition-transform ${open ? "rotate-180" : ""}`} />
+        </button>
+      </h3>
+      <div id={id} hidden={!open}>
+        {open ? (
+          <div className="px-5 pb-5">
+            {hint ? <p className="mb-3.5 text-[0.8rem] leading-snug text-fg/85">{hint}</p> : null}
+            <div className="grid grid-cols-1 gap-3.5 [&>*]:min-w-0">{children}</div>
+          </div>
+        ) : null}
+      </div>
     </section>
   );
 }

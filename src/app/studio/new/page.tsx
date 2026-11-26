@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { Studio } from "@/components/studio/Studio";
 import { occasions } from "@/lib/invitation/occasions";
@@ -11,6 +12,8 @@ export const metadata: Metadata = { title: "Design studio", robots: { index: fal
 async function NewStudio({ searchParams }: { searchParams: PageProps<"/studio/new">["searchParams"] }) {
   const sp = await searchParams;
   const template = typeof sp.template === "string" && getTemplate(sp.template) ? sp.template : undefined;
+  // The studio no longer switches designs, so one has to be chosen first.
+  if (!template) redirect("/templates");
   const occasion = occasions.find((o) => o.id === sp.occasion)?.id as OccasionId | undefined;
   const palette = palettes.find((p) => p.id === sp.palette)?.id;
   return <Studio templateId={template} occasion={occasion} paletteId={palette} />;

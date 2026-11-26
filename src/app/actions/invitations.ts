@@ -7,6 +7,7 @@ import type { CardKind } from "@/lib/invitation/cardDesign";
 import type { InvitationData } from "@/lib/invitation/types";
 import { paymentsMode } from "@/lib/plans";
 import { slugify } from "@/lib/server/ids";
+import { allow, callerKey } from "@/lib/server/ratelimit";
 import {
   cleanPin,
   createInvitation,
@@ -20,7 +21,6 @@ import {
   setInvitationPin,
   setInvitationSlug,
   setInvitationStatus,
-  storeInlineImage,
   updateInvitationData,
   type InvitationSummary,
 } from "@/lib/server/invitations";
@@ -40,21 +40,12 @@ export type SaveResult =
   | { ok: true; id: string; slug: string; data: InvitationData }
   | { ok: false; error: "owner" | "not-found" | "invalid" | "busy" };
 
-// Light guard against scripted card creation. Per server instance, so it is a speed bump and not a wall.
-const created = new Map<string, number[]>();
 const CREATE_LIMIT = 20;
 const HOUR = 3600_000;
 
+/** Slows down scripted card creation. */
 async function allowCreate(): Promise<boolean> {
-  const h = await headers();
-  const ip = (h.get("x-forwarded-for") ?? "").split(",")[0].trim() || "local";
-  const now = Date.now();
-  const recent = (created.get(ip) ?? []).filter((t) => now - t < HOUR);
-  if (recent.length >= CREATE_LIMIT) return false;
-  recent.push(now);
-  created.set(ip, recent);
-  if (created.size > 5000) created.clear();
-  return true;
+  return allow(`create:${callerKey(await headers())}`, CREATE_LIMIT, HOUR);
 }
 
 /**
@@ -91,14 +82,6 @@ export async function saveCardDesignAction(token: string, kind: CardKind, design
   const inv = await getInvitationByToken(token);
   if (!inv) return { ok: false };
   return { ok: await saveCardDesign(inv.id, kind, design) };
-}
-
-/** Store a picture for a card and answer with its address. */
-export async function uploadCardImageAction(token: string, dataUrl: unknown): Promise<{ ok: true; url: string } | { ok: false }> {
-  const inv = await getInvitationByToken(token);
-  if (!inv) return { ok: false };
-  const url = await storeInlineImage(dataUrl);
-  return url ? { ok: true, url } : { ok: false };
 }
 
 export async function publishAction(token: string): Promise<{ ok: boolean; error?: string }> {

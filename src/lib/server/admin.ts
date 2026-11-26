@@ -2,6 +2,7 @@ import "server-only";
 import { createHash, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { allow, callerKey, isBlocked } from "./ratelimit";
 
 const COOKIE = "inv_admin";
 
@@ -22,15 +23,28 @@ function same(a: string, b: string): boolean {
   return x.length === y.length && timingSafeEqual(x, y);
 }
 
-export function checkAdminPassword(candidate: string): boolean {
+function checkAdminPassword(candidate: string): boolean {
   const real = password();
   return Boolean(real) && same(digest(candidate), digest(real!));
 }
 
+const WRONG_TRIES = 10;
+const WRONG_WINDOW = 15 * 60_000;
+
+/** Check the team password, allowing ten wrong tries per network every fifteen minutes. */
+export async function tryAdminPassword(candidate: string, headers: Headers): Promise<"ok" | "wrong" | "blocked"> {
+  const key = `admin:${callerKey(headers)}`;
+  if (await isBlocked(key, WRONG_TRIES, WRONG_WINDOW)) return "blocked";
+  if (checkAdminPassword(candidate)) return "ok";
+  await allow(key, WRONG_TRIES, WRONG_WINDOW);
+  return "wrong";
+}
+
 export async function isAdmin(): Promise<boolean> {
+  // Cookies are read first so the page is never built as a fixed redirect.
+  const value = (await cookies()).get(COOKIE)?.value ?? "";
   const real = password();
   if (!real) return false;
-  const value = (await cookies()).get(COOKIE)?.value ?? "";
   return same(value, digest(real));
 }
 
@@ -55,7 +69,7 @@ export async function endAdminSession(): Promise<void> {
 }
 
 /** For scripts: the same password sent in the x-admin-key header. */
-export function isAdminRequest(req: Request): boolean {
+export async function isAdminRequest(req: Request): Promise<boolean> {
   const key = req.headers.get("x-admin-key") ?? "";
-  return key.length > 0 && checkAdminPassword(key);
+  return key.length > 0 && (await tryAdminPassword(key, req.headers)) === "ok";
 }

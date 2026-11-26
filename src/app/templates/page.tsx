@@ -20,6 +20,7 @@ function items(): GalleryItem[] {
     alsoFor: t.alsoFor,
     tags: t.tags,
     opening: ritualInfo[t.theme.ritual].label,
+    hasOpening: t.theme.ritual !== "none",
     cover: <FluidCover templateId={t.id} />,
   }));
 }
@@ -33,7 +34,7 @@ export default function TemplatesPage() {
           <p className="label text-brand">The collection</p>
           <h1 className="display mt-5 max-w-4xl text-[clamp(3rem,9vw,6.5rem)]">Find the design that feels like you.</h1>
           <p className="mt-6 max-w-xl text-[1.05rem] leading-relaxed text-fg/85">
-            Every design is shown exactly as it looks on a phone. Open the live demo, try the opening, then make it yours.
+            Every design is shown exactly as it looks on a phone. Tap one for a quick look, try the opening, then make it yours.
             Colours, lettering, ornaments and wording can all change.
           </p>
           <p className="mb-10 mt-4 max-w-xl text-[1.05rem] leading-relaxed text-fg/85">

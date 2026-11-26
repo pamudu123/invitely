@@ -237,7 +237,7 @@ function PicturesTab({ kind, data, design, change, layout, shape, format, select
   const sticker = stickers.find((s) => s.id === selected);
   const inches = { w: format.width / 100, h: format.height / 100 };
   const webPhotos = Array.from(
-    new Set([data.heroPhoto, ...data.gallery, ...data.story.map((s) => s.photo)].filter((s): s is string => Boolean(s?.startsWith("/api/media/")))),
+    new Set([data.heroPhoto, ...data.gallery, ...data.story.map((s) => s.photo)].filter((s): s is string => Boolean(s && !s.startsWith("data:")))),
   );
 
   const setPicture = (patch: Partial<CardPicture>) => {

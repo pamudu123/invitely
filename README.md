@@ -15,7 +15,7 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3000. No configuration is needed for development. Data is stored in a local SQLite file at `.data/invitely.db`, created on first use.
+Open http://localhost:3000. No configuration is needed for development. Data is stored in an embedded Postgres in `.data/pg` and photos in `.data/media`, both created on first use.
 
 ## Where to look
 
@@ -44,8 +44,9 @@ Copy `.env.example` to `.env.local` and fill in what you need. Everything is opt
 
 | Variable | Purpose |
 | --- | --- |
-| `DATABASE_URL` | libSQL database URL, for example a Turso database. Defaults to a local file |
-| `DATABASE_AUTH_TOKEN` | Token for the hosted database |
+| `DATABASE_URL` | Pooled Postgres connection. `POSTGRES_URL` works too. Defaults to an embedded Postgres |
+| `DIRECT_URL` | Direct connection, only for `npm run db:migrate`. `POSTGRES_URL_NON_POOLING` works too |
+| `SUPABASE_URL`, `SUPABASE_SECRET_KEY` | Photo storage. `SUPABASE_SERVICE_ROLE_KEY` works too. Defaults to local files |
 | `NEXT_PUBLIC_SITE_URL` | Public address of the site, used in share links |
 | `ADMIN_PASSWORD` | Password for `/admin` and `npm run card`. Required in production |
 | `PAYMENTS_MODE` | `off` (default, publishing is free) or `manual` (hold until payment is confirmed) |
@@ -58,6 +59,14 @@ npm run build
 
 ```bash
 npm run lint
+```
+
+## Deploying
+
+The site runs on Vercel with a Supabase database and photo bucket. After adding a file to `supabase/migrations`, apply it before deploying the code that needs it:
+
+```bash
+npm run db:migrate
 ```
 
 ## Editing one card with Claude Code
@@ -78,7 +87,7 @@ Or type `/revise-card your-card-link` in Claude Code. It pulls the card and the 
 
 ## Stack
 
-Next.js 16 (App Router with Cache Components), React 19, TypeScript, Tailwind CSS 4, libSQL. Ornaments are SVG drawn in code, 3D scenes are modelled in code with three.js and the soundscapes are synthesised in the browser, so the project ships no licensed media.
+Next.js 16 (App Router with Cache Components), React 19, TypeScript, Tailwind CSS 4, Postgres (Supabase). Ornaments are SVG drawn in code, 3D scenes are modelled in code with three.js and the soundscapes are synthesised in the browser, so the project ships no licensed media.
 
 ## Changing things
 

@@ -2,7 +2,8 @@
 
 import { Download, FileDown, RotateCcw, Scissors, Share2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { saveCardDesignAction, uploadCardImageAction } from "@/app/actions/invitations";
+import { saveCardDesignAction } from "@/app/actions/invitations";
+import { uploadImage } from "@/lib/client/uploads";
 import { bareHost, useOrigin } from "@/components/dashboard/links";
 import { Button, Card, Field, Select } from "@/components/ui/kit";
 import { buildPdf, dataUrlToBlob, dataUrlToBytes, downloadBlob, renderFace, shareImage } from "@/lib/client/cardExport";
@@ -258,11 +259,10 @@ export function CardStudio({
     ...(isPrint ? { shape: design.shape, tone, density: design.density, scale: design.scale } : {}),
   };
 
-  const upload = async (dataUrl: string) => {
-    const res = await uploadCardImageAction(token, dataUrl);
-    if (!res.ok) throw new Error("Could not upload that picture. Please try again.");
-    return res.url;
-  };
+  const upload = (dataUrl: string) =>
+    uploadImage(dataUrl).catch(() => {
+      throw new Error("Could not upload that picture. Please try again.");
+    });
 
   const handles = (side: CardSide) =>
     tab === "pictures" ? (

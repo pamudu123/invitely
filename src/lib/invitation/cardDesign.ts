@@ -142,7 +142,8 @@ export function stickerDpi(s: CardSticker, widthIn: number): number {
 
 /* ------------------------------- checking ------------------------------- */
 
-const MEDIA_PATH = /^\/api\/media\/[a-z0-9]{6,32}$/;
+/** A stored photo: the development store, or a public storage address. */
+const PHOTO = /^(?:\/api\/media\/[a-z0-9]{6,32}\.(?:jpg|png|webp)|https:\/\/[^\s"'<>()]{4,500})$/;
 type Loose = Record<string, unknown>;
 const obj = (v: unknown): Loose => (v && typeof v === "object" && !Array.isArray(v) ? (v as Loose) : {});
 const num = (v: unknown, min: number, max: number, fallback: number) => {
@@ -153,7 +154,7 @@ const pick = <T extends string>(v: unknown, allowed: readonly T[]): T | undefine
 
 function cleanPicture(v: unknown, side: CardSide): CardPicture | undefined {
   const p = obj(v);
-  if (typeof p.src !== "string" || !MEDIA_PATH.test(p.src)) return undefined;
+  if (typeof p.src !== "string" || !PHOTO.test(p.src)) return undefined;
   const placement = pick(p.placement, ["background", "emblem", "full"] as const) ?? "background";
   return {
     src: p.src,
@@ -169,7 +170,7 @@ function cleanPicture(v: unknown, side: CardSide): CardPicture | undefined {
 
 function cleanSticker(v: unknown, index: number): CardSticker | undefined {
   const s = obj(v);
-  if (typeof s.src !== "string" || !MEDIA_PATH.test(s.src)) return undefined;
+  if (typeof s.src !== "string" || !PHOTO.test(s.src)) return undefined;
   return {
     id: typeof s.id === "string" && /^[a-z0-9]{1,24}$/.test(s.id) ? s.id : `s${index}`,
     side: s.side === "back" ? "back" : "front",

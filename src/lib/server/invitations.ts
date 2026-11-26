@@ -6,7 +6,7 @@ import { sceneHeroes, themeScene, usesScene } from "@/lib/invitation/scenes";
 import { displayNames, normalizeInvitation, templates } from "@/lib/invitation/templates";
 import { fontPairs, palettes } from "@/lib/invitation/theme";
 import type { InvitationData, LanguageId, WishItem } from "@/lib/invitation/types";
-import { db, SYSTEM_OWNER } from "./db";
+import { db } from "./db";
 import { randomId, slugify } from "./ids";
 import { hashSecret, isManageToken, newManageToken, verifySecret } from "./secrets";
 
@@ -82,32 +82,12 @@ const hex = (v: unknown): string | undefined =>
 const isDate = (v: unknown): v is string => typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v);
 const isTime = (v: unknown): v is string => typeof v === "string" && /^\d{2}:\d{2}$/.test(v);
 
-const MEDIA_PATH = /^\/api\/media\/[a-z0-9]{6,32}$/;
-const DATA_URL = /^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/=]+)$/;
-const MAX_IMAGE_BYTES = 1_400_000;
-
-/** Store an inline image and return its URL. Unknown or oversized values are dropped. */
-async function resolveImage(value: unknown): Promise<string | undefined> {
+const MEDIA_PATH = /^\/api\/media\/[a-z0-9]{6,32}\.(?:jpg|png|webp)$/;
+/** Keep the address of a stored photo. Photos are uploaded before the card is saved, so inline images are dropped. */
+function cleanImage(value: unknown): string | undefined {
   if (typeof value !== "string" || !value) return undefined;
   if (MEDIA_PATH.test(value)) return value;
-  if (/^https:\/\/[^\s"'<>]{4,500}$/.test(value)) return value;
-  return storeInlineImage(value);
-}
-
-/** Store an image sent as a data URL. Answers undefined when it is not a picture we accept, or is too large. */
-export async function storeInlineImage(value: unknown): Promise<string | undefined> {
-  if (typeof value !== "string") return undefined;
-  const m = DATA_URL.exec(value);
-  if (!m) return undefined;
-  const bytes = Buffer.from(m[2], "base64");
-  if (!bytes.length || bytes.length > MAX_IMAGE_BYTES) return undefined;
-  const id = randomId(16);
-  const c = await db();
-  await c.execute({
-    sql: "INSERT INTO media (id, user_id, mime, bytes, created_at) VALUES (?, ?, ?, ?, ?)",
-    args: [id, SYSTEM_OWNER, m[1], bytes, Date.now()],
-  });
-  return `/api/media/${id}`;
+  return /^https:\/\/[^\s"'<>]{4,500}$/.test(value) ? value : undefined;
 }
 
 const ritualIds = ["lamp", "seal", "curtain", "lotus", "scratch", "balloon", "betel", "doors", "clapper", "gift", "play", "none"] as const;
@@ -147,7 +127,7 @@ export async function sanitizeInvitation(raw: unknown): Promise<InvitationData> 
 
   const gallery: string[] = [];
   for (const g of d.gallery.slice(0, 12)) {
-    const url = await resolveImage(g);
+    const url = cleanImage(g);
     if (url) gallery.push(url);
   }
   const story = [];
@@ -157,7 +137,7 @@ export async function sanitizeInvitation(raw: unknown): Promise<InvitationData> 
       title: clip(s.title, 100),
       when: clip(s.when, 40),
       text: clip(s.text, 600),
-      photo: await resolveImage(s.photo),
+      photo: cleanImage(s.photo),
     });
   }
 
@@ -189,7 +169,7 @@ export async function sanitizeInvitation(raw: unknown): Promise<InvitationData> 
     venueName: clip(d.venueName, 120),
     venueAddress: clip(d.venueAddress, 200),
     mapQuery: clip(d.mapQuery, 400),
-    heroPhoto: await resolveImage(d.heroPhoto),
+    heroPhoto: cleanImage(d.heroPhoto),
     coverWash: typeof d.coverWash === "number" && Number.isFinite(d.coverWash) ? Math.min(95, Math.max(0, Math.round(d.coverWash))) : undefined,
     gallery,
     events: d.events.slice(0, 16).map((e) => ({
@@ -292,9 +272,9 @@ export async function createInvitation(data: InvitationData, owner: OwnerDetails
   const token = newManageToken();
   const pin = cleanPin(owner.pin);
   await c.execute({
-    sql: `INSERT INTO invitations (id, user_id, slug, occasion, title, status, plan, data, created_at, updated_at, manage_token, owner_name, owner_contact, pin_hash)
-          VALUES (?, ?, ?, ?, ?, 'draft', 'free', ?, ?, ?, ?, ?, ?, ?)`,
-    args: [id, SYSTEM_OWNER, slug, data.occasion, title, JSON.stringify(data), now, now, token, clip(owner.name, 80), clip(owner.contact, 120), pin ? await hashSecret(pin) : ""],
+    sql: `INSERT INTO invitations (id, slug, occasion, title, status, plan, data, created_at, updated_at, manage_token, owner_name, owner_contact, pin_hash)
+          VALUES (?, ?, ?, ?, 'draft', 'free', ?, ?, ?, ?, ?, ?, ?)`,
+    args: [id, slug, data.occasion, title, JSON.stringify(data), now, now, token, clip(owner.name, 80), clip(owner.contact, 120), pin ? await hashSecret(pin) : ""],
   });
   return (await getInvitationByToken(token))!;
 }
@@ -415,10 +395,10 @@ export async function updateInvitationData(id: string, data: InvitationData): Pr
 export async function saveCardDesign(id: string, kind: CardKind, raw: unknown): Promise<boolean> {
   const c = await db();
   const res = await c.execute({
-    sql: `UPDATE invitations SET updated_at = ?, data = json_set(
-            json_set(data, '$.cards', json(COALESCE(json_extract(data, '$.cards'), '{}'))), ?, json(?))
+    sql: `UPDATE invitations SET updated_at = ?, data = jsonb_set(
+            jsonb_set(data::jsonb, '{cards}', COALESCE(data::jsonb -> 'cards', '{}'::jsonb)), ?::text[], ?::jsonb)::text
           WHERE id = ?`,
-    args: [Date.now(), kind === "print" ? "$.cards.print" : "$.cards.image", JSON.stringify(cleanCardDesign(raw, kind)), id],
+    args: [Date.now(), kind === "print" ? "{cards,print}" : "{cards,image}", JSON.stringify(cleanCardDesign(raw, kind)), id],
   });
   return res.rowsAffected > 0;
 }
@@ -623,14 +603,4 @@ export async function setRsvpHidden(invitationId: string, rsvpId: string, hidden
 export async function deleteRsvp(invitationId: string, rsvpId: string): Promise<void> {
   const c = await db();
   await c.execute({ sql: "DELETE FROM rsvps WHERE id = ? AND invitation_id = ?", args: [rsvpId, invitationId] });
-}
-
-export async function getMedia(id: string): Promise<{ mime: string; bytes: Uint8Array } | null> {
-  if (!/^[a-z0-9]{6,32}$/.test(id)) return null;
-  const c = await db();
-  const res = await c.execute({ sql: "SELECT mime, bytes FROM media WHERE id = ?", args: [id] });
-  const row = res.rows[0];
-  if (!row) return null;
-  const raw = row.bytes as ArrayBuffer | Uint8Array;
-  return { mime: String(row.mime), bytes: raw instanceof Uint8Array ? raw : new Uint8Array(raw) };
 }
